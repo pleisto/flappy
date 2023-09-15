@@ -1,0 +1,47 @@
+{
+  "name": "flappy-monorepo-root",
+  "license": "Apache-2.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "tools/*"
+  ],
+  "volta": {
+    "node": "20.6.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{json,yml,yaml,md,mdx,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.code-workspace": [
+      "prettier --parser json --write"
+    ]
+  },
+  "scripts": {
+    "dev": "yarn workspace @pleisto/flappy-devkit dev",
+    "commit": "git add . && cz",
+    "postinstall": "run dev is-ci || husky install"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "packageManager": "yarn@3.6.3",
+  "devDependencies": {
+    "@pleisto/eslint-plugin": "^1.4.84",
+    "@types/node": "^20.6.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.49.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
+}

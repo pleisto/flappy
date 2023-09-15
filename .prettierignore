@@ -1,0 +1,20 @@
+# Add files here to ignore them from prettier formatting
+
+dist/
+coverage/
+tmp/
+log/
+node_modules/
+.yarn/
+CHANGELOG.*
+*.env
+.next/
+*.tsbuildinfo
+.eslintcache
+.nyc_output/
+.coverage-cache/
+dist/
+storybook-static/
+target/
+
+/tools/helm-charts/**/*.yaml

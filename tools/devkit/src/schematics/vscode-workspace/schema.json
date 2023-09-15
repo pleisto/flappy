@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "SchematicsPleistoDevKitVSCodeWorkspace",
+  "title": "vscode-workspace options schema",
+  "type": "object",
+  "properties": {}
+}

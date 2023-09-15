@@ -1,0 +1,8 @@
+root: true
+
+extends:
+  - plugin:@pleisto/eslint-plugin/node
+
+parserOptions:
+  project:
+    - ./tsconfig.json

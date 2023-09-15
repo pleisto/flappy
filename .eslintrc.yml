@@ -1,0 +1,10 @@
+# Each sub-packages in this monorepo should have its own .eslintrc.yml.
+# This root .eslintrc.yml is only used for files outside of any sub-packages.
+root: true
+
+extends:
+  - plugin:@pleisto/eslint-plugin/base
+
+parserOptions:
+  project:
+    - ./tsconfig.json

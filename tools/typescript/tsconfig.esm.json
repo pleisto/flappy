@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.cjs.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext"
+  },
+  "ts-node": {
+    "swc": true,
+    "esm": true,
+    "compilerOptions": {
+      "module": "NodeNext"
+    }
+  }
+}

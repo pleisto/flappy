@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "vscode-workspace": {
+      "description": "Update vs code workspace file",
+      "factory": "./vscode-workspace/index#workspace",
+      "schema": "./vscode-workspace/schema.json"
+    }
+  }
+}

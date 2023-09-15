@@ -1,0 +1,11 @@
+[workspace]
+members = ["./packages/code-interpreter"]
+resolver = "2"
+package.license = "Apache-2.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.dev]
+incremental = true

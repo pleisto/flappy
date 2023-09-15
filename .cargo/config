@@ -1,0 +1,29 @@
+[cargo-new]
+vsc = "git"
+
+[build]
+pipelining = true
+
+[target.x86_64-pc-windows-msvc]
+# Our minimum supported CPU is sandy bridge, beacuse we require
+# SSE4.2 and AVX instructions for SIMD support.
+# Since sandy bridge is released in 2011, we can assume that most
+# of our users have a CPU that supports these instructions.
+rustflags = ["-C", "target-cpu=sandybridge"]
+
+[target.x86_64-unknown-linux-gnu]
+# Our minimum supported CPU is sandy bridge, beacuse we require
+# SSE4.2 and AVX instructions for SIMD support.
+# Since sandy bridge is released in 2011, we can assume that most
+# of our users have a CPU that supports these instructions.
+rustflags = ["-C", "target-cpu=sandybridge"]
+
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "target-cpu=apple-m1",  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup"]
+
+[target.x86_64-apple-darwin]
+# Haswell is the minimum supported CPU for macOS 12.
+# Since Haswell is released in 2013, we can assume that most
+# of our macOS users have a CPU that supports these instructions.
+rustflags = ["-C", "target-cpu=haswell"]
