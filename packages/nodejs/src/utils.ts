@@ -1,6 +1,6 @@
 import { zodToJsonSchema } from 'zod-to-json-schema'
 import { omit } from 'radash'
-import { type ZodSchema } from 'zod'
+import { type ZodSchema } from './flappy-type'
 
 /**
  * Convert Zod schema to JSON schema and remove unused properties.

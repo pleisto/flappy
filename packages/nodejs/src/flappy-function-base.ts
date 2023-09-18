@@ -1,4 +1,4 @@
-import { type z } from 'zod'
+import { type ZodType as z } from './flappy-type'
 import { type FlappyFunctionDefinition, type ResolveFunction } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { zodToCleanJsonSchema } from './utils'

@@ -1,4 +1,4 @@
-import { type z } from 'zod'
+import { type ZodType as z } from './flappy-type'
 import { type InvokeFunctionDefinition, type ResolveFunction } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 
