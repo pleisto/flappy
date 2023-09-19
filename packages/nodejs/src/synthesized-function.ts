@@ -1,4 +1,4 @@
-import { type z } from 'zod'
+import { type ZodType as z } from './flappy-type'
 import { type SynthesizedFunctionDefinition } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'

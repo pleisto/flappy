@@ -4,7 +4,7 @@ import { InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
-import { z } from 'zod'
+import { ZodType as z } from './flappy-type'
 import { zodToCleanJsonSchema } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

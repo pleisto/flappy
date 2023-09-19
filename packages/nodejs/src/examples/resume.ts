@@ -1,5 +1,4 @@
-import { createFlappyAgent, createInvokeFunction, createSynthesizedFunction } from '..'
-import { z } from 'zod'
+import { createFlappyAgent, createInvokeFunction, createSynthesizedFunction, ZodType as z } from '..'
 import OpenAI from 'openai'
 import { ChatGPT } from '../llm/chatgpt'
 
