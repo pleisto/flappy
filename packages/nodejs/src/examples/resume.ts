@@ -93,4 +93,4 @@ const resumeAgent = createFlappyAgent({
   ]
 })
 
-void resumeAgent.createExecutePlan('找到前端工程师的简历')
+void resumeAgent.executePlan('找到前端工程师的简历')

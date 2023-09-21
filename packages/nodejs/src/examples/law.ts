@@ -54,5 +54,5 @@ const lawAgent = createFlappyAgent({
   ]
 })
 
-void lawAgent.createExecutePlan('找到原告为张三的最新案件并返回它的元数据')
+void lawAgent.executePlan('找到原告为张三的最新案件并返回它的元数据')
 // void lawAgent.callFunction('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)

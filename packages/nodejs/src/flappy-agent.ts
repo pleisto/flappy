@@ -82,11 +82,11 @@ export class FlappyAgent {
   }
 
   /**
-   * createExecutePlan
+   * executePlan
    * @param prompt user input prompt
    * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
    */
-  public async createExecutePlan(prompt: string, enableCot: boolean = true): Promise<any> {
+  public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
     const functions = JSON.stringify(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema))
