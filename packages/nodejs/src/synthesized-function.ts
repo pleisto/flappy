@@ -35,29 +35,36 @@ export class SynthesizedFunction<
       }
     ]
     console.dir(requestMessage, { depth: null })
-    const result = await agent.llm.chatComplete(requestMessage)
+    let result = await agent.llm.chatComplete(requestMessage)
 
-    try {
-      const data = this.parseComplete(result)
-      return data
-    } catch (err) {
-      // try to repair the result once
-      const repaired = await agent.llm.chatComplete([
-        ...requestMessage,
-        {
-          role: 'assistant',
-          content: result.data!
-        },
-        {
-          role: 'user',
-          content: `You response is invalid for the following reason:
+    let retry = agent.retry
+
+    while (true) {
+      try {
+        if (retry !== agent.retry) console.debug('Attempt retry: ', agent.retry - retry)
+        const data = this.parseComplete(result)
+        return data
+      } catch (err) {
+        console.error(err)
+        retry -= 1
+        // try to repair the result
+        result = await agent.llm.chatComplete([
+          ...requestMessage,
+          {
+            role: 'assistant',
+            content: result.data!
+          },
+          {
+            role: 'user',
+            content: `You response is invalid for the following reason:
           ${(err as Error).message}
 
           Please try again.`
-        }
-      ])
-      const data = this.parseComplete(repaired)
-      return data
+          }
+        ])
+      }
+
+      if (retry <= 0) throw new Error('Interrupted, function call failed. Please refer to the error message above.')
     }
   }
 

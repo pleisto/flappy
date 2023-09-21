@@ -33,14 +33,18 @@ const lanOutputSchema = (enableCoT: boolean) => {
   )
 }
 
+const DEFAULT_RETRY = 1
+
 export class FlappyAgent {
   config: any
   llm: LLMBase
   llmPlaner: LLMBase
+  retry: number
   constructor(config: FlappyAgentConfig) {
     this.config = config
     this.llm = config.llm
     this.llmPlaner = config.llmPlaner ?? config.llm
+    this.retry = config.retry ?? DEFAULT_RETRY
   }
 
   /**
@@ -129,7 +133,9 @@ export class FlappyAgent {
           return [k, v]
         })
       )
+      console.debug('Start function call:', step.functionName)
       const result = await fn.call(this, args)
+      console.debug('End Function call:', step.functionName)
       returnStore.set(step.id, result)
     }
     // step id starts from 1, so plan.length is the last step id

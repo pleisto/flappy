@@ -64,6 +64,7 @@ export interface FlappyAgentConfig {
 
   /**
    * Maximum number of retries when language model generation failed.
+   * The default retries is 1.
    */
   retry?: number
 }
