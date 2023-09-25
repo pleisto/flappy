@@ -1,5 +1,5 @@
 import { type ZodType as z } from './flappy-type'
-import { type FlappyFunctionDefinition, type ResolveFunction } from './flappy-agent.interface'
+import { type FlappyFunctionDefinition } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { zodToCleanJsonSchema } from './utils'
 
@@ -20,10 +20,14 @@ const buildJsonSchema = (define: FlappyFunctionDefinition) => {
   }
 }
 
-export abstract class FlappyFunctionBase<TArgs extends z.ZodType = z.ZodType, TReturn extends z.ZodType = z.ZodType> {
-  define: FlappyFunctionDefinition<TArgs, TReturn, ResolveFunction<TArgs, TReturn>>
+export abstract class FlappyFunctionBase<
+  TName extends string = string,
+  TArgs extends z.ZodType = z.ZodType,
+  TReturn extends z.ZodType = z.ZodType
+> {
+  define: FlappyFunctionDefinition<TName, TArgs, TReturn>
   callingSchema: object
-  constructor(define: FlappyFunctionDefinition<TArgs, TReturn, ResolveFunction<TArgs, TReturn>>) {
+  constructor(define: FlappyFunctionDefinition<TName, TArgs, TReturn>) {
     this.define = define
     this.callingSchema = buildJsonSchema(define)
   }

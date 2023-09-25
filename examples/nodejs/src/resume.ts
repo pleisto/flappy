@@ -88,7 +88,7 @@ const resumeAgent = createFlappyAgent({
       description: 'Get all frontend engineer resumes.',
       args: z.null(),
       returnType: z.array(z.string()),
-      resolve: async (): Promise<string[]> => {
+      resolve: async () => {
         // Do something
         // e.g. query SQL database
         console.debug('getFrontendEngineerResumes called')

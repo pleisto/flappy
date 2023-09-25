@@ -1,4 +1,9 @@
-import { type FlappyAgentConfig, type FlappyFunction } from './flappy-agent.interface'
+import {
+  type FindFlappyFunction,
+  type AnyFlappyFunction,
+  type FlappyAgentConfig,
+  type FlappyFunctionNames
+} from './flappy-agent.interface'
 import { SynthesizedFunction } from './synthesized-function'
 import { InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
@@ -23,24 +28,27 @@ const lanOutputSchema = (enableCoT: boolean) => {
         thought: z.string().describe('The thought why this step is needed.')
       }
     : ({} as any)
-  return z.array(
-    z
-      .object({
+  return z
+    .array(
+      z.object({
         ...thought,
         ...baseStep
       })
-      .describe('An array storing the steps.')
-  )
+    )
+    .describe('An array storing the steps.')
 }
 
 const DEFAULT_RETRY = 1
 
-export class FlappyAgent {
+export class FlappyAgent<
+  TFunctions extends AnyFlappyFunction[] = AnyFlappyFunction[],
+  TNames extends string = FlappyFunctionNames<TFunctions>
+> {
   config: any
   llm: LLMBase
   llmPlaner: LLMBase
   retry: number
-  constructor(config: FlappyAgentConfig) {
+  constructor(config: FlappyAgentConfig<TFunctions>) {
     this.config = config
     this.llm = config.llm
     this.llmPlaner = config.llmPlaner ?? config.llm
@@ -51,37 +59,43 @@ export class FlappyAgent {
    * Get function definitions as a JSON Schema object array.
    */
   public functionsDefinitions(): object[] {
-    return this.config.functions.map((fn: FlappyFunction) => fn.callingSchema)
+    return this.config.functions.map((fn: AnyFlappyFunction) => fn.callingSchema)
   }
 
   /**
    * Find function by name.
    */
-  public findFunction(name: string): FlappyFunction | undefined {
-    return this.config.functions.find((fn: FlappyFunction) => fn.define.name === name)
+  public findFunction<
+    TName extends TNames,
+    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
+  >(name: TName): TFunction {
+    const fn = this.config.functions.find((fn: AnyFlappyFunction) => fn.define.name === name)
+    if (!fn) throw new Error(`Function definition not found: ${name}`)
+    return fn
   }
 
   /**
    * List all synthesized functions.
    */
   public synthesizedFunctions(): SynthesizedFunction[] {
-    return this.config.functions.filter((fn: FlappyFunction) => fn instanceof SynthesizedFunction)
+    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof SynthesizedFunction)
   }
 
   /**
    * List all invoke functions.
    */
   public invokeFunctions(): InvokeFunction[] {
-    return this.config.functions.filter((fn: FlappyFunction) => fn instanceof InvokeFunction)
+    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof InvokeFunction)
   }
 
   /**
    * Call a function by name.
    */
-  public async callFunction(name: string, args: any): Promise<any> {
+  public async callFunction<
+    TName extends TNames,
+    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
+  >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
     const fn = this.findFunction(name)
-    if (!fn) throw new Error(`Function definition not found: ${name}`)
-    // eslint-disable-next-line @typescript-eslint/return-await
     return await fn.call(this, args)
   }
 
@@ -117,7 +131,7 @@ export class FlappyAgent {
     zodSchema.parse(plan)
     const returnStore = new Map()
     for (const step of plan) {
-      const fn = this.findFunction(step.functionName)
+      const fn = this.findFunction<TNames>(step.functionName)
       if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
       const args = Object.fromEntries(
         Object.entries(step.args).map(([k, v]) => {
@@ -158,4 +172,6 @@ export class FlappyAgent {
  * @param config
  * @returns
  */
-export const createFlappyAgent = (config: FlappyAgentConfig): FlappyAgent => new FlappyAgent(config)
+export const createFlappyAgent = <const TFunctions extends AnyFlappyFunction[]>(
+  config: FlappyAgentConfig<TFunctions>
+): FlappyAgent<TFunctions> => new FlappyAgent(config)
