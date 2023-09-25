@@ -24,5 +24,8 @@ gradleEnterprise {
     }
   }
 }
-include("sample")
-project(":sample").projectDir = file("./sample")
+include("kotlin-example")
+project(":kotlin-example").projectDir = file("../../examples/kotlin")
+
+include("java-example")
+project(":java-example").projectDir = file("../../examples/java")

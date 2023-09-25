@@ -7,9 +7,10 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
+            <option value="$PROJECT_DIR$/../../examples/java" />
+            <option value="$PROJECT_DIR$/../../examples/kotlin" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/flappy" />
-            <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>
       </GradleProjectSettings>
