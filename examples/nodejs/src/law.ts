@@ -49,7 +49,7 @@ const lawAgent = createFlappyAgent({
         arg2: z.array(z.string()).describe('ignore it').optional()
       }),
       returnType: z.string(),
-      resolve: async (args: any): Promise<string> => {
+      resolve: async args => {
         // Do something
         // e.g. query SQL database
         console.debug('getLatestLawsuitsByPlaintiff called', args)

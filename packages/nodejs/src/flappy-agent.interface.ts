@@ -1,45 +1,56 @@
-import { type ZodType as z } from './flappy-type'
+import { type IsNever, type Writable, type ZodType as z } from './flappy-type'
 import { type SynthesizedFunction } from './synthesized-function'
 import { type InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
 
-// TODO: fix me
-// export type ResolveFunction<TArgs extends z.ZodType, TReturn extends z.ZodType> = (
-//   args: TArgs
-// ) => Promise<z.infer<TReturn>>
+type ResolveFunction<in TArgs extends z.ZodType, TReturn extends z.ZodType> = (
+  args: TArgs
+) => Promise<z.infer<Writable<TReturn>>>
 
-export type ResolveFunction<TArgs extends z.ZodType, TReturn extends z.ZodType> = any
-
-interface FunctionsDefinitionBase<TArgs extends z.ZodType, TReturn extends z.ZodType> {
-  name: string
+interface FunctionsDefinitionBase<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType> {
+  name: TName
   description?: string
   args: TArgs
   returnType: TReturn
 }
 
 export interface InvokeFunctionDefinition<
-  TArgs extends z.ZodType,
-  TReturn extends z.ZodType,
-  TResolve extends ResolveFunction<TArgs, TReturn>
-> extends FunctionsDefinitionBase<TArgs, TReturn> {
-  resolve: TResolve
+  TName extends string,
+  in out TArgs extends z.ZodType,
+  TReturn extends z.ZodType
+> extends FunctionsDefinitionBase<TName, TArgs, TReturn> {
+  resolve: ResolveFunction<TArgs, TReturn>
 }
 
-export interface SynthesizedFunctionDefinition<TArgs extends z.ZodType, TReturn extends z.ZodType>
-  extends FunctionsDefinitionBase<TArgs, TReturn> {}
+export interface SynthesizedFunctionDefinition<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType>
+  extends FunctionsDefinitionBase<TName, TArgs, TReturn> {}
 
 export type FlappyFunctionDefinition<
+  TName extends string = string,
   TArgs extends z.ZodType = z.ZodType,
-  TReturn extends z.ZodType = z.ZodType,
-  TResolve extends ResolveFunction<TArgs, TReturn> = ResolveFunction<TArgs, TReturn>
-> = InvokeFunctionDefinition<TArgs, TReturn, TResolve> | SynthesizedFunctionDefinition<TArgs, TReturn>
+  TReturn extends z.ZodType = z.ZodType
+> = InvokeFunctionDefinition<TName, TArgs, TReturn> | SynthesizedFunctionDefinition<TName, TArgs, TReturn>
 
-export type FlappyFunction = SynthesizedFunction | InvokeFunction
+export type AnyFlappyFunction = AnySynthesizedFunction | AnyInvokeFunction
+type AnySynthesizedFunction = SynthesizedFunction<string, z.ZodType, z.ZodType>
+type AnyInvokeFunction = InvokeFunction<string, any, z.ZodType>
+
+export type FindFlappyFunction<TFunctions extends AnyFlappyFunction[], Name extends string> = IsNever<Name> extends true
+  ? never
+  : string extends Name
+  ? never
+  : TFunctions extends [infer First extends AnyFlappyFunction, ...infer Rest extends AnyFlappyFunction[]]
+  ? First['define']['name'] extends Name
+    ? First
+    : FindFlappyFunction<Rest, Name>
+  : never
+
+export type FlappyFunctionNames<TFunctions extends AnyFlappyFunction[]> = TFunctions[number]['define']['name']
 
 /**
  * FlappyAgent Config
  */
-export interface FlappyAgentConfig {
+export interface FlappyAgentConfig<TFunctions extends AnyFlappyFunction[] = AnyFlappyFunction[]> {
   /**
    * Which language model to use for inference.
    */
@@ -60,7 +71,7 @@ export interface FlappyAgentConfig {
   /**
    * List of functions that can be called by the agent or language model.
    */
-  functions: FlappyFunction[]
+  functions: TFunctions
 
   /**
    * Maximum number of retries when language model generation failed.

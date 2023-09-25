@@ -9,10 +9,11 @@ const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
 
 export class SynthesizedFunction<
+  TName extends string = string,
   TArgs extends z.ZodType = z.ZodType,
   TReturn extends z.ZodType = z.ZodType
-> extends FlappyFunctionBase {
-  declare define: SynthesizedFunctionDefinition<TArgs, TReturn>
+> extends FlappyFunctionBase<TName, TArgs, TReturn> {
+  declare define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
 
   public async call(agent: FlappyAgent, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
     const describe = this.define.description
@@ -84,6 +85,10 @@ export class SynthesizedFunction<
  * @param define
  * @returns
  */
-export const createSynthesizedFunction = <TArgs extends z.ZodType = z.ZodType, TReturn extends z.ZodType = z.ZodType>(
-  define: SynthesizedFunctionDefinition<TArgs, TReturn>
-): SynthesizedFunction<TArgs, TReturn> => new SynthesizedFunction(define)
+export const createSynthesizedFunction = <
+  const TName extends string,
+  const TArgs extends z.ZodType,
+  const TReturn extends z.ZodType
+>(
+  define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
+): SynthesizedFunction<TName, TArgs, TReturn> => new SynthesizedFunction(define)
