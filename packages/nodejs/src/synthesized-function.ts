@@ -24,7 +24,7 @@ export class SynthesizedFunction<
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
     const prompt = (args as any) instanceof Object ? JSON.stringify(args) : args
-    let requestMessage: ChatMLMessage[] = [
+    const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `${describe}
@@ -39,6 +39,7 @@ export class SynthesizedFunction<
         content: `user request:${prompt}\n\njson object:`
       }
     ]
+    let requestMessage = originalRequestMessage
     let retry = options?.retry ?? agent.retry
     let result: ChatMLResponse | undefined
 
@@ -58,7 +59,7 @@ export class SynthesizedFunction<
         // Otherwise, update message for repairing
         if (result?.success && result.data) {
           requestMessage = [
-            ...requestMessage,
+            ...originalRequestMessage,
             {
               role: 'assistant',
               content: result?.data ?? ''

@@ -108,7 +108,7 @@ export class FlappyAgent<
     const functions = JSON.stringify(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema))
-    let requestMessage: ChatMLMessage[] = [
+    const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
@@ -126,6 +126,7 @@ export class FlappyAgent<
         content: `Prompt: ${prompt}\n\nPlan array:`
       }
     ]
+    let requestMessage = originalRequestMessage
     let plan: any[] = []
 
     let retry = this.retry
@@ -154,7 +155,7 @@ export class FlappyAgent<
         // Otherwise, update message for repairing
         if (result?.success && result.data) {
           requestMessage = [
-            ...requestMessage,
+            ...originalRequestMessage,
             {
               role: 'assistant',
               content: result?.data ?? ''
