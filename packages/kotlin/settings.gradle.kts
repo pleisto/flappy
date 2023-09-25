@@ -6,22 +6,23 @@
  */
 
 plugins {
-    // Apply the foojay-resolver plugin to allow automatic download of JDKs
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
+  // Apply the foojay-resolver plugin to allow automatic download of JDKs
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 
-    id("com.gradle.enterprise") version ("3.15")
+  id("com.gradle.enterprise") version ("3.15")
 }
 
 rootProject.name = "flappy"
 include("flappy")
 
 gradleEnterprise {
-    if (System.getenv("CI") != null) {
-        buildScan {
-            publishAlways()
-            termsOfServiceUrl = "https://gradle.com/terms-of-service"
-            termsOfServiceAgree = "yes"
-        }
+  if (System.getenv("CI") != null) {
+    buildScan {
+      publishAlways()
+      termsOfServiceUrl = "https://gradle.com/terms-of-service"
+      termsOfServiceAgree = "yes"
     }
+  }
 }
-include("flappy:sample")
+include("sample")
+project(":sample").projectDir = file("./sample")
