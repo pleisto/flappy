@@ -6,7 +6,7 @@ plugins {
   `java-library`
 }
 
-group = "org.example"
+group = "org.example.java"
 version = "unspecified"
 
 repositories {

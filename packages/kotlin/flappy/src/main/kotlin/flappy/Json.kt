@@ -5,11 +5,11 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 
 val kotlinModule = KotlinModule.Builder()
-    .enable(KotlinFeature.StrictNullChecks)
-    .build()
+  .enable(KotlinFeature.StrictNullChecks)
+  .build()
 
 val jacksonMapper = jsonMapper {
-    addModule(kotlinModule)
+  addModule(kotlinModule)
 }
 
 
