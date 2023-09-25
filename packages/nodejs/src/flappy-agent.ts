@@ -96,7 +96,7 @@ export class FlappyAgent<
     TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
   >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
     const fn = this.findFunction(name)
-    return await fn.call(this, args)
+    return fn.call(this, args)
   }
 
   /**

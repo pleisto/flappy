@@ -2,7 +2,7 @@ import { type ZodType as z } from './flappy-type'
 import { type SynthesizedFunctionDefinition } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
-import { FlappyFunctionBase } from './flappy-function-base'
+import { FlappyFunctionBase, type FlappyFunctionOptions } from './flappy-function-base'
 import { omit } from 'radash'
 
 const extractSchema = (schema: any, prop: string): string =>
@@ -15,7 +15,11 @@ export class SynthesizedFunction<
 > extends FlappyFunctionBase<TName, TArgs, TReturn> {
   declare define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
 
-  public async call(agent: FlappyAgent, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
+  public async call(
+    agent: FlappyAgent,
+    args: z.infer<TArgs>,
+    options?: FlappyFunctionOptions
+  ): Promise<z.infer<TReturn>> {
     const describe = this.define.description
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
@@ -35,7 +39,7 @@ export class SynthesizedFunction<
         content: `user request:${prompt}\n\njson object:`
       }
     ]
-    let retry = agent.retry
+    let retry = options?.retry ?? agent.retry
     let result: ChatMLResponse | undefined
 
     while (true) {
