@@ -27,7 +27,7 @@ To begin with Flappy, select your preferred language implementation from the lis
 - Python (coming soon)
 - PHP (coming soon)
 - Java (coming soon)
-- C# (coming soon)
+- [C#](./packages/csharp/README.md)
 - Go (coming soon)
 
 ## Contributing

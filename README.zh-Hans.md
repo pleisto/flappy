@@ -25,7 +25,7 @@ Flappy 还提供了类似于 OpenAI 的代码解释器的功能。它在**生产
 - [Python](./packages/python/README.md)
 - PHP（即将推出）
 - Java（即将推出）
-- C#（即将推出）
+- [C#](./packages/csharp/README.md)
 - Go（即将推出）
 
 ## 贡献
