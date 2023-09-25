@@ -19,6 +19,10 @@
       "path": "packages/nodejs"
     },
     {
+      "name": "@pleisto/kotlin-flappy",
+      "path": "packages/kotlin"
+    },
+    {
       "name": "@pleisto/flappy-devkit",
       "path": "tools/devkit"
     }
