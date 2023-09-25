@@ -25,7 +25,7 @@ Flappyを始めるためには、以下のリストから好みの言語実装�
 - [Python](./packages/python/README.md)
 - PHP (近日公開)
 - Java (近日公開)
-- C# (近日公開)
+- [C#](./packages/csharp/README.md)
 - Go (近日公開)
 
 ## 貢献
