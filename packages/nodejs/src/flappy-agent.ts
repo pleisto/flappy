@@ -176,7 +176,6 @@ export class FlappyAgent<
     const returnStore = new Map()
     for (const step of plan) {
       const fn = this.findFunction<TNames>(step.functionName)
-      if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
       const args = Object.fromEntries(
         Object.entries(step.args).map(([k, v]) => {
           if (typeof v === 'string' && v.startsWith(STEP_PREFIX)) {
