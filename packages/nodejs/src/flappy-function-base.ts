@@ -20,6 +20,16 @@ const buildJsonSchema = (define: FlappyFunctionDefinition) => {
   }
 }
 
+export interface FlappyFunctionOptions {
+  /**
+   * Maximum number of retries when function calling failed.
+   * The default retries is 1.
+   * If the value doesn't set, it would use the agent.retry instead.
+   * Currently, it works on SynthesizedFunction only.
+   */
+  retry?: number
+}
+
 export abstract class FlappyFunctionBase<
   TName extends string = string,
   TArgs extends z.ZodType = z.ZodType,
@@ -32,5 +42,5 @@ export abstract class FlappyFunctionBase<
     this.callingSchema = buildJsonSchema(define)
   }
 
-  public abstract call(agent: FlappyAgent, args: z.infer<TArgs>): z.infer<TReturn>
+  public abstract call(agent: FlappyAgent, args: z.infer<TArgs>, options?: FlappyFunctionOptions): z.infer<TReturn>
 }
