@@ -25,4 +25,3 @@ gradleEnterprise {
     }
 }
 include("flappy:sample")
-findProject(":flappy:sample")?.name = "sample"

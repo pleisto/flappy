@@ -11,6 +11,14 @@
       "path": "examples/nodejs"
     },
     {
+      "name": "@pleisto/kotlin-example",
+      "path": "examples/kotlin"
+    },
+    {
+      "name": "@pleisto/java-example",
+      "path": "examples/java"
+    },
+    {
       "name": "@pleisto/code-interpreter",
       "path": "packages/code-interpreter"
     },
