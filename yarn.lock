@@ -334,7 +334,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pleisto/node-flappy@workspace:packages/nodejs":
+"@pleisto/node-example@workspace:examples/nodejs":
+  version: 0.0.0-use.local
+  resolution: "@pleisto/node-example@workspace:examples/nodejs"
+  dependencies:
+    "@pleisto/node-flappy": "workspace:^"
+    openai: ^4.7.0
+    ts-node: ^10.9.1
+  languageName: unknown
+  linkType: soft
+
+"@pleisto/node-flappy@workspace:^, @pleisto/node-flappy@workspace:packages/nodejs":
   version: 0.0.0-use.local
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:

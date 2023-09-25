@@ -7,6 +7,10 @@
       "path": "."
     },
     {
+      "name": "@pleisto/node-example",
+      "path": "examples/nodejs"
+    },
+    {
       "name": "@pleisto/code-interpreter",
       "path": "packages/code-interpreter"
     },
