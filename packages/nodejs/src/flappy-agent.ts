@@ -108,7 +108,7 @@ export class FlappyAgent<
     const functions = JSON.stringify(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema))
-    const requestMessage: ChatMLMessage[] = [
+    let requestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
@@ -126,8 +126,51 @@ export class FlappyAgent<
         content: `Prompt: ${prompt}\n\nPlan array:`
       }
     ]
-    const result = await this.llmPlaner.chatComplete(requestMessage)
-    const plan = this.parseComplete(result)
+    let plan: any[] = []
+
+    let retry = this.retry
+    let result: ChatMLResponse | undefined
+
+    while (true) {
+      try {
+        if (retry !== this.retry) console.debug('Attempt retry: ', this.retry - retry)
+        console.dir(requestMessage, { depth: null })
+        result = await this.llmPlaner.chatComplete(requestMessage)
+        plan = this.parseComplete(result)
+
+        // check for function calling in each step
+        for (const step of plan) {
+          const fn = this.findFunction(step.functionName)
+          if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
+        }
+
+        break
+      } catch (err) {
+        console.error(err)
+        if (retry <= 0) throw new Error('Interrupted, create plan failed. Please refer to the error message above.')
+
+        retry -= 1
+        // if the response came from chatComplete is failed, retry it directly.
+        // Otherwise, update message for repairing
+        if (result?.success && result.data) {
+          requestMessage = [
+            ...requestMessage,
+            {
+              role: 'assistant',
+              content: result?.data ?? ''
+            },
+            {
+              role: 'user',
+              content: `You response is invalid for the following reason:
+          ${(err as Error).message}
+
+          Please try again.`
+            }
+          ]
+        }
+      }
+    }
+
     zodSchema.parse(plan)
     const returnStore = new Map()
     for (const step of plan) {
