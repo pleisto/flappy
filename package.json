@@ -26,7 +26,7 @@
   "scripts": {
     "dev": "yarn workspace @pleisto/flappy-devkit dev",
     "node-example": "yarn workspace @pleisto/node-example",
-    "commit": "git add . && cz",
+    "commit": "cz",
     "postinstall": "run dev is-ci || husky install"
   },
   "commitlint": {
