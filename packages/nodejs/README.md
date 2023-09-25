@@ -1,4 +1,4 @@
-# flappy Node.js version
+# Flappy Node.js Version
 
 This package is about the Node.js version of the implementation which is written in TypeScript.
 
