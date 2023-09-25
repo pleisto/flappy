@@ -172,3 +172,8 @@ FlappyBaseAgent lawAgent = new FlappyBaseAgent(
         llm, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
 );
 ```
+
+## TODO
+
+* Support nested class field
+* Support literal type field
