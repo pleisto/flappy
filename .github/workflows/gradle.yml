@@ -50,7 +50,7 @@ jobs:
 
       - name: Run tests with Gradle
         run: >
-          ./gradlew build check
+          cd packages/kotlin && ./gradlew build check
           --stacktrace
           -Pkotlin.version=${{ matrix.kotlin-version }}
           -Pkotlin.ir.enabled=${{ matrix.kotlin-ir-enabled }}
