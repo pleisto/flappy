@@ -1,4 +1,4 @@
-# flappy Node.JS version
+# flappy Node.js version
 
 This package is about the Node.js version of the implementation which is written in TypeScript.
 
@@ -14,7 +14,7 @@ yarn add @pleisto/node-flappy
 
 You can create a plan through `node-flappy` to offer your capabilities to the flappy agent. Afterwards, the flappy agent will create and execute the plan according to your requests.
 
-#### Create an agent
+#### Create an Agent
 
 To create an agent, you'll need to provide an LLM (Large Language Model), along with the methods you want the agent to be able to use.
 
