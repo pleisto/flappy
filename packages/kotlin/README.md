@@ -18,7 +18,7 @@ implementation("com.pleisto:flappy:0.0.1")
 
 A synthesized function allows developers to format natural language using configuration fields for the LLM.
 
-In `kotlin`:
+With **Kotlin**
 
 ```kotlin
 class LawMetaArguments(
@@ -48,7 +48,7 @@ val lawGetMeta = FlappySynthesizedFunction(
 )
 ```
 
-In `Java`
+With **Java**
 
 ```java
 class LawMetaArguments {
@@ -82,7 +82,7 @@ FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
 
 In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `invokeFunction`.
 
-In `kotlin`:
+With **Kotlin**
 
 ```kotlin
 val MOCK_LAWSUIT_DATA =
@@ -114,7 +114,7 @@ val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
 )
 ```
 
-In `Java`
+With **Java**
 
 ```java
 class GetLatestLawsuitsArguments {
@@ -151,7 +151,7 @@ FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
 
 To create an agent, you need to provide an LLM (Large Language Model) along with the methods you want the agent to use.
 
-In `kotlin`:
+With **Kotlin**
 
 ```kotlin
 val llm = ChatGPT(
@@ -166,7 +166,7 @@ val lawAgent = FlappyBaseAgent(
 )
 ```
 
-In `Java`
+With **Java**
 
 ```java
 ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
