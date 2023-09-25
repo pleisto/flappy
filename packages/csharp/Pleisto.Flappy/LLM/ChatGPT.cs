@@ -14,6 +14,12 @@ namespace Pleisto.Flappy.LLM
       get; private set;
     }
 
+    /// <summary>
+    /// Calculate the default max tokens for a given model.
+    /// <see cref="https://platform.openai.com/docs/models/overview"/>
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
     private static int calcDefaultMaxTokens(string model)
     {
       if (model.Contains("16k"))
@@ -58,7 +64,7 @@ namespace Pleisto.Flappy.LLM
                       Content = i.content,
                       Role = ChatMessageRole.FromString(i.role.ToString())
                     }).ToArray(),
-        //MaxTokens = (config?.maxTokens ?? maxTokens)*2,
+        //MaxTokens = (config?.maxTokens ?? maxTokens),
         Temperature = config?.temperature,
         TopP = config?.top_p,
       });

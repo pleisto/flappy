@@ -13,6 +13,7 @@
 		<AnalysisLevel>latest</AnalysisLevel>
 		<DebugType>full</DebugType>
 		<Nullable>disable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

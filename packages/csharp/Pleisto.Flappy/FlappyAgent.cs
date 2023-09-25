@@ -8,12 +8,22 @@ using System.ComponentModel;
 
 namespace Pleisto.Flappy
 {
+  /// <summary>
+  /// Flappy Agent
+  /// </summary>
   public partial class FlappyAgent
   {
     internal readonly FlappyAgentConfig config;
     internal readonly LLMBase llm;
     internal readonly LLMBase llmPlaner;
 
+    /// <summary>
+    /// Create a flappy agent.
+    /// </summary>
+    /// <param name="config">config of flappy</param>
+    /// <param name="llm"></param>
+    /// <param name="llmPlaner"></param>
+    /// <exception cref="NullReferenceException"></exception>
     public FlappyAgent(FlappyAgentConfig config, LLMBase llm, LLMBase llmPlaner)
     {
       this.config = config;
@@ -23,29 +33,59 @@ namespace Pleisto.Flappy
       this.llmPlaner = llmPlaner ?? this.llm;
     }
 
+    /// <summary>
+    /// Get function definitions as a JSON Schema object array.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<FlappyFunction> functionsDefinitions() => from i in config.functions
                                                                  select i;
 
+    /// <summary>
+    /// Find function by name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public FlappyFunction findFunction(string name) => (from i in config.functions
                                                         where i.name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
                                                         select i).FirstOrDefault();
 
+    /// <summary>
+    ///  List all synthesized functions.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<FlappyFunction> synthesizedFunctions() => from i in config.functions
                                                                  let type = i.GetType()
                                                                  where type.BaseType == typeof(SynthesizedFunction<,>)
                                                                  select i;
 
+    /// <summary>
+    /// List all invoke functions.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<FlappyFunction> invokeFunctions() => from i in config.functions
                                                             let type = i.GetType()
                                                             where type.BaseType == typeof(InvokeFunctions<,>)
                                                             select i;
 
+    /// <summary>
+    /// Call a function by name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidProgramException"></exception>
     public async Task<object> callFunction(string name, object args)
     {
       var fn = findFunction(name) ?? throw new InvalidProgramException($"no function found: {name}");
       return await fn.sharp_syscall(this, JObject.FromObject(args));
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="prompt">user input prompt</param>
+    /// <param name="enableCot">enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.</param>
+    /// <returns></returns>
     public async Task<object> createExecutePlan(string prompt, bool enableCot = true)
     {
       var functions = new JArray(from i in functionsDefinitions()
@@ -57,10 +97,10 @@ namespace Pleisto.Flappy
 
       var requestMessage = new ChatMLMessage[]
       {
-                new ChatMLMessage
-                {
-                  role = ChatMLMessageRole.system,
-                  content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
+        new ChatMLMessage
+        {
+          role = ChatMLMessageRole.system,
+          content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
 Make as few plans as possible if it can solve the problem.
 The functions list is described using the following JSON schema array:
 {functions}
@@ -69,12 +109,12 @@ Your specified plans should be output as JSON object array and adhere to the fol
 {returnSchema}
 
 Only the listed functions are allowed to be used."
-                },
-                new ChatMLMessage
-                {
-                  role = ChatMLMessageRole.user,
-                  content = $"Prompt: {prompt}\n\nPlan array:"
-                }
+        },
+        new ChatMLMessage
+        {
+          role = ChatMLMessageRole.user,
+          content = $"Prompt: {prompt}\n\nPlan array:"
+        }
       };
       var result = await llmPlaner.chatComplete(requestMessage, null);
       if (result.success == false)
