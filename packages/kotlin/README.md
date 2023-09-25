@@ -145,7 +145,7 @@ FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
 );
 ```
 
-#### Create an agent
+#### Create an Agent
 
 To create an agent, you need to provide an LLM (Large Language Model) along with the methods you want the agent to use.
 
