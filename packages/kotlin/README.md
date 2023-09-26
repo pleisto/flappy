@@ -1,8 +1,9 @@
 # Flappy Kotlin version
 
 ![License](https://img.shields.io/github/license/pleisto/flappy)
-[![test](https://github.com/pleisto/flappy/actions/workflows/gradle.yml/badge.svg)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
-![Maven Central](https://img.shields.io/maven-central/v/com.pleisto/flappy)
+![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/gradle.yml?label=ci)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&link=https%3A%2F%2Fcentral.sonatype.com%2Fartifact%2Fcom.pleisto%2Fflappy)
+![Docs](https://img.shields.io/badge/doc-documentation?link=https%3A%2F%2Fpleisto.github.io%2Fflappy%2Fkotlin%2F)
 
 This package is the Kotlin version of the flappy implementation.
 
@@ -13,7 +14,7 @@ This package is the Kotlin version of the flappy implementation.
 Add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
-implementation("com.pleisto:flappy:0.0.1")
+implementation("com.pleisto:flappy:0.0.3")
 ```
 
 #### Create a Synthesized Function

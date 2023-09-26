@@ -49,6 +49,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_dir: kotlin
           publish_dir: packages/kotlin/flappy/build/dokka/dokkaHtml
+          keep_files: true
 
       - name: Publish to maven central
         run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
