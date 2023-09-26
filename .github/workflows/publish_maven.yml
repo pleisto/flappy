@@ -2,6 +2,15 @@ name: Gradle publish
 
 on:
   workflow_dispatch:
+    inputs:
+      type:
+        type: choice
+        description: 'type'
+        options:
+          - all
+          - github-page-only
+          - github-package-only
+          - maven-central-only
   push:
     branches: [main]
     paths:
@@ -35,6 +44,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.type == 'all' || github.event.inputs.type == 'github-page-only' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_dir: kotlin
@@ -42,6 +52,7 @@ jobs:
 
       - name: Publish to maven central
         run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.type == 'all' || github.event.inputs.type == 'maven-central-only' }}
         working-directory: packages/kotlin
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY}}
@@ -52,7 +63,10 @@ jobs:
       - name: Publish to github packages
         run: ./gradlew publishAllPublicationsToGitHubPackageRepository
         working-directory: packages/kotlin
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.type == 'all' || github.event.inputs.type == 'github-package-only' }}
         env:
-          ORG_GRADLE_PROJECT_GithubPackagesUsername: ${{vars.GPR_USERNAME}}
-          ORG_GRADLE_PROJECT_GithubPackagesPassword: ${{secrets.GPR_TOKEN}}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY}}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD}}
+          ORG_GRADLE_PROJECT_GithubPackagesUsername: ${{vars.ORG_GRADLE_PROJECT_GITHUBPACKAGESUSERNAME}}
+          ORG_GRADLE_PROJECT_GithubPackagesPassword: ${{secrets.ORG_GRADLE_PROJECT_GITHUBPACKAGESPASSWORD}}
 
