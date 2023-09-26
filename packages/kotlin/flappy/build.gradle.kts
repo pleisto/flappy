@@ -43,15 +43,6 @@ publishing {
         password = System.getenv("ORG_GRADLE_PROJECT_GithubPackagesPassword")
       }
     }
-//        https://central.sonatype.com/publishing/deployments
-//        maven {
-//            name = "Sonatype"
-//            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-//            credentials {
-//                username = project.findProperty("sonatype.user") as String? ?: System.getenv("SONATYPE_USERNAME")
-//                password = project.findProperty("sonatype.key") as String? ?: System.getenv("SONATYPE_TOKEN")
-//            }
-//        }
   }
 }
 
@@ -73,19 +64,38 @@ dependencies {
 
   implementation("io.ktor:ktor-client-java-jvm:2.3.4")
   implementation("com.aallam.openai:openai-client:3.4.1")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.+")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }
 
-//mavenPublishing {
-//    coordinates("com.pleisto", "flappy", "0.0.10")
-//
-//    pom {
-//        name.set("flappy")
-//        description.set("A description of what my library does.")
-//        url.set("https://github.com/pleisto/flappy/")
-//    }
-//}
+mavenPublishing {
+//  coordinates("com.pleisto", "flappy", "0.0.10")
+
+  pom {
+    name.set("flappy")
+    inceptionYear.set("2023")
+    description.set("A library developed to streamline the creation of AI applications and agents that use Large Language Models (LLMs).")
+    url.set("https://github.com/pleisto/flappy")
+    licenses {
+      license {
+        name.set("The Apache License, Version 2.0")
+        url.set("https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE")
+      }
+    }
+
+    developers {
+      developer {
+        id.set("clszzyh")
+        name.set("Yuhang Shi")
+        url.set("https://github.com/clszzyh")
+      }
+    }
+
+    scm {
+      url.set("https://github.com/pleisto/flappy")
+    }
+  }
+}
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
