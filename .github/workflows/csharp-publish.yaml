@@ -3,9 +3,10 @@ name: CSharp Nuget Publish
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    #branches: [ main ]
     path:
       - "**/*.csproj"
+      - ".github/workflows/csharp-publish.yaml"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
