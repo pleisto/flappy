@@ -5,13 +5,19 @@ import flappy.annotations.FlappyField
 
 class FieldSubTypeProperty(val type: String)
 
+
+sealed interface FieldPropertyOrProperties {
+  val description: String?
+  val type: String
+}
+
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class FieldProperty(
-  val type: String,
-  val description: String? = null,
+  override val type: String,
+  override val description: String? = null,
   val enum: List<String>? = null,
   val items: FieldSubTypeProperty? = null
-)
+) : FieldPropertyOrProperties
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class FieldProperties(
@@ -19,14 +25,15 @@ class FieldProperties(
 
   val required: List<String>? = null,
 
-  val description: String? = null
-) {
-  val type = FieldType.OBJECT.type
+  override val description: String? = null
+) : FieldPropertyOrProperties {
+  override val type = FieldType.OBJECT.type
 }
 
+
 class FunctionProperties(
-  val args: FieldProperties,
-  val returnType: FieldProperties
+  val args: FieldPropertyOrProperties,
+  val returnType: FieldPropertyOrProperties
 )
 
 class FunctionParameters(
@@ -43,7 +50,7 @@ class FunctionSchema(
 
 interface FieldSchema {
   fun size(): Int
-  fun buildSchema(description: String? = null): FieldProperties
+  fun buildSchema(description: String? = null): FieldPropertyOrProperties
 }
 
 fun buildFieldSchema(klass: Class<*>): FieldSchema {
@@ -59,7 +66,7 @@ class FieldMetadataSchema(private val data: List<FieldMetadata>) : FieldSchema {
     if (data.isEmpty()) throw CompileException("field is empty")
   }
 
-  override fun buildSchema(description: String?): FieldProperties {
+  override fun buildSchema(description: String?): FieldPropertyOrProperties {
     return FieldProperties(
       properties = data.associate { Pair(it.name, it.toFieldProperty()) },
       required = data.filter { !it.optional }.map { it.name },
