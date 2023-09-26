@@ -42,4 +42,4 @@ jobs:
           cd packages/csharp;
           dotnet build -c Release;
           echo "Packages: $(find -type f | grep nupkg$)"
-          nuget push $(find -type f | grep nupkg$)
+          nuget push $(find -type f | grep nupkg$) -Source https://api.nuget.org/v3/index.json
