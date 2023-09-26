@@ -4,9 +4,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
-class ReflectTest {
+class SchemaTest {
+
   @Test
-  fun reflect() {
+  fun schema() {
     data class Foo(val foo: String)
 
     val foo = Foo("abc")
