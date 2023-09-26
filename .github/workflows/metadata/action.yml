@@ -1,0 +1,38 @@
+name: 'Metadata'
+outputs:
+  sha_short:
+    description: "Git short rev"
+    value: ${{ steps.git_rev.outputs.sha_short }}
+  build_date:
+    description: "Build date"
+    value: ${{ steps.build_date.outputs.build_date }}
+  kotlin_version:
+    description: "Kotlin Version"
+    value: ${{ steps.version.outputs.kotlin_version }}
+  git_head_message:
+    description: "Head message"
+    value: ${{ steps.message.outputs.git_head_message }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set git_rev outputs
+      id: git_rev
+      shell: bash
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Set message
+      id: message
+      shell: bash
+      # https://stackoverflow.com/a/74137121
+      run: echo "git_head_message=$(git log -1 --no-merges --pretty=%B |  tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+    - name: Set build_date outputs
+      id: build_date
+      shell: bash
+      run: echo "build_date=$(date +%F_%H-%M)" >> $GITHUB_OUTPUT
+
+    - name: Set Kotlin VERSION outputs
+      id: kotlin_version
+      shell: bash
+      run: echo "kotlin_version=$(echo -n $(awk -F'=' '/version/ {print $2}' packages/kotlin/flappy/gradle.properties))" >> $GITHUB_OUTPUT
