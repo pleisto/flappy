@@ -40,4 +40,4 @@ jobs:
         run: |
           cd packages/csharp;
           dotnet build -c Release;
-          dotnet push $(find -type f | grep nupkg$)
+          dotnet nuget push $(find -type f | grep nupkg$)
