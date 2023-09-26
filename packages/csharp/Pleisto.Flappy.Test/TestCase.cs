@@ -4,6 +4,7 @@ namespace Pleisto.Flappy.Test
 {
   public class TestCase
   {
+    bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
     /// <summary>
     /// Case test of Law
     /// </summary>
@@ -11,8 +12,12 @@ namespace Pleisto.Flappy.Test
     [Test]
     public async Task LawTestAsync()
     {
-      LawProgram.ConsoleRun = false;
-      await LawProgram.Main();
+      if (NoGptTest == false)
+      {
+        LawProgram.ConsoleRun = false;
+        await LawProgram.Main();
+      }
     }
   }
+
 }

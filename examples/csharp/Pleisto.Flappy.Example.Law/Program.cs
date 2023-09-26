@@ -22,7 +22,7 @@ namespace Pleisto.Flappy.Test.Law
           ApiVersion = "v1",
         }, "gpt-3.5-turbo", null)
         {
-          DebugGPT=true
+          DebugGPT = true
         };
 
         var lawAgent = new FlappyAgent(new FlappyAgentConfig
