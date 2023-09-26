@@ -36,8 +36,9 @@ jobs:
             ${{ runner.os }}-nuget
 
       - uses: actions/checkout@v4
-      - name: dotnet test
+      - name: dotnet publish
         run: |
           cd packages/csharp;
           dotnet build -c Release;
-          dotnet nuget push $(find -type f | grep nupkg$)
+          dotnet nuget push $(find -type f | grep nupkg$) \
+            --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
