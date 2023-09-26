@@ -9,7 +9,7 @@ import { InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
-import { ZodType as z } from './flappy-type'
+import { z } from './flappy-type'
 import { zodToCleanJsonSchema } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -96,7 +96,7 @@ export class FlappyAgent<
     TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
   >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
     const fn = this.findFunction(name)
-    return fn.call(this, args)
+    return await fn.call(this, args)
   }
 
   /**

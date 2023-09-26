@@ -1,4 +1,4 @@
-export { z as ZodType, ZodSchema } from 'zod'
+export * as z from 'zod'
 
 export type Writable<T> = { -readonly [P in keyof T]: T[P] }
 

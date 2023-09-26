@@ -1,4 +1,4 @@
-import { type IsNever, type Writable, type ZodType as z } from './flappy-type'
+import { type IsNever, type Writable, type z } from './flappy-type'
 import { type SynthesizedFunction } from './synthesized-function'
 import { type InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
