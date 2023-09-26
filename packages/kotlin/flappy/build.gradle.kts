@@ -68,9 +68,8 @@ dependencies {
 
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
   implementation(kotlin("reflect"))
-//    implementation("com.github.kittinunf.fuel:fuel:3.0.0-alpha1")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
 
   implementation("io.ktor:ktor-client-java-jvm:2.3.4")
   implementation("com.aallam.openai:openai-client:3.4.1")

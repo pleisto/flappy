@@ -8,6 +8,8 @@ import flappy.llms.ChatGPTConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Law {
   public static final String LAW_EXECUTE_PLAN_PROMPT = "Find the latest case with the plaintiff being families of victims and return its metadata.";
@@ -27,7 +29,7 @@ public class Law {
     LawMetaReturn.class
   );
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
     ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
@@ -37,19 +39,19 @@ public class Law {
     );
 
 
-    lawAgent.executePlan(LAW_EXECUTE_PLAN_PROMPT, CoroutineCallback.Companion.call((output, error) -> {
-      System.out.println("ok");
-      System.out.println(output);
-      System.out.println(error);
-      System.out.println("####");
-    }));
+    Future<LawMetaReturn> future = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+    LawMetaReturn ret = future.get();
+
+    System.out.println("################# RESULT ################");
+    System.out.println(ret.getDefendant());
+    System.out.println("################# RESULT ################");
   }
 
-  enum Verdict {
+  public enum Verdict {
     Innocent, Guilty, Unknown
   }
 
-  static class LawMetaReturn {
+  public static class LawMetaReturn {
     @FlappyField
     Verdict verdict;
 

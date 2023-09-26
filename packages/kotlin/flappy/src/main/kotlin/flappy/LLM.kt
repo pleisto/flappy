@@ -1,5 +1,9 @@
 package flappy
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
 interface FlappyLLM {
@@ -36,4 +40,10 @@ abstract class FlappyLLMBase {
     config: FlappyLLM.GenerateConfig? = null
   ): FlappyLLM.Response
 
+  @OptIn(DelicateCoroutinesApi::class)
+  fun chatCompleteAsync(
+    messages: List<FlappyChatMessage>,
+    source: String,
+    config: FlappyLLM.GenerateConfig? = null
+  ): CompletableFuture<FlappyLLM.Response> = GlobalScope.future { chatComplete(messages, source, config) }
 }

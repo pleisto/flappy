@@ -1,12 +1,13 @@
 package flappy.examples;
 
-import flappy.CoroutineCallback;
 import flappy.FlappyBaseAgent;
 import flappy.FlappyLLM;
 import flappy.llms.Dummy;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static flappy.AgentKt.AGENT_SOURCE;
 import static org.example.java.Law.*;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LawTestJava {
   @Test
-  public void law() {
+  public void law() throws ExecutionException, InterruptedException {
     Dummy dummy = new Dummy(((_message, source, _cfg) -> {
       switch (source) {
         case AGENT_SOURCE:
@@ -60,9 +61,11 @@ public class LawTestJava {
       dummy, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
     );
 
-    lawAgent.executePlan(LAW_EXECUTE_PLAN_PROMPT, CoroutineCallback.Companion.call((output, error) -> {
-      assertEquals(2, 1);
-    }));
+    Future<LawMetaReturn> returnFuture = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+
+    LawMetaReturn ret = returnFuture.get();
+
+    assertEquals(Verdict.Unknown, ret.getVerdict());
   }
 
 }

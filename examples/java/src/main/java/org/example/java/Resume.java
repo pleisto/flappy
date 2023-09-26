@@ -8,6 +8,8 @@ import flappy.llms.ChatGPTConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Resume {
   static final String MOCK_RESUME_DATA = """
@@ -44,7 +46,9 @@ public class Resume {
     - 学士学位，计算机科学，北京大学，2012年
     """;
 
-  public static void main(String[] args) {
+  static final String RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据";
+
+  public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
     ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
@@ -69,12 +73,13 @@ public class Resume {
       llm, List.of(resumeGetMeta, getFrontendEngineerResumes)
     );
 
-    resumeAgent.executePlan("找到前端工程师的简历并返回他的元数据", CoroutineCallback.Companion.call((output, error) -> {
-      System.out.println("ok");
-      System.out.println(output);
-      System.out.println(error);
-      System.out.println("####");
-    }));
+
+    Future<ResumeMetaReturn> future = resumeAgent.executePlanAsync(RESUME_EXECUTE_PLAN_PROMPT);
+    ResumeMetaReturn ret = future.get();
+
+    System.out.println("################# RESULT ################");
+    System.out.println(ret.name);
+    System.out.println("################# RESULT ################");
   }
 
   static class GetResumesReturn {

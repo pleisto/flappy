@@ -3,6 +3,10 @@ package flappy
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.readValue
 import flappy.annotations.FlappyField
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
 const val AGENT_SOURCE = "#agent"
@@ -99,7 +103,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
       logger.info("before call $id $functionName $newArgsString")
 
-      val result = callFunction(functionName, newArgsString)
+      val result = callFunction<Any>(functionName, newArgsString)
 
       logger.info("after call $id $functionName ${jacksonMapper.writeValueAsString(result)}")
 
@@ -111,6 +115,10 @@ class FlappyBaseAgent @JvmOverloads constructor(
     @Suppress("UNCHECKED_CAST")
     return result as R
   }
+
+  // https://stackoverflow.com/a/52887677/20030734
+  @OptIn(DelicateCoroutinesApi::class)
+  fun <R> executePlanAsync(prompt: String): CompletableFuture<R> = GlobalScope.future { executePlan(prompt) }
 
   private fun fetchStepArgs(value: Any, resultStore: ResultStore): Any {
     if (value is String && value.startsWith(STEP_PREFIX)) {
@@ -144,10 +152,14 @@ class FlappyBaseAgent @JvmOverloads constructor(
     return castSteps(body)
   }
 
-  private suspend fun callFunction(name: String, args: String): Any {
+  private suspend fun <R> callFunction(name: String, args: String): R {
     val f = this.findFunction(name)
-    return f.call(args, this)
+    return f.call(args, this) as R
   }
+
+  @OptIn(DelicateCoroutinesApi::class)
+  fun <R> callFunctionAsync(name: String, args: String): CompletableFuture<R> =
+    GlobalScope.future { callFunction(name, args) }
 }
 
 
