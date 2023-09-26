@@ -1,0 +1,12 @@
+{
+  "name": "@pleisto/node-example-resume",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "@pleisto/node-flappy": "workspace:^",
+    "openai": "^4.7.0",
+    "ts-node": "^10.9.1"
+  }
+}
