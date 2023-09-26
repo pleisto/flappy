@@ -1,0 +1,58 @@
+name: Gradle publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/kotlin/flappy/gradle.properties'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish Maven
+    timeout-minutes: 30
+    environment:
+      name: Maven
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Publish document
+        run: ./gradlew dokkaHtml
+        working-directory: packages/kotlin
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_dir: kotlin
+          publish_dir: packages/kotlin/flappy/build/dokka/dokkaHtml
+
+      - name: Publish to maven central
+        run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
+        working-directory: packages/kotlin
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY}}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD}}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD}}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME}}
+
+      - name: Publish to github packages
+        run: ./gradlew publishAllPublicationsToGitHubPackageRepository
+        working-directory: packages/kotlin
+        env:
+          ORG_GRADLE_PROJECT_GithubPackagesUsername: ${{vars.GPR_USERNAME}}
+          ORG_GRADLE_PROJECT_GithubPackagesPassword: ${{secrets.GPR_TOKEN}}
+

@@ -1,6 +1,8 @@
 # Flappy Kotlin version
 
-[![Gradle test](https://github.com/pleisto/flappy/actions/workflows/gradle.yml/badge.svg)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
+![License](https://img.shields.io/github/license/pleisto/flappy)
+[![test](https://github.com/pleisto/flappy/actions/workflows/gradle.yml/badge.svg)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
+![Maven Central](https://img.shields.io/maven-central/v/com.pleisto/flappy)
 
 This package is the Kotlin version of the flappy implementation.
 
