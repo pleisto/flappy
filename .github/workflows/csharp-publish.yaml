@@ -39,7 +39,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: dotnet publish
         run: |
-          cd packages/csharp;
-          dotnet build -c Release;
-          echo "Packages: $(find -type f | grep nupkg$)"
-          nuget push $(find -type f | grep nupkg$) -Source https://api.nuget.org/v3/index.json
+          cd packages/csharp
+          dotnet build -c Release
+          find -type f | grep nupkg$ | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }}
+          done
