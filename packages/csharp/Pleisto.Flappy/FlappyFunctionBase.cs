@@ -1,50 +1,80 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema.Generation;
 using Pleisto.Flappy.Interfaces;
-using System.Diagnostics.CodeAnalysis;
+using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy
 {
-  public abstract class FlappyFunctionBase<TArgs, TReturn> : FlappyFunction
+  /// <summary>
+  /// Basic of flappy function
+  /// </summary>
+  /// <typeparam name="TArgs"></typeparam>
+  /// <typeparam name="TReturn"></typeparam>
+  public abstract class FlappyFunctionBase<TArgs, TReturn> : IFlappyFunction
       where TArgs : class
       where TReturn : class
   {
-    public InvokeFunctionDefinition<TArgs, TReturn> define;
-    public JObject callingSchema { get; set; }
+    /// <summary>
+    /// Function define
+    /// </summary>
+    public InvokeFunctionDefinition<TArgs, TReturn> Define;
 
-    public string name => define.name;
+    /// <summary>
+    /// Function calling schema
+    /// </summary>
+    public JObject CallingSchema { get; private set; }
 
+    /// <summary>
+    /// Name of function
+    /// </summary>
+    public string Name => Define.Name;
+
+    /// <summary>
+    /// Create Flappy Function Base
+    /// </summary>
+    /// <param name="define">Function Definition</param>
     public FlappyFunctionBase(InvokeFunctionDefinition<TArgs, TReturn> define)
     {
-      this.define = define;
-      this.callingSchema = buildJsonSchema(define);
+      Define = define;
+      CallingSchema = BuildJsonSchema(define);
     }
 
-    [SuppressMessage("Maintainability", "CA1507:使用 nameof 表达符号名称", Justification = "<挂起>")]
-    private static JObject buildJsonSchema(InvokeFunctionDefinition<TArgs, TReturn> define)
+    private static JObject BuildJsonSchema(InvokeFunctionDefinition<TArgs, TReturn> define)
     {
       var schemaGenerator = new JSchemaGenerator();
       return new JObject
       {
-        ["name"] = define.name,
-        ["description"] = define.description,
+        ["name"] = define.Name,
+        ["description"] = define.Description,
         ["parameters"] = new JObject
         {
           ["type"] = "object",
           ["properties"] = new JObject
           {
-            ["args"] = JObject.FromObject(schemaGenerator.Generate(define.args.GetType())),
-            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(define.returnType.GetType()))
+            ["args"] = JObject.FromObject(schemaGenerator.Generate(define.Args.GetType())),
+            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(define.ReturnType.GetType()))
           }
         }
       };
     }
 
-    public abstract Task<TReturn> call(FlappyAgent agent, TArgs args);
+    /// <summary>
+    /// Function call abstract
+    /// </summary>
+    /// <param name="agent">FlappyAgent caller</param>
+    /// <param name="args">Calling argument</param>
+    /// <returns></returns>
+    public abstract Task<TReturn> Call(FlappyAgent agent, TArgs args);
 
-    public async Task<JObject> sharp_syscall(FlappyAgent agent, JObject args)
+    /// <summary>
+    /// System call method
+    /// </summary>
+    /// <param name="agent">FlappyAgent</param>
+    /// <param name="args">Calling argument (JsonObject)</param>
+    /// <returns>Functions return (JsonObject)</returns>
+    public async Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args)
     {
-      return JObject.FromObject(await call(agent, args.ToObject<TArgs>()));
+      return JObject.FromObject(await Call(agent, args.ToObject<TArgs>(JsonExtensions.jsonSerializer)),JsonExtensions.jsonSerializer);
     }
   }
 }

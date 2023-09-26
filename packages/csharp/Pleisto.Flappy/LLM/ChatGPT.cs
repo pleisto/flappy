@@ -7,9 +7,12 @@ namespace Pleisto.Flappy.LLM
   /// <summary>
   /// LLM of ChatGPT
   /// </summary>
-  public class ChatGPT : LLMBase
+  public class ChatGPT : ILLMBase
   {
-    public int maxTokens
+    /// <summary>
+    /// Max Tokens
+    /// </summary>
+    public int MaxTokens
     {
       get; private set;
     }
@@ -20,7 +23,7 @@ namespace Pleisto.Flappy.LLM
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    private static int calcDefaultMaxTokens(string model)
+    private static int CalcDefaultMaxTokens(string model)
     {
       if (model.Contains("16k"))
         return 16385;
@@ -31,11 +34,20 @@ namespace Pleisto.Flappy.LLM
       return 4096;
     }
 
+    /// <summary>
+    /// ChatGPT LLM
+    /// </summary>
+    /// <param name="client">OpenAI Client</param>
+    /// <param name="model">Used model</param>
+    /// <param name="maxTokens">
+    /// Max Tokens null by AutoDetect
+    /// <see cref="https://platform.openai.com/docs/models/overview"/>
+    /// </param>
     public ChatGPT(OpenAIAPI client, string model, int? maxTokens)
     {
       this.client = client;
       this.model = model;
-      this.maxTokens = maxTokens ?? calcDefaultMaxTokens(model);
+      this.MaxTokens = maxTokens ?? CalcDefaultMaxTokens(model);
     }
 
     private readonly string model;
@@ -46,13 +58,19 @@ namespace Pleisto.Flappy.LLM
     /// </summary>
     public bool DebugGPT { get; set; } = false;
 
-    public virtual async Task<ChatMLResponse> chatComplete(ChatMLMessage[] message, GenerateConfig config)
+    /// <summary>
+    /// Run ChatGPT Complete
+    /// </summary>
+    /// <param name="message">Request Message</param>
+    /// <param name="config">Config</param>
+    /// <returns></returns>
+    public virtual async Task<ChatMLResponse> ChatComplete(ChatMLMessage[] message, GenerateConfig config)
     {
       if (DebugGPT)
         foreach (var i in message)
         {
-          Console.WriteLine($"=========== Role:{i.role} ============");
-          Console.WriteLine(i.content);
+          Console.WriteLine($"=========== Role:{i.Role} ============");
+          Console.WriteLine(i.Content);
           Console.WriteLine($"===============END====================");
         }
       var resp = await client.Chat.CreateChatCompletionAsync(new ChatRequest
@@ -61,12 +79,12 @@ namespace Pleisto.Flappy.LLM
         Messages = (from i in message
                     select new ChatMessage
                     {
-                      Content = i.content,
-                      Role = ChatMessageRole.FromString(i.role.ToString())
+                      Content = i.Content,
+                      Role = ChatMessageRole.FromString(i.Role.ToString())
                     }).ToArray(),
         //MaxTokens = (config?.maxTokens ?? maxTokens),
-        Temperature = config?.temperature,
-        TopP = config?.top_p,
+        Temperature = config?.Temperature,
+        TopP = config?.Top_P,
       });
 
       if (DebugGPT)
@@ -75,16 +93,16 @@ namespace Pleisto.Flappy.LLM
       {
         return new ChatMLResponse
         {
-          success = true,
-          data = resp.Choices[0].Message.Content
+          Success = true,
+          Data = resp.Choices[0].Message.Content
         };
       }
       else
       {
         return new ChatMLResponse
         {
-          success = false,
-          data = null
+          Success = false,
+          Data = null
         };
       }
     }

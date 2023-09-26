@@ -14,6 +14,7 @@
 		<DebugType>full</DebugType>
 		<Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>IDE1006</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -62,6 +62,9 @@ csharp_style_expression_bodied_local_functions = false:silent
 csharp_style_conditional_delegate_call = true:suggestion
 csharp_style_var_for_built_in_types = false:silent
 
+# CS1584: XML 注释中有语法错误的 cref 特性
+dotnet_diagnostic.CS1584.severity = none
+
 [*.vb]
 #### 命名样式 ####
 

@@ -5,15 +5,27 @@ namespace Pleisto.Flappy
 {
   public partial class FlappyAgent
   {
+    /// <summary>
+    /// Step Prefix
+    /// </summary>
     public const string STEP_PREFIX = "%@_";
 
-    public static readonly Regex STEP_PREFIX_REGEX = new Regex("^%(.*)_");
-
+    /// <summary>
+    /// Resolve function delegate
+    /// </summary>
+    /// <typeparam name="TArgs"></typeparam>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <param name="args"></param>
+    /// <returns></returns>
     public delegate Task<TReturn> ResolveFunction<TArgs, TReturn>(TArgs args)
       where TArgs : class
       where TReturn : class;
 
-    public static JSchemaGenerator GetSchemaGenerator()
+    /// <summary>
+    /// Get Schema Generator
+    /// </summary>
+    /// <returns></returns>
+    internal static JSchemaGenerator GetSchemaGenerator()
     {
       var ret = new JSchemaGenerator();
       ret.GenerationProviders.Add(new StringEnumGenerationProvider());

@@ -28,7 +28,7 @@ namespace Pleisto.Flappy.Test
     [Test]
     public void GenerateJsonSchema()
     {
-      Assert.Pass(FlappyAgent.lanOutputSchema(true).ToString());
+      Assert.Pass(FlappyAgent.GetLanOutputSchema(true).ToString());
     }
   }
 }

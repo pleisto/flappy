@@ -8,16 +8,16 @@ namespace Pleisto.Flappy.LLM.Interfaces
     /// <summary>
     /// System
     /// </summary>
-    system,
+    System,
 
     /// <summary>
     /// User
     /// </summary>
-    user,
+    User,
 
     /// <summary>
     /// Assistant
     /// </summary>
-    assistant,
+    Assistant,
   }
 }

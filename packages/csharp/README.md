@@ -9,7 +9,7 @@ This package is the Kotlin version of the flappy implementation.
 
 
 ### Create a Synthesized Function
-
+ * for csharp, the function return type and function argument type must be convert to json
 ```csharp
     class getMeta_Args
     {

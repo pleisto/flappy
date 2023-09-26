@@ -1,6 +1,11 @@
 namespace Pleisto.Flappy.Interfaces
 {
-  public interface FlappyFunctionDefinition<TArgs, TReturn>
+  /// <summary>
+  /// Flappy Function Definition
+  /// </summary>
+  /// <typeparam name="TArgs">Argument of Function Call</typeparam>
+  /// <typeparam name="TReturn">Function Return</typeparam>
+  public interface IFlappyFunctionDefinition<TArgs, TReturn>
     where TArgs : new()
     where TReturn : new()
   {

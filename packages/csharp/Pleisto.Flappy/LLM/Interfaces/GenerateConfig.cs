@@ -1,9 +1,23 @@
 namespace Pleisto.Flappy.LLM.Interfaces
 {
+  /// <summary>
+  /// LLM Generation Config
+  /// </summary>
   public class GenerateConfig
   {
-    public int maxTokens { get; set; }
-    public int temperature { get; set; }
-    public int top_p { get; set; }
+    /// <summary>
+    /// MaxTokens
+    /// </summary>
+    public int MaxTokens { get; set; }
+
+    /// <summary>
+    /// Temperature
+    /// </summary>
+    public int Temperature { get; set; }
+
+    /// <summary>
+    /// Top P
+    /// </summary>
+    public int Top_P { get; set; }
   }
 }
