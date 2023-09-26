@@ -2,9 +2,16 @@ using LawProgram = Pleisto.Flappy.Test.Law.Program;
 
 namespace Pleisto.Flappy.Test
 {
+  /// <summary>
+  /// ChatGPT Test Case
+  /// </summary>
   public class TestCase
   {
-    bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
+    /// <summary>
+    /// Disable GPT Test Case on environment set
+    /// </summary>
+    private bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
+
     /// <summary>
     /// Case test of Law
     /// </summary>
@@ -19,5 +26,4 @@ namespace Pleisto.Flappy.Test
       }
     }
   }
-
 }

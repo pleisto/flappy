@@ -2,14 +2,8 @@ name: CSharp Nuget Test
 
 on:
   workflow_dispatch:
-  push:
-    path:
-      - "**/*.cs"
-      - "**/*.csproj"
-      - "**/*.sln"
-      - "examples/csharp/**/*"
-      - "packages/csharp/**/*"
-      - ".github/workflows/csharp-*"
+  release:
+    type: create
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -26,6 +20,7 @@ jobs:
             3.1
             6.0
             7.0
+          source-url: https://nuget.pkg.github.com/pleisto/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -39,8 +34,7 @@ jobs:
 
       - uses: actions/checkout@v4
       - name: dotnet test
-        env:
-          OPENAI_API_KEY: 
         run: |
           cd packages/csharp;
-          dotnet test -e NO_GPT_TEST=true
+          dotnet build -c Release;
+          dotnet push $(find -type f | grep nupkg$)
