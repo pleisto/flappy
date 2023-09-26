@@ -9,6 +9,7 @@ on:
       - "**/*.sln"
       - "examples/csharp/**/*"
       - "packages/csharp/**/*"
+      - ".github/workflows/csharp-*"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
