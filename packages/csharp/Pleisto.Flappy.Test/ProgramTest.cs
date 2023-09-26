@@ -31,4 +31,5 @@ namespace Pleisto.Flappy.Test
       Assert.Pass(FlappyAgent.GetLanOutputSchema(true).ToString());
     }
   }
+
 }

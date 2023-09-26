@@ -1,9 +1,11 @@
-name: CSharp Nuget Test
+name: CSharp Nuget Publish
 
 on:
   workflow_dispatch:
-  release:
-    type: create
+  push:
+    branches: [ main ]
+    path:
+      - "**/*.csproj"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

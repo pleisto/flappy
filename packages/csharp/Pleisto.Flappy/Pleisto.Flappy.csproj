@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.0.1-alpha</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
