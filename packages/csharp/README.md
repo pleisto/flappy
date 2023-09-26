@@ -6,6 +6,9 @@ This package is the Kotlin version of the flappy implementation.
 
 ### Installation
 
+```
+Install-Package Pleisto.Flappy
+```
 
 
 ### Create a Synthesized Function

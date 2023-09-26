@@ -20,7 +20,10 @@ namespace Pleisto.Flappy.Test.Law
           Auth = new APIAuthentication(apiKey: OpenApiKey),
           ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
           ApiVersion = "v1",
-        }, "gpt-3.5-turbo", null);
+        }, "gpt-3.5-turbo", null)
+        {
+          DebugGPT=true
+        };
 
         var lawAgent = new FlappyAgent(new FlappyAgentConfig
         {

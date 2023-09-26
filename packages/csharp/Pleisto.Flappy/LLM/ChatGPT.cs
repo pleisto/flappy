@@ -80,7 +80,7 @@ namespace Pleisto.Flappy.LLM
                     select new ChatMessage
                     {
                       Content = i.Content,
-                      Role = ChatMessageRole.FromString(i.Role.ToString())
+                      Role = ChatMessageRole.FromString(i.Role.ToString().ToLower())
                     }).ToArray(),
         //MaxTokens = (config?.maxTokens ?? maxTokens),
         Temperature = config?.Temperature,

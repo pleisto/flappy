@@ -4,7 +4,7 @@ using System.Text;
 namespace Pleisto.Flappy.Utils
 {
   /// <summary>
-  /// Program extensions
+  /// Program extensions of Json
   /// </summary>
   internal static class JsonExtensions
   {
