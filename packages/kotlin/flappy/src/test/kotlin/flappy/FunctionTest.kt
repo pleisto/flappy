@@ -1,8 +1,8 @@
 package flappy
 
-import kotlinx.coroutines.runBlocking
 import flappy.annotations.FlappyField
 import flappy.llms.Dummy
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -74,11 +74,6 @@ class FunctionTest {
   )
 
   @Test
-  fun functionCheck() {
-    assertEquals(sampleFunction.argsSchema.size(), 2)
-  }
-
-  @Test
   fun argsSchemaPropertiesString() {
     assertEquals(
       sampleFunction.argsSchemaPropertiesString,
@@ -135,18 +130,13 @@ class FunctionTest {
       val arg2: List<String>?
     )
 
-    class GetLatestLawsuitsReturn(
-      @FlappyField
-      val output: String
-    )
-
 
     val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
       name = "getLatestLawsuitsByPlaintiff",
       description = "Get the latest lawsuits by plaintiff.",
       args = GetLatestLawsuitsArguments::class.java,
-      returnType = GetLatestLawsuitsReturn::class.java,
-      invoker = { args, _ -> GetLatestLawsuitsReturn(args.plaintiff) }
+      returnType = String::class.java,
+      invoker = { args, _ -> args.plaintiff }
     )
 
     val lawAgent = FlappyBaseAgent(
@@ -157,7 +147,7 @@ class FunctionTest {
 
     runBlocking {
       val result = lawGetLatestLawsuitsByPlaintiff.call("""{"plaintiff":"foo", "arg1":true}""", lawAgent)
-      assertEquals(result.output, "foo")
+      assertEquals(result, "foo")
     }
 
   }

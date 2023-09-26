@@ -177,4 +177,3 @@ FlappyBaseAgent lawAgent = new FlappyBaseAgent(
 ## TODO
 
 * Support nested class field
-* Support literal type field

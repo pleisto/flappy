@@ -55,18 +55,13 @@ class GetLatestLawsuitsArguments(
   val arg2: List<String>?
 )
 
-class GetLatestLawsuitsReturn(
-  @FlappyField
-  val output: String
-)
-
 
 val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
   name = "getLatestLawsuitsByPlaintiff",
   description = "Get the latest lawsuits by plaintiff.",
   args = GetLatestLawsuitsArguments::class.java,
-  returnType = GetLatestLawsuitsReturn::class.java,
-  invoker = { _, _ -> GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA) }
+  returnType = String::class.java,
+  invoker = { _, _ -> MOCK_LAWSUIT_DATA }
 )
 
 const val LAW_EXECUTE_PLAN_PROMPT =

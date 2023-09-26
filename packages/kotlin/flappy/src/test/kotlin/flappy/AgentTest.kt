@@ -43,7 +43,7 @@ class AgentTest {
     inferenceLLM = llm,
     functions = listOf(sampleFunction)
   )
-  
+
   @Test
   fun functionCheck() {
 

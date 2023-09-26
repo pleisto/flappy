@@ -19,8 +19,8 @@ public class Law {
     "getLatestLawsuitsByPlaintiff",
     "Get the latest lawsuits by plaintiff.",
     GetLatestLawsuitsArguments.class,
-    GetLatestLawsuitsReturn.class,
-    (a, agent, $completion) -> new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)
+    String.class,
+    (a, agent, $completion) -> MOCK_LAWSUIT_DATA
   );
   public static FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
     "getMeta",
@@ -94,23 +94,6 @@ public class Law {
 
     public void setJudgeOptions(List<String> judgeOptions) {
       this.judgeOptions = judgeOptions;
-    }
-  }
-
-  static class GetLatestLawsuitsReturn {
-    @FlappyField
-    String output;
-
-    public GetLatestLawsuitsReturn(String output) {
-      this.output = output;
-    }
-
-    public String getOutput() {
-      return output;
-    }
-
-    public void setOutput(String output) {
-      this.output = output;
     }
   }
 

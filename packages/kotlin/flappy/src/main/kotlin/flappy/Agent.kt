@@ -37,12 +37,12 @@ class FlappyBaseAgent @JvmOverloads constructor(
     val thought: String
   )
 
-  private val stepSchema = buildFieldSchema(BaseStep::class.java).buildSchema("Base step.")
+  private val stepSchema = buildFieldProperties(BaseStep::class.java, "Base step.")
 
   val functionDefinitionString: String = jacksonMapper.writeValueAsString(functionsDefinition)
   val lanOutputSchemaString: String = jacksonMapper.writeValueAsString(object {
     val items = stepSchema
-    val type = FieldType.LIST.type
+    val type = FieldType.LIST.typeName
   })
 
   init {

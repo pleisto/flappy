@@ -13,13 +13,10 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
 ) {
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
 
-  val argsSchema = buildFieldSchema(this.args)
-  val returnSchema = buildFieldSchema(this.returnType)
-
   val source = "#function#$name"
 
-  private val argsSchemaProperties = argsSchema.buildSchema("Function arguments")
-  private val returnTypeSchemaProperties = returnSchema.buildSchema("Function return type")
+  private val argsSchemaProperties = buildFieldProperties(this.args, "Function arguments")
+  private val returnTypeSchemaProperties = buildFieldProperties(this.returnType, "Function return type")
 
   val argsSchemaPropertiesString: String = jacksonMapper.writeValueAsString(argsSchemaProperties)
   val returnTypeSchemaPropertiesString: String = jacksonMapper.writeValueAsString(returnTypeSchemaProperties)

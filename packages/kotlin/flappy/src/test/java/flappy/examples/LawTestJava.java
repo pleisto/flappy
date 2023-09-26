@@ -35,7 +35,7 @@ public class LawTestJava {
                   "id": 2,
                   "functionName": "getMeta",
                   "args": {
-                    "lawsuit": "%@_1.output"
+                    "lawsuit": "%@_1"
                   },
                   "thought": "Extract metadata from the lawsuit."
                 }

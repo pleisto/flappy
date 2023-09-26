@@ -4,69 +4,128 @@ import java.lang.reflect.Field
 
 enum class FieldType {
   STRING {
-    override val type = "string"
+    override val typeName = "string"
   },
   FLOAT {
-    override val type = "float"
+    override val typeName = "float"
   },
   BOOLEAN {
-    override val type = "boolean"
+    override val typeName = "boolean"
   },
   DOUBLE {
-    override val type = "double"
+    override val typeName = "double"
   },
   INTEGER {
-    override val type = "int"
+    override val typeName = "int"
   },
   LONG {
-    override val type = "long"
+    override val typeName = "long"
   },
   LIST {
-    override val type = "array"
+    override val typeName = "array"
   },
   ENUM {
-    override val type = "string"
+    override val typeName = "string"
   },
   OBJECT {
-    override val type = "object"
+    override val typeName = "object"
   },
 
   NONE {
-    override val type = "none"
+    override val typeName = "none"
   };
 
-  abstract val type: String
+  abstract val typeName: String
 }
 
-fun getSingleFieldType(name: String, typeKlass: Class<*>): FieldType {
-  if (typeKlass.isEnum) return FieldType.ENUM
-  if (typeKlass.isArray) return FieldType.LIST
+sealed class FieldTypeClass(open val klass: Class<*>) {
+  open val isLiteral: Boolean = true
+  abstract val type: FieldType
+
+  open fun toFieldProperty(description: String? = null): FieldProperty {
+    return FieldProperty(type = type.typeName, description = description)
+  }
+
+  class STRING(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.STRING
+  }
+
+  class FLOAT(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.FLOAT
+  }
+
+  class BOOLEAN(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.BOOLEAN
+  }
+
+  class DOUBLE(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.DOUBLE
+  }
+
+  class INTEGER(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.INTEGER
+  }
+
+  class LONG(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.LONG
+  }
+
+  class LIST(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val isLiteral = false
+    override val type = FieldType.LIST
+  }
+
+  class ENUM(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.ENUM
+
+    private fun enumValues(): List<String> = klass.enumConstants.map { it.toString() }
+
+    override fun toFieldProperty(description: String?): FieldProperty {
+      return FieldProperty(type = type.typeName, description = description, enum = enumValues())
+    }
+  }
+
+  class OBJECT(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val isLiteral = false
+    override val type = FieldType.OBJECT
+  }
+
+  class NONE(override val klass: Class<*>) : FieldTypeClass(klass) {
+    override val type = FieldType.NONE
+    override val isLiteral = false
+  }
+
+}
+
+fun getSingleFieldType(typeKlass: Class<*>): FieldTypeClass {
+  if (typeKlass.isEnum) return FieldTypeClass.ENUM(typeKlass)
+  if (typeKlass.isArray) return FieldTypeClass.LIST(typeKlass)
 
   return when (typeKlass) {
-    String::class.java -> FieldType.STRING
-    Boolean::class.java -> FieldType.BOOLEAN
-    Boolean::class.javaObjectType -> FieldType.BOOLEAN
+    String::class.java -> FieldTypeClass.STRING(typeKlass)
+    Boolean::class.java -> FieldTypeClass.BOOLEAN(typeKlass)
+    Boolean::class.javaObjectType -> FieldTypeClass.BOOLEAN(typeKlass)
 
-    Float::class.java -> FieldType.FLOAT
-    Float::class.javaObjectType -> FieldType.FLOAT
+    Float::class.java -> FieldTypeClass.FLOAT(typeKlass)
+    Float::class.javaObjectType -> FieldTypeClass.FLOAT(typeKlass)
 
-    Double::class.java -> FieldType.DOUBLE
-    Double::class.javaObjectType -> FieldType.DOUBLE
+    Double::class.java -> FieldTypeClass.DOUBLE(typeKlass)
+    Double::class.javaObjectType -> FieldTypeClass.DOUBLE(typeKlass)
 
-    Int::class.java -> FieldType.INTEGER
-    Integer::class.java -> FieldType.INTEGER
+    Int::class.java -> FieldTypeClass.INTEGER(typeKlass)
+    Integer::class.java -> FieldTypeClass.INTEGER(typeKlass)
 
-    Long::class.java -> FieldType.LONG
-    Long::class.javaObjectType -> FieldType.LONG
+    Long::class.java -> FieldTypeClass.LONG(typeKlass)
+    Long::class.javaObjectType -> FieldTypeClass.LONG(typeKlass)
 
-    List::class.java -> FieldType.LIST
-    List::class.javaObjectType -> FieldType.LIST
+    List::class.java -> FieldTypeClass.LIST(typeKlass)
+    List::class.javaObjectType -> FieldTypeClass.LIST(typeKlass)
 
-    Map::class.java -> FieldType.OBJECT
+    Map::class.java -> FieldTypeClass.OBJECT(typeKlass)
 
-    Object::class.java -> FieldType.OBJECT
+    Object::class.java -> FieldTypeClass.OBJECT(typeKlass)
 
-    else -> throw FatalException("Field type `$typeKlass` is not supported for `$name`")
+    else -> FieldTypeClass.NONE(typeKlass)
   }
 }
 
@@ -81,14 +140,14 @@ data class FieldMetadata(
   val name: String = field.name
   private val type = field.type
 
-  private val fieldType = getSingleFieldType(name, type)
+  private val fieldType = getSingleFieldType(type)
 
   private val finalSubType: FieldType?
     get() {
-      if (fieldType !== FieldType.LIST) return null
+      if (fieldType !is FieldTypeClass.LIST) return null
 
       if (type.isArray) {
-        return getSingleFieldType(name, type.componentType)
+        return getSingleFieldType(type.componentType).type
       }
 
       return subType
@@ -96,27 +155,31 @@ data class FieldMetadata(
 
   private val enumValues: List<String>?
     get() {
-      if (fieldType === FieldType.ENUM)
+      if (fieldType is FieldTypeClass.ENUM)
         return type.enumConstants.map { it.toString() }
 
-      if (fieldType === FieldType.LIST && finalSubType === FieldType.ENUM)
+      if (fieldType is FieldTypeClass.LIST && finalSubType === FieldType.ENUM)
         return type.componentType.enumConstants.map { it.toString() }
 
       return null
     }
 
   fun toFieldProperty() = FieldProperty(
-    type = fieldType.type,
+    type = fieldType.type.typeName,
     description = description,
     enum = enumValues,
-    items = finalSubType?.let { FieldSubTypeProperty(type = it.type) }
+    items = finalSubType?.let { FieldSubTypeProperty(type = it.typeName) }
   )
 
 
   init {
+    if (this.fieldType is FieldTypeClass.NONE) {
+      throw CompileException("`$name`: Type is not supported")
+    }
+
     when (this.finalSubType) {
-      FieldType.NONE -> throw CompileException("A `subType` should be passed in `List` type")
-      FieldType.LIST -> throw CompileException("A `subType` cannot be a `List` type")
+      FieldType.NONE -> throw CompileException("`$name`: A `subType` should be passed in `List` type")
+      FieldType.LIST -> throw CompileException("`$name`: A `subType` cannot be a `List` type")
       else -> {}
     }
   }

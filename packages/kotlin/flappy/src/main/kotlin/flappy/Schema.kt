@@ -5,11 +5,10 @@ import flappy.annotations.FlappyField
 
 class FieldSubTypeProperty(val type: String)
 
-
-sealed interface FieldPropertyOrProperties {
-  val description: String?
-  val type: String
-}
+sealed class FieldPropertyOrProperties(
+  open val description: String?,
+  open val type: String
+)
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class FieldProperty(
@@ -17,7 +16,7 @@ class FieldProperty(
   override val description: String? = null,
   val enum: List<String>? = null,
   val items: FieldSubTypeProperty? = null
-) : FieldPropertyOrProperties
+) : FieldPropertyOrProperties(description = description, type = type)
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class FieldProperties(
@@ -26,9 +25,7 @@ class FieldProperties(
   val required: List<String>? = null,
 
   override val description: String? = null
-) : FieldPropertyOrProperties {
-  override val type = FieldType.OBJECT.type
-}
+) : FieldPropertyOrProperties(description = description, type = FieldType.OBJECT.typeName)
 
 
 class FunctionProperties(
@@ -39,7 +36,7 @@ class FunctionProperties(
 class FunctionParameters(
   val properties: FunctionProperties
 ) {
-  val type = FieldType.OBJECT.type
+  val type = FieldType.OBJECT.typeName
 }
 
 class FunctionSchema(
@@ -49,19 +46,20 @@ class FunctionSchema(
 )
 
 interface FieldSchema {
-  fun size(): Int
   fun buildSchema(description: String? = null): FieldPropertyOrProperties
 }
 
-fun buildFieldSchema(klass: Class<*>): FieldSchema {
+fun buildFieldProperties(klass: Class<*>, description: String? = null): FieldPropertyOrProperties {
+  val field = getSingleFieldType(klass)
+  if (field.isLiteral) return field.toFieldProperty(description)
+
+
   val fields = FlappyField.flappyFieldMetadataList(klass)
 
-  return FieldMetadataSchema(fields)
+  return FieldMetadataSchema(fields).buildSchema(description)
 }
 
 class FieldMetadataSchema(private val data: List<FieldMetadata>) : FieldSchema {
-  override fun size() = data.size
-
   init {
     if (data.isEmpty()) throw CompileException("field is empty")
   }
