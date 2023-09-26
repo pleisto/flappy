@@ -23,9 +23,9 @@ jobs:
             3.1
             6.0
             7.0
-          source-url: https://nuget.pkg.github.com/pleisto/index.json
+          #source-url: https://nuget.pkg.github.com/pleisto/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
 
       - uses: actions/cache@v3
         with:
