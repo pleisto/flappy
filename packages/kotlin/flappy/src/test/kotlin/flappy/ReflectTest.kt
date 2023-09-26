@@ -20,6 +20,5 @@ class ReflectTest {
     assertFails {
       foo.getField("bar")
     }
-
   }
 }

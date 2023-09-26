@@ -1,7 +1,6 @@
 package flappy
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import flappy.annotations.FlappyField
 import java.util.logging.Logger
 
 typealias AnyFlappyFunction = FlappyFunction<*, *>
@@ -12,16 +11,12 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
   private val args: Class<Args>,
   private val returnType: Class<Ret>,
 ) {
-
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
-
-  val argsSchema = FlappyField.flappyFieldMetadataList(this.args)
-  val returnSchema = FlappyField.flappyFieldMetadataList(this.returnType)
 
   val source = "#function#$name"
 
-  private val argsSchemaProperties = argsSchema.buildSchema(FieldSchemaType.ARGUMENTS)
-  private val returnTypeSchemaProperties = returnSchema.buildSchema(FieldSchemaType.RETURN_TYPE)
+  private val argsSchemaProperties = buildFieldProperties(this.args, "Function arguments")
+  private val returnTypeSchemaProperties = buildFieldProperties(this.returnType, "Function return type")
 
   val argsSchemaPropertiesString: String = jacksonMapper.writeValueAsString(argsSchemaProperties)
   val returnTypeSchemaPropertiesString: String = jacksonMapper.writeValueAsString(returnTypeSchemaProperties)

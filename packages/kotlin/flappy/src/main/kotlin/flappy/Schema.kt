@@ -1,53 +1,42 @@
 package flappy
 
 import com.fasterxml.jackson.annotation.JsonInclude
-
-enum class FieldSchemaType {
-  ARGUMENTS {
-    override val description = "Function arguments"
-
-  },
-  RETURN_TYPE {
-    override val description = "Function return type"
-  },
-  BASE_STEP {
-    override val description = "Base step."
-  }
-  ;
-
-
-  abstract val description: String
-}
+import flappy.annotations.FlappyField
 
 class FieldSubTypeProperty(val type: String)
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-class FieldProperty(
-  val type: String,
-  val description: String? = null,
-  val enum: List<String>? = null,
-  val items: FieldSubTypeProperty? = null
+sealed class FieldPropertyOrProperties(
+  open val description: String?,
+  open val type: String
 )
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+class FieldProperty(
+  override val type: String,
+  override val description: String? = null,
+  val enum: List<String>? = null,
+  val items: FieldSubTypeProperty? = null
+) : FieldPropertyOrProperties(description = description, type = type)
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 class FieldProperties(
   val properties: Map<String, FieldProperty>,
 
   val required: List<String>? = null,
 
-  val description: String
-) {
-  val type = FieldType.OBJECT.type
-}
+  override val description: String? = null
+) : FieldPropertyOrProperties(description = description, type = FieldType.OBJECT.typeName)
+
 
 class FunctionProperties(
-  val args: FieldProperties,
-  val returnType: FieldProperties
+  val args: FieldPropertyOrProperties,
+  val returnType: FieldPropertyOrProperties
 )
 
 class FunctionParameters(
   val properties: FunctionProperties
 ) {
-  val type = FieldType.OBJECT.type
+  val type = FieldType.OBJECT.typeName
 }
 
 class FunctionSchema(
@@ -56,18 +45,30 @@ class FunctionSchema(
   val parameters: FunctionParameters
 )
 
-class FieldMetadataSchema(private val data: List<FieldMetadata>) {
-  fun size() = data.size
+interface FieldSchema {
+  fun buildSchema(description: String? = null): FieldPropertyOrProperties
+}
 
+fun buildFieldProperties(klass: Class<*>, description: String? = null): FieldPropertyOrProperties {
+  val field = getSingleFieldType(klass)
+  if (field.isLiteral) return field.toFieldProperty(description)
+
+
+  val fields = FlappyField.flappyFieldMetadataList(klass)
+
+  return FieldMetadataSchema(fields).buildSchema(description)
+}
+
+class FieldMetadataSchema(private val data: List<FieldMetadata>) : FieldSchema {
   init {
     if (data.isEmpty()) throw CompileException("field is empty")
   }
 
-  fun buildSchema(type: FieldSchemaType): FieldProperties {
+  override fun buildSchema(description: String?): FieldPropertyOrProperties {
     return FieldProperties(
       properties = data.associate { Pair(it.name, it.toFieldProperty()) },
       required = data.filter { !it.optional }.map { it.name },
-      description = type.description
+      description = description
     )
   }
 }

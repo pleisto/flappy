@@ -1,7 +1,6 @@
 package flappy.annotations
 
 import flappy.FieldMetadata
-import flappy.FieldMetadataSchema
 import flappy.FieldType
 
 
@@ -14,8 +13,8 @@ annotation class FlappyField(
   val subType: FieldType = FieldType.NONE
 ) {
   companion object {
-    fun flappyFieldMetadataList(klass: Class<*>): FieldMetadataSchema {
-      val data = klass.declaredFields.filter { it.isAnnotationPresent((FlappyField::class.java)) }
+    fun flappyFieldMetadataList(klass: Class<*>): List<FieldMetadata> {
+      return klass.declaredFields.filter { it.isAnnotationPresent((FlappyField::class.java)) }
         .map {
           val annotation = it.getAnnotation(FlappyField::class.java)
           FieldMetadata(
@@ -25,8 +24,6 @@ annotation class FlappyField(
             subType = annotation.subType
           )
         }
-
-      return FieldMetadataSchema(data)
     }
   }
 }
