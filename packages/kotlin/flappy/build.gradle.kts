@@ -26,12 +26,6 @@ repositories {
   mavenCentral()
 }
 
-mavenPublishing {
-  publishToMavenCentral(SonatypeHost.S01, true)
-  signAllPublications()
-}
-
-
 publishing {
   repositories {
     // mavenCentral()
@@ -69,6 +63,9 @@ dependencies {
 }
 
 mavenPublishing {
+  publishToMavenCentral(SonatypeHost.S01, true)
+  signAllPublications()
+
 //  coordinates("com.pleisto", "flappy", "0.0.10")
 
   pom {
