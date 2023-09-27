@@ -1,6 +1,11 @@
-import { createFlappyAgent, createInvokeFunction, createSynthesizedFunction, ZodType as z } from '..'
+import {
+  createFlappyAgent,
+  createInvokeFunction,
+  createSynthesizedFunction,
+  ZodType as z,
+  ChatGPT
+} from '@pleisto/node-flappy'
 import OpenAI from 'openai'
-import { ChatGPT } from '../llm/chatgpt'
 
 const gpt35 = new ChatGPT(
   new OpenAI({
@@ -83,7 +88,7 @@ const resumeAgent = createFlappyAgent({
       description: 'Get all frontend engineer resumes.',
       args: z.null(),
       returnType: z.array(z.string()),
-      resolve: async (): Promise<string[]> => {
+      resolve: async () => {
         // Do something
         // e.g. query SQL database
         console.debug('getFrontendEngineerResumes called')
@@ -93,4 +98,4 @@ const resumeAgent = createFlappyAgent({
   ]
 })
 
-void resumeAgent.createExecutePlan('找到前端工程师的简历')
+void resumeAgent.executePlan('找到前端工程师的简历并返回他的元数据')

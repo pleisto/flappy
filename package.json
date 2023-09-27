@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "tools/*"
+    "tools/*",
+    "examples/*"
   ],
   "volta": {
     "node": "20.6.1"
@@ -24,7 +25,8 @@
   },
   "scripts": {
     "dev": "yarn workspace @pleisto/flappy-devkit dev",
-    "commit": "git add . && cz",
+    "node-example": "yarn workspace @pleisto/node-example",
+    "commit": "cz",
     "postinstall": "run dev is-ci || husky install"
   },
   "commitlint": {

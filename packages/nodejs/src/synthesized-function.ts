@@ -2,24 +2,29 @@ import { type ZodType as z } from './flappy-type'
 import { type SynthesizedFunctionDefinition } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
-import { FlappyFunctionBase } from './flappy-function-base'
+import { FlappyFunctionBase, type FlappyFunctionOptions } from './flappy-function-base'
 import { omit } from 'radash'
 
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
 
 export class SynthesizedFunction<
+  TName extends string = string,
   TArgs extends z.ZodType = z.ZodType,
   TReturn extends z.ZodType = z.ZodType
-> extends FlappyFunctionBase {
-  declare define: SynthesizedFunctionDefinition<TArgs, TReturn>
+> extends FlappyFunctionBase<TName, TArgs, TReturn> {
+  declare define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
 
-  public async call(agent: FlappyAgent, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
+  public async call(
+    agent: FlappyAgent,
+    args: z.infer<TArgs>,
+    options?: FlappyFunctionOptions
+  ): Promise<z.infer<TReturn>> {
     const describe = this.define.description
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
     const prompt = (args as any) instanceof Object ? JSON.stringify(args) : args
-    const requestMessage: ChatMLMessage[] = [
+    const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `${describe}
@@ -34,30 +39,41 @@ export class SynthesizedFunction<
         content: `user request:${prompt}\n\njson object:`
       }
     ]
-    console.dir(requestMessage, { depth: null })
-    const result = await agent.llm.chatComplete(requestMessage)
+    let requestMessage = originalRequestMessage
+    let retry = options?.retry ?? agent.retry
+    let result: ChatMLResponse | undefined
 
-    try {
-      const data = this.parseComplete(result)
-      return data
-    } catch (err) {
-      // try to repair the result once
-      const repaired = await agent.llm.chatComplete([
-        ...requestMessage,
-        {
-          role: 'assistant',
-          content: result.data!
-        },
-        {
-          role: 'user',
-          content: `You response is invalid for the following reason:
+    while (true) {
+      try {
+        if (retry !== agent.retry) console.debug('Attempt retry: ', agent.retry - retry)
+        console.dir(requestMessage, { depth: null })
+        result = await agent.llm.chatComplete(requestMessage)
+        const data = this.parseComplete(result)
+        return data
+      } catch (err) {
+        console.error(err)
+        if (retry <= 0) throw new Error('Interrupted, function call failed. Please refer to the error message above.')
+
+        retry -= 1
+        // if the response came from chatComplete is failed, retry it directly.
+        // Otherwise, update message for repairing
+        if (result?.success && result.data) {
+          requestMessage = [
+            ...originalRequestMessage,
+            {
+              role: 'assistant',
+              content: result?.data ?? ''
+            },
+            {
+              role: 'user',
+              content: `You response is invalid for the following reason:
           ${(err as Error).message}
 
           Please try again.`
+            }
+          ]
         }
-      ])
-      const data = this.parseComplete(repaired)
-      return data
+      }
     }
   }
 
@@ -77,6 +93,10 @@ export class SynthesizedFunction<
  * @param define
  * @returns
  */
-export const createSynthesizedFunction = <TArgs extends z.ZodType = z.ZodType, TReturn extends z.ZodType = z.ZodType>(
-  define: SynthesizedFunctionDefinition<TArgs, TReturn>
-): SynthesizedFunction<TArgs, TReturn> => new SynthesizedFunction(define)
+export const createSynthesizedFunction = <
+  const TName extends string,
+  const TArgs extends z.ZodType,
+  const TReturn extends z.ZodType
+>(
+  define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
+): SynthesizedFunction<TName, TArgs, TReturn> => new SynthesizedFunction(define)

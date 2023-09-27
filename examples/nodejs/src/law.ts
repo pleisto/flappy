@@ -1,6 +1,11 @@
-import { createFlappyAgent, createInvokeFunction, createSynthesizedFunction, ZodType as z } from '..'
+import {
+  createFlappyAgent,
+  createInvokeFunction,
+  createSynthesizedFunction,
+  ZodType as z,
+  ChatGPT
+} from '@pleisto/node-flappy'
 import OpenAI from 'openai'
-import { ChatGPT } from '../llm/chatgpt'
 
 const gpt35 = new ChatGPT(
   new OpenAI({
@@ -44,7 +49,7 @@ const lawAgent = createFlappyAgent({
         arg2: z.array(z.string()).describe('ignore it').optional()
       }),
       returnType: z.string(),
-      resolve: async (args: any): Promise<string> => {
+      resolve: async args => {
         // Do something
         // e.g. query SQL database
         console.debug('getLatestLawsuitsByPlaintiff called', args)
@@ -54,5 +59,5 @@ const lawAgent = createFlappyAgent({
   ]
 })
 
-void lawAgent.createExecutePlan('找到原告为张三的最新案件并返回它的元数据')
+void lawAgent.executePlan('Find the latest case with the plaintiff being families of victims and return its metadata.')
 // void lawAgent.callFunction('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)

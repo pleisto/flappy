@@ -1,4 +1,9 @@
-import { type FlappyAgentConfig, type FlappyFunction } from './flappy-agent.interface'
+import {
+  type FindFlappyFunction,
+  type AnyFlappyFunction,
+  type FlappyAgentConfig,
+  type FlappyFunctionNames
+} from './flappy-agent.interface'
 import { SynthesizedFunction } from './synthesized-function'
 import { InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
@@ -23,74 +28,87 @@ const lanOutputSchema = (enableCoT: boolean) => {
         thought: z.string().describe('The thought why this step is needed.')
       }
     : ({} as any)
-  return z.array(
-    z
-      .object({
+  return z
+    .array(
+      z.object({
         ...thought,
         ...baseStep
       })
-      .describe('An array storing the steps.')
-  )
+    )
+    .describe('An array storing the steps.')
 }
 
-export class FlappyAgent {
+const DEFAULT_RETRY = 1
+
+export class FlappyAgent<
+  TFunctions extends AnyFlappyFunction[] = AnyFlappyFunction[],
+  TNames extends string = FlappyFunctionNames<TFunctions>
+> {
   config: any
   llm: LLMBase
   llmPlaner: LLMBase
-  constructor(config: FlappyAgentConfig) {
+  retry: number
+  constructor(config: FlappyAgentConfig<TFunctions>) {
     this.config = config
     this.llm = config.llm
     this.llmPlaner = config.llmPlaner ?? config.llm
+    this.retry = config.retry ?? DEFAULT_RETRY
   }
 
   /**
    * Get function definitions as a JSON Schema object array.
    */
   public functionsDefinitions(): object[] {
-    return this.config.functions.map((fn: FlappyFunction) => fn.callingSchema)
+    return this.config.functions.map((fn: AnyFlappyFunction) => fn.callingSchema)
   }
 
   /**
    * Find function by name.
    */
-  public findFunction(name: string): FlappyFunction | undefined {
-    return this.config.functions.find((fn: FlappyFunction) => fn.define.name === name)
+  public findFunction<
+    TName extends TNames,
+    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
+  >(name: TName): TFunction {
+    const fn = this.config.functions.find((fn: AnyFlappyFunction) => fn.define.name === name)
+    if (!fn) throw new Error(`Function definition not found: ${name}`)
+    return fn
   }
 
   /**
    * List all synthesized functions.
    */
   public synthesizedFunctions(): SynthesizedFunction[] {
-    return this.config.functions.filter((fn: FlappyFunction) => fn instanceof SynthesizedFunction)
+    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof SynthesizedFunction)
   }
 
   /**
    * List all invoke functions.
    */
   public invokeFunctions(): InvokeFunction[] {
-    return this.config.functions.filter((fn: FlappyFunction) => fn instanceof InvokeFunction)
+    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof InvokeFunction)
   }
 
   /**
    * Call a function by name.
    */
-  public async callFunction(name: string, args: any): Promise<any> {
+  public async callFunction<
+    TName extends TNames,
+    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
+  >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
     const fn = this.findFunction(name)
-    if (!fn) throw new Error(`Function definition not found: ${name}`)
-    // eslint-disable-next-line @typescript-eslint/return-await
-    return await fn.call(this, args)
+    return fn.call(this, args)
   }
 
   /**
-   * createExecutePlan
+   * executePlan
    * @param prompt user input prompt
    * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
    */
-  public async createExecutePlan(prompt: string, enableCot: boolean = true): Promise<any> {
+  public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
     const functions = JSON.stringify(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema))
-    const requestMessage: ChatMLMessage[] = [
+    const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
@@ -108,13 +126,56 @@ export class FlappyAgent {
         content: `Prompt: ${prompt}\n\nPlan array:`
       }
     ]
-    const result = await this.llmPlaner.chatComplete(requestMessage)
-    const plan = this.parseComplete(result)
+    let requestMessage = originalRequestMessage
+    let plan: any[] = []
+
+    let retry = this.retry
+    let result: ChatMLResponse | undefined
+
+    while (true) {
+      try {
+        if (retry !== this.retry) console.debug('Attempt retry: ', this.retry - retry)
+        console.dir(requestMessage, { depth: null })
+        result = await this.llmPlaner.chatComplete(requestMessage)
+        plan = this.parseComplete(result)
+
+        // check for function calling in each step
+        for (const step of plan) {
+          const fn = this.findFunction(step.functionName)
+          if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
+        }
+
+        break
+      } catch (err) {
+        console.error(err)
+        if (retry <= 0) throw new Error('Interrupted, create plan failed. Please refer to the error message above.')
+
+        retry -= 1
+        // if the response came from chatComplete is failed, retry it directly.
+        // Otherwise, update message for repairing
+        if (result?.success && result.data) {
+          requestMessage = [
+            ...originalRequestMessage,
+            {
+              role: 'assistant',
+              content: result?.data ?? ''
+            },
+            {
+              role: 'user',
+              content: `You response is invalid for the following reason:
+          ${(err as Error).message}
+
+          Please try again.`
+            }
+          ]
+        }
+      }
+    }
+
     zodSchema.parse(plan)
     const returnStore = new Map()
     for (const step of plan) {
-      const fn = this.findFunction(step.functionName)
-      if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
+      const fn = this.findFunction<TNames>(step.functionName)
       const args = Object.fromEntries(
         Object.entries(step.args).map(([k, v]) => {
           if (typeof v === 'string' && v.startsWith(STEP_PREFIX)) {
@@ -129,7 +190,9 @@ export class FlappyAgent {
           return [k, v]
         })
       )
+      console.debug('Start function call:', step.functionName)
       const result = await fn.call(this, args)
+      console.debug('End Function call:', step.functionName)
       returnStore.set(step.id, result)
     }
     // step id starts from 1, so plan.length is the last step id
@@ -152,4 +215,6 @@ export class FlappyAgent {
  * @param config
  * @returns
  */
-export const createFlappyAgent = (config: FlappyAgentConfig): FlappyAgent => new FlappyAgent(config)
+export const createFlappyAgent = <const TFunctions extends AnyFlappyFunction[]>(
+  config: FlappyAgentConfig<TFunctions>
+): FlappyAgent<TFunctions> => new FlappyAgent(config)

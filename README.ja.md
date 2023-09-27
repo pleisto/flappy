@@ -21,10 +21,11 @@ Flappyは、OpenAIのCode Interpreterに似た機能も提供します。これ�
 Flappyを始めるためには、以下のリストから好みの言語実装を選んでください：
 
 - [Node.js](./packages/nodejs/README.md)
+- [Kotlin](./packages/kotlin/README.md)
 - [Python](./packages/python/README.md)
 - PHP (近日公開)
 - Java (近日公開)
-- C# (近日公開)
+- [C#](./packages/csharp/README.md)
 - Go (近日公開)
 
 ## 貢献
