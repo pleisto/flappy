@@ -12,9 +12,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:16.2.2, @angular-devkit/core@npm:^16.2.2":
-  version: 16.2.2
-  resolution: "@angular-devkit/core@npm:16.2.2"
+"@angular-devkit/core@npm:16.2.3, @angular-devkit/core@npm:^16.2.3":
+  version: 16.2.3
+  resolution: "@angular-devkit/core@npm:16.2.3"
   dependencies:
     ajv: 8.12.0
     ajv-formats: 2.1.1
@@ -27,36 +27,36 @@ __metadata:
   peerDependenciesMeta:
     chokidar:
       optional: true
-  checksum: 3abfd2b33a066ca6cf05fec5805d3751d2a9152c00f533f2e401cb83598d0f3808367a2fc2649008489f17aba42f39665d02136530af493669d32241fbb6795b
+  checksum: e040a043f18c140bdcd4f12e1cafd1114d6c8f489d5c5cf6c789157db3f6922a6e546e7ea70af6a9b6956d2f56f5c650ec6dfe4d3f1574745f6e7585f41d3aef
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics-cli@npm:^16.2.2":
-  version: 16.2.2
-  resolution: "@angular-devkit/schematics-cli@npm:16.2.2"
+"@angular-devkit/schematics-cli@npm:^16.2.3":
+  version: 16.2.3
+  resolution: "@angular-devkit/schematics-cli@npm:16.2.3"
   dependencies:
-    "@angular-devkit/core": 16.2.2
-    "@angular-devkit/schematics": 16.2.2
+    "@angular-devkit/core": 16.2.3
+    "@angular-devkit/schematics": 16.2.3
     ansi-colors: 4.1.3
     inquirer: 8.2.4
     symbol-observable: 4.0.0
     yargs-parser: 21.1.1
   bin:
     schematics: bin/schematics.js
-  checksum: f4846df37ebb49f3b8d4f1ae7a3c8dd1d009e77c2ca01334c411b00e43b41be458dcca7bb9df6d0ab5f39004205204e178a03633e04eb14290681aa9550d78dc
+  checksum: 2117168b39d9979db8e968d07a9c960d9837e0fb2b5ef5d694e7788bfcc3843a6cd0a0925c426807c9fcc530c0a06b0da0b804739853aa066e863e1905383f73
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:16.2.2, @angular-devkit/schematics@npm:^16.2.2":
-  version: 16.2.2
-  resolution: "@angular-devkit/schematics@npm:16.2.2"
+"@angular-devkit/schematics@npm:16.2.3, @angular-devkit/schematics@npm:^16.2.3":
+  version: 16.2.3
+  resolution: "@angular-devkit/schematics@npm:16.2.3"
   dependencies:
-    "@angular-devkit/core": 16.2.2
+    "@angular-devkit/core": 16.2.3
     jsonc-parser: 3.2.0
     magic-string: 0.30.1
     ora: 5.4.1
     rxjs: 7.8.1
-  checksum: 421a8c961a23b5cae550a8616b301b6f5d5dd84b1fc10c1c2b761cbc51f88ddebe2858377a20a7247275ea86f81a0f922dbc8c357e47035e4b8771796b8b7bb4
+  checksum: 1e9189e5427ff30992176d812cc48cb5e51ca3bc84f1bcb55f2eb7fc44e04888bb0d911d687fbec5f5d99084cd47de39e51e5cf5b79b2de298fb62617529b310
   languageName: node
   linkType: hard
 
@@ -203,10 +203,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:8.49.0":
-  version: 8.49.0
-  resolution: "@eslint/js@npm:8.49.0"
-  checksum: a6601807c8aeeefe866926ad92ed98007c034a735af20ff709009e39ad1337474243d47908500a3bde04e37bfba16bcf1d3452417f962e1345bc8756edd6b830
+"@eslint/js@npm:8.50.0":
+  version: 8.50.0
+  resolution: "@eslint/js@npm:8.50.0"
+  checksum: 302478f2acaaa7228729ec6a04f56641590185e1d8cd1c836a6db8a6b8009f80a57349341be9fbb9aa1721a7a569d1be3ffc598a33300d22816f11832095386c
   languageName: node
   linkType: hard
 
@@ -318,13 +318,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pleisto/flappy-devkit@workspace:tools/devkit"
   dependencies:
-    "@angular-devkit/core": ^16.2.2
-    "@angular-devkit/schematics": ^16.2.2
-    "@angular-devkit/schematics-cli": ^16.2.2
+    "@angular-devkit/core": ^16.2.3
+    "@angular-devkit/schematics": ^16.2.3
+    "@angular-devkit/schematics-cli": ^16.2.3
     "@swc/core": 1.3.82
     "@swc/helpers": ^0.5.2
-    "@types/node": ^20.6.0
-    "@types/yargs": ^17.0.24
+    "@types/node": ^20.7.0
+    "@types/yargs": ^17.0.25
     chalk: ^4.1.2
     jsonc: ^2.0.0
     ts-node: ^10.9.1
@@ -339,7 +339,7 @@ __metadata:
   resolution: "@pleisto/node-example@workspace:examples/nodejs"
   dependencies:
     "@pleisto/node-flappy": "workspace:^"
-    openai: ^4.7.0
+    openai: ^4.10.0
     ts-node: ^10.9.1
   languageName: unknown
   linkType: soft
@@ -348,7 +348,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:
-    openai: ^4.7.0
+    openai: ^4.10.0
     radash: ^11.0.0
     zod: ^3.22.2
     zod-to-json-schema: ^3.21.4
@@ -541,10 +541,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.6.0":
-  version: 20.6.0
-  resolution: "@types/node@npm:20.6.0"
-  checksum: 52611801af5cf151c6fac1963aa4a8a8ca2e388a9e9ed82b01b70bca762088ded5b32cc789c5564220d5d7dccba2b8dd34446a3d4fc74736805e1f2cf262e29d
+"@types/node@npm:*, @types/node@npm:^20.7.0":
+  version: 20.7.0
+  resolution: "@types/node@npm:20.7.0"
+  checksum: 1b2919925c213f4d2039ada7a8354c998e144f7291db8d719ef58ea9924ab636c113690073b0ec3b82ba62907385f7e0f51e9d1583c1a818776daa5156d3a590
   languageName: node
   linkType: hard
 
@@ -576,12 +576,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:^17.0.24":
-  version: 17.0.24
-  resolution: "@types/yargs@npm:17.0.24"
+"@types/yargs@npm:^17.0.25":
+  version: 17.0.25
+  resolution: "@types/yargs@npm:17.0.25"
   dependencies:
     "@types/yargs-parser": "*"
-  checksum: 5f3ac4dc4f6e211c1627340160fbe2fd247ceba002190da6cf9155af1798450501d628c9165a183f30a224fc68fa5e700490d740ff4c73e2cdef95bc4e8ba7bf
+  checksum: ef57926de514f5eb0a182167a63930bd7d2eb33d89b6041760f690d50b2019d7901b30c33ab7d03b3fa66a5004f0f81e36186d8f9e5e583a27b9ce331d2a5276
   languageName: node
   linkType: hard
 
@@ -1927,14 +1927,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.49.0":
-  version: 8.49.0
-  resolution: "eslint@npm:8.49.0"
+"eslint@npm:^8.50.0":
+  version: 8.50.0
+  resolution: "eslint@npm:8.50.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.6.1
     "@eslint/eslintrc": ^2.1.2
-    "@eslint/js": 8.49.0
+    "@eslint/js": 8.50.0
     "@humanwhocodes/config-array": ^0.11.11
     "@humanwhocodes/module-importer": ^1.0.1
     "@nodelib/fs.walk": ^1.2.8
@@ -1970,7 +1970,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: 4dfe257e1e42da2f9da872b05aaaf99b0f5aa022c1a91eee8f2af1ab72651b596366320c575ccd4e0469f7b4c97aff5bb85ae3323ebd6a293c3faef4028b0d81
+  checksum: 9ebfe5615dc84700000d218e32ddfdcfc227ca600f65f18e5541ec34f8902a00356a9a8804d9468fd6c8637a5ef6a3897291dad91ba6579d5b32ffeae5e31768
   languageName: node
   linkType: hard
 
@@ -2196,10 +2196,10 @@ __metadata:
   resolution: "flappy-monorepo-root@workspace:."
   dependencies:
     "@pleisto/eslint-plugin": ^1.4.84
-    "@types/node": ^20.6.0
+    "@types/node": ^20.7.0
     commitizen: ^4.3.0
     cz-conventional-changelog: ^3.3.0
-    eslint: ^8.49.0
+    eslint: ^8.50.0
     husky: ^8.0.3
     lint-staged: ^14.0.1
     prettier: ^3.0.3
@@ -3591,9 +3591,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.7.0":
-  version: 4.7.0
-  resolution: "openai@npm:4.7.0"
+"openai@npm:^4.10.0":
+  version: 4.10.0
+  resolution: "openai@npm:4.10.0"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -3605,7 +3605,7 @@ __metadata:
     node-fetch: ^2.6.7
   bin:
     openai: bin/cli
-  checksum: ce1c8cd0a64d66bfa79bd1c7940b5496d92c9f707aa329a33524a06c13349401f1f9a9cb6c909f210701ba3090ddb93c48e9d4647cc8ac60b9f622b702554bb2
+  checksum: bdbf4d39f25a83c3ab551ce16d5d12b39217af4556bbf93c1c57f3eef9324e97098144de29e5b95d0b092a5f9e03efa8b05e15d96957c8a30a3aab916000f50b
   languageName: node
   linkType: hard
 
