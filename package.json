@@ -37,7 +37,7 @@
   "packageManager": "yarn@3.6.3",
   "devDependencies": {
     "@pleisto/eslint-plugin": "^1.4.84",
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.7.0",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.50.0",
