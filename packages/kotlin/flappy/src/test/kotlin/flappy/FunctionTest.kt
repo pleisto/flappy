@@ -1,6 +1,7 @@
 package flappy
 
 import flappy.annotations.FlappyField
+import flappy.annotations.flappyFieldMetadataList
 import flappy.llms.Dummy
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -76,7 +77,7 @@ class FunctionTest {
   @Test
   fun argsSchemaPropertiesString() {
     assertEquals(
-      sampleFunction.argsSchemaPropertiesString,
+      sampleFunction.argsTypeSchemaPropertiesString,
       """{"properties":{"argsString":{"type":"string","description":"Lawsuit full text."},"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsString","argsLong"],"description":"Function arguments","type":"object"}"""
     )
   }
@@ -85,30 +86,32 @@ class FunctionTest {
   fun returnTypeSchemaPropertiesString() {
     assertEquals(
       sampleFunction.returnTypeSchemaPropertiesString,
-      """{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","enum":["Innocent","Guilty","Unknown"],"items":{"type":"string"}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}"""
+      """{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","items":{"type":"string","enum":["Innocent","Guilty","Unknown"]}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}"""
     )
   }
 
   @Test
   fun functionInit() {
     class SampleArguments
+
+    assertEquals(SampleArguments::class.java.flappyFieldMetadataList().size, 0)
   }
 
 
   @Test
   fun parse() {
     assertFailsWith<ParseException> {
-      sampleFunction.castReturn("")
+      "".castBy(sampleFunction.returnType)
     }
 
     assertFailsWith<ParseException> {
-      sampleFunction.castArgs("")
+      "".castBy(sampleFunction.argsType)
     }
 
-    assertEquals(sampleFunction.castArgs("{\"argsString\":\"foo\"}").argsString, "foo")
-    assertEquals(sampleFunction.castArgs("{\"argsString\":\"foo\"}").argsLong, 0)
+    assertEquals("{\"argsString\":\"foo\"}".castBy(sampleFunction.argsType).argsString, "foo")
+    assertEquals("{\"argsString\":\"foo\"}".castBy(sampleFunction.argsType).argsLong, 0)
 
-    assertEquals(sampleFunction.castArgs("{\"argsString\":\"foo\",\"argsLong\":1}").argsLong, 1)
+    assertEquals("{\"argsString\":\"foo\",\"argsLong\":1}".castBy(sampleFunction.argsType).argsLong, 1)
   }
 
   @Test

@@ -37,13 +37,14 @@ class FlappyBaseAgent @JvmOverloads constructor(
     val thought: String
   )
 
-  private val stepSchema = buildFieldProperties(BaseStep::class.java, "Base step.")
+  private val stepSchema = BaseStep::class.java.buildFieldProperties("Base step.")
 
-  val functionDefinitionString: String = jacksonMapper.writeValueAsString(functionsDefinition)
-  val lanOutputSchemaString: String = jacksonMapper.writeValueAsString(object {
+  val functionDefinitionString: String = functionsDefinition.asString()
+  val lanOutputSchemaString: String = object {
     val items = stepSchema
     val type = FieldType.LIST.typeName
-  })
+    val description = "An array storing the steps."
+  }.asString()
 
   init {
     if (finalMaxRetry <= 0) throw CompileException("retry should be positive")
@@ -153,6 +154,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
   private suspend fun <R> callFunction(name: String, args: String): R {
     val f = this.findFunction(name)
+    @Suppress("UNCHECKED_CAST")
     return f.call(args, this) as R
   }
 

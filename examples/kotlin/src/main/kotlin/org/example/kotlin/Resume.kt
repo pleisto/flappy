@@ -1,7 +1,7 @@
 package org.example.kotlin
 
-import flappy.FieldType
 import flappy.FlappyBaseAgent
+import flappy.FlappyClass
 import flappy.FlappyInvokeFunction
 import flappy.FlappySynthesizedFunction
 import flappy.annotations.FlappyField
@@ -9,10 +9,23 @@ import flappy.llms.ChatGPT
 import flappy.llms.ChatGPTConfig
 import io.github.cdimascio.dotenv.dotenv
 
-suspend fun main(args: Array<String>) {
-  val dotenv = dotenv()
+val resumeGetMeta = FlappySynthesizedFunction(
+  name = "getMeta",
+  description = "Extract meta data from a lawsuit full text.",
+  args = ResumeMetaArguments::class.java,
+  returnType = ResumeMetaReturn::class.java
+)
 
-  val MOCK_RESUME_DATA = """
+val getFrontendEngineerResumes = FlappyInvokeFunction(
+  name = "getFrontendEngineerResumes",
+  description = "Get all frontend engineer resumes.",
+  args = FlappyClass.Null.javaClass,
+  returnType = String::class.java,
+  invoker = { _, _ -> MOCK_RESUME_DATA }
+)
+
+
+val MOCK_RESUME_DATA = """
             我是一名资深的软件工程师，拥有超过七年的前端开发经验。我热衷于构建出色的用户界面，熟练运用HTML、CSS和JavaScript，并精通React、Vue以及Angular等前端框架。我曾参与过多个大型项目，负责设计和实现前端架构，确保网站的高性能和用户友好性。此外，我还具备项目管理的经验，能够带领团队按时交付高质量的成果。
 
             ### 项目经历
@@ -47,44 +60,71 @@ suspend fun main(args: Array<String>) {
 
             """.trimIndent()
 
-
-  class GetResumesReturn(
-    @FlappyField(subType = FieldType.STRING)
-    var output: List<String>
-  )
+val RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据"
 
 
-  class ResumeEducation(
-    @FlappyField
-    var degree: String,
+class ResumeProjectExperiences(
+  @FlappyField
+  val title: String,
 
-    @FlappyField
-    var fieldOfStudy: String,
+  @FlappyField
+  val role: String,
 
-    @FlappyField
-    var university: String,
+  @FlappyField
+  val description: String
+)
 
-    @FlappyField
-    var year: Number
-  )
+class ResumeEducation(
+  @FlappyField
+  val degree: String,
+
+  @FlappyField
+  val fieldOfStudy: String,
+
+  @FlappyField
+  val university: String,
+
+  @FlappyField
+  val year: Number
+)
+
+class ResumeSkills(
+  @FlappyField
+  val name: String,
+
+  @FlappyField
+  val proficiency: String
+)
 
 
-  class ResumeMetaArguments(
-    @FlappyField(description = "Resume full text.")
-    var text: String
-  )
+class ResumeMetaArguments(
+  @FlappyField(description = "Resume full text.")
+  val text: String
+)
 
 
-  class ResumeMetaReturn(
-    @FlappyField
-    var name: String,
+class ResumeMetaReturn(
+  @FlappyField
+  val name: String,
 
-    @FlappyField
-    var profession: String,
+  @FlappyField
+  val profession: String,
 
-    @FlappyField
-    var experienceYears: Int,
-  )
+  @FlappyField
+  val experienceYears: Int,
+
+  @FlappyField
+  val skills: Array<ResumeSkills>,
+
+  @FlappyField
+  val projectExperiences: Array<ResumeProjectExperiences>,
+
+  @FlappyField
+  val education: ResumeEducation,
+)
+
+suspend fun main(args: Array<String>) {
+  val dotenv = dotenv()
 
 
   val llm = ChatGPT(
@@ -92,20 +132,6 @@ suspend fun main(args: Array<String>) {
     chatGPTConfig = ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
   )
 
-  val resumeGetMeta = FlappySynthesizedFunction(
-    name = "getMeta",
-    description = "Extract meta data from a lawsuit full text.",
-    args = ResumeMetaArguments::class.java,
-    returnType = ResumeMetaReturn::class.java
-  )
-
-  val getFrontendEngineerResumes = FlappyInvokeFunction(
-    name = "getFrontendEngineerResumes",
-    description = "Get all frontend engineer resumes.",
-    args = ResumeMetaArguments::class.java,
-    returnType = GetResumesReturn::class.java,
-    invoker = { _, _ -> GetResumesReturn(listOf(MOCK_RESUME_DATA)) }
-  )
 
   val resumeAgent = FlappyBaseAgent(
     inferenceLLM = llm,
@@ -113,5 +139,5 @@ suspend fun main(args: Array<String>) {
     maxRetry = 2
   )
 
-  resumeAgent.executePlan<Any>("找到前端工程师的简历并返回他的元数据")
+  resumeAgent.executePlan<ResumeMetaReturn>(RESUME_EXECUTE_PLAN_PROMPT)
 }

@@ -59,7 +59,7 @@ class AgentTest {
   fun xxx() {
     assertEquals(
       lawAgent.lanOutputSchemaString,
-      """{"items":{"properties":{"id":{"type":"int","description":"Increment id starting from 1"},"functionName":{"type":"string"},"args":{"type":"object","description":"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '%@_' + the ID of the previous step (e.g. '%@_1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema."},"thought":{"type":"string","description":"The thought why this step is needed."}},"required":["id","functionName","args","thought"],"description":"Base step.","type":"object"},"type":"array"}"""
+      """{"items":{"properties":{"id":{"type":"int","description":"Increment id starting from 1"},"functionName":{"type":"string"},"args":{"description":"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '%@_' + the ID of the previous step (e.g. '%@_1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.","type":"object"},"thought":{"type":"string","description":"The thought why this step is needed."}},"required":["id","functionName","args","thought"],"description":"Base step.","type":"object"},"type":"array","description":"An array storing the steps."}"""
     )
   }
 

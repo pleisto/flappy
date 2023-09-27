@@ -81,6 +81,6 @@ suspend fun main(args: Array<String>) {
     functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
   )
 
-  lawAgent.executePlan<Any>(LAW_EXECUTE_PLAN_PROMPT)
+  lawAgent.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
 //    lawAgent.callFunction("getMeta", MetaArguments(MOCK_LAWSUIT_DATA))
 }
