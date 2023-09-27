@@ -20,7 +20,7 @@
     "@angular-devkit/core": "^16.2.3",
     "@angular-devkit/schematics": "^16.2.3",
     "@angular-devkit/schematics-cli": "^16.2.3",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.0",
     "jsonc": "^2.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
