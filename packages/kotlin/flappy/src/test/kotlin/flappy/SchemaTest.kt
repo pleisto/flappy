@@ -1,6 +1,7 @@
 package flappy
 
 import flappy.annotations.FlappyField
+import javax.lang.model.type.NullType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -15,9 +16,8 @@ class SchemaTest {
     )
 
 
-    val schema = buildFieldProperties(SampleArguments::class.java, "foo")
     assertEquals(
-      jacksonMapper.writeValueAsString(schema), """
+      SampleArguments::class.java.buildFieldProperties("foo").asString(), """
         {"properties":{"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsLong"],"description":"foo","type":"object"}
     """.trimIndent()
     )
@@ -28,9 +28,8 @@ class SchemaTest {
       val optLong: Long?
     )
 
-    val schema2 = buildFieldProperties(SampleOptional::class.java)
     assertEquals(
-      jacksonMapper.writeValueAsString(schema2), """
+      SampleOptional::class.java.buildFieldProperties().asString(), """
         {"properties":{"optLong":{"type":"long","description":"long desc"}},"type":"object"}
     """.trimIndent()
     )
@@ -43,29 +42,105 @@ class SchemaTest {
   @Test
   fun literal() {
     assertEquals(
-      jacksonMapper.writeValueAsString(buildFieldProperties(String::class.java)), """
+      String::class.java.buildFieldProperties().asString(), """
         {"type":"string"}
     """.trimIndent()
     )
 
     assertEquals(
-      jacksonMapper.writeValueAsString(buildFieldProperties(Double::class.java, "double")), """
+      Double::class.java.buildFieldProperties("double").asString(), """
         {"type":"double","description":"double"}
     """.trimIndent()
     )
 
     assertEquals(
-      jacksonMapper.writeValueAsString(buildFieldProperties(SampleEnum::class.java, "enum")), """
+      SampleEnum::class.java.buildFieldProperties("enum").asString(), """
         {"type":"string","description":"enum","enum":["Foo","Bar","Baz"]}
     """.trimIndent()
     )
   }
 
   @Test
-  fun list() {
+  fun nullable() {
+    assertFails {
+      NullType::class.java.buildFieldProperties().asString()
+    }
+
+    assertFails {
+      Nothing::class.java.buildFieldProperties().asString()
+    }
+
+    assertEquals(
+      FlappyClass.Null::class.java.buildFieldProperties().asString(),
+      """{"type":"null"}"""
+    )
+
+    assertEquals(
+      jacksonMapper.readValue("null", FlappyClass.Null::class.java),
+      null
+    )
+
+    assertEquals(
+      jacksonMapper.readValue("{}", FlappyClass.Null::class.java) is FlappyClass.Null,
+      true
+    )
+
+
+  }
+
+  @Test
+  fun list1() {
     // https://stackoverflow.com/a/75213023/20030734
     assertFails {
-      buildFieldProperties(List::class.java)
+      List::class.java.buildFieldProperties()
     }
+    assertFails {
+      listOf<String>()::class.java.buildFieldProperties()
+    }
+
+    val listKlass = arrayListOf<String>()::class.java
+    assertFails {
+      listKlass.buildFieldProperties()
+    }
+
+    assertEquals(jacksonMapper.readValue("""["1","2"]""", listKlass), listOf("1", "2"))
+    assertEquals(jacksonMapper.readValue("[]", listKlass), listOf())
+  }
+
+
+  @Test
+  fun nested() {
+    class Baz(
+      @FlappyField
+      val baz: Long?
+    )
+
+    class Foo(
+      @FlappyField
+      val name: String,
+
+      @FlappyField(optional = true)
+      val e: SampleEnum?
+    )
+
+    class Bar(
+      @FlappyField
+      val foo: Foo,
+
+      @FlappyField
+      val a1: Array<Int>,
+
+      @FlappyField
+      val a2: Array<SampleEnum>,
+
+      @FlappyField
+      val baz: Array<Baz>
+    )
+
+    assertEquals(
+      Bar::class.java.buildFieldProperties("desc").asString(), """
+        {"properties":{"foo":{"properties":{"name":{"type":"string"},"e":{"type":"string","enum":["Foo","Bar","Baz"]}},"required":["name"],"type":"object"},"a1":{"type":"array","items":{"type":"int"}},"a2":{"type":"array","items":{"type":"string","enum":["Foo","Bar","Baz"]}},"baz":{"type":"array","items":{"properties":{"baz":{"type":"long"}},"required":["baz"],"type":"object"}}},"required":["foo","a1","a2","baz"],"description":"desc","type":"object"}
+    """.trimIndent()
+    )
   }
 }

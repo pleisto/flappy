@@ -1,32 +1,33 @@
 package flappy
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import java.util.logging.Logger
 
 typealias AnyFlappyFunction = FlappyFunction<*, *>
 
+typealias AnyClass = Class<*>
+
 abstract class FlappyFunction<Args : Any, Ret : Any>(
   val name: String,
   private val description: String,
-  private val args: Class<Args>,
-  private val returnType: Class<Ret>,
+  val argsType: Class<Args>,
+  val returnType: Class<Ret>,
 ) {
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
 
   val source = "#function#$name"
 
-  private val argsSchemaProperties = buildFieldProperties(this.args, "Function arguments")
-  private val returnTypeSchemaProperties = buildFieldProperties(this.returnType, "Function return type")
+  private val argsTypeSchemaProperties = this.argsType.buildFieldProperties("Function arguments")
+  private val returnTypeSchemaProperties = this.returnType.buildFieldProperties("Function return type")
 
-  val argsSchemaPropertiesString: String = jacksonMapper.writeValueAsString(argsSchemaProperties)
-  val returnTypeSchemaPropertiesString: String = jacksonMapper.writeValueAsString(returnTypeSchemaProperties)
+  val argsTypeSchemaPropertiesString: String = argsTypeSchemaProperties.asString()
+  val returnTypeSchemaPropertiesString: String = returnTypeSchemaProperties.asString()
 
   fun definition() = FunctionSchema(
     name = name,
     description = description,
     parameters = FunctionParameters(
       FunctionProperties(
-        args = argsSchemaProperties,
+        args = argsTypeSchemaProperties,
         returnType = returnTypeSchemaProperties
       )
     )
@@ -37,7 +38,7 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
     """
             $description
             User request according to the following JSON Schema:
-            $argsSchemaPropertiesString
+            $argsTypeSchemaPropertiesString
 
             Translate it into JSON objects according to the following JSON Schema: $returnTypeSchemaPropertiesString
         """.trimIndent()
@@ -68,36 +69,20 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
     return jacksonMapper.writeValueAsString(args)
   }
 
-  fun castArgs(input: String): Args {
-    try {
-      return jacksonMapper.readValue(input, args)
-    } catch (e: MismatchedInputException) {
-      throw ParseException(e.message ?: e.originalMessage)
-    }
-  }
-
-  fun castReturn(input: String): Ret {
-    try {
-      return jacksonMapper.readValue(input, returnType)
-    } catch (e: MismatchedInputException) {
-      throw ParseException(e.message ?: e.originalMessage)
-    }
-  }
-
   protected fun parseComplete(resp: FlappyLLM.Response): Ret {
     if (!resp.success) throw NonRepairableException(resp.data)
     if (isInvalidJson(resp.data)) throw RepairableException("invalid json")
 
-    return castReturn(resp.data)
+    return resp.data.castBy(returnType)
   }
 
   abstract suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null): Ret
 
   suspend fun call(args: String, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null) =
-    invoke(castArgs(args), agent, config)
+    invoke(args.castBy(argsType), agent, config)
 
   suspend fun call(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null) {
-    invoke(if (args is String) castArgs(args) else args, agent, config)
+    invoke(if (args is String) (args.castBy(argsType)) else args, agent, config)
   }
 }
 
