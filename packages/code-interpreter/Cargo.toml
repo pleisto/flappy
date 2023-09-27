@@ -8,7 +8,7 @@ independent = true
 
 
 [dependencies]
-deno_core = "0.213.0"
+deno_core = "0.218.0"
 mimalloc = "0.1.38"
 tokio = { version = "1.32.0", features = ["full"] }
 
