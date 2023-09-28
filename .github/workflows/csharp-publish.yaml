@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    path:
+    paths:
+      - "**/*.cs"
       - "**/*.csproj"
-      - ".github/workflows/csharp-publish.yaml"
+      - "**/*.sln"
+      - "examples/csharp/**/*"
+      - "packages/csharp/**/*"
+      - ".github/workflows/csharp-*"
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -41,7 +45,7 @@ jobs:
         run: |
           cd packages/csharp
           dotnet build -c Release
-          find -type f | grep nupkg$ | while read line; do
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"
             nuget push $line \
               -Source https://api.nuget.org/v3/index.json \
