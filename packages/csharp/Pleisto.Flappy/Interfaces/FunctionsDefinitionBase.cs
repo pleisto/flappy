@@ -2,19 +2,47 @@ using Newtonsoft.Json;
 
 namespace Pleisto.Flappy.Interfaces
 {
+  /// <summary>
+  /// Base Definition of Function
+  /// </summary>
+  /// <typeparam name="TArgs">Function call Args</typeparam>
+  /// <typeparam name="TReturns">Function Return</typeparam>
   public class FunctionsDefinitionBase<TArgs, TReturns>
     where TArgs : class
     where TReturns : class
   {
-    //[JsonRequired]
-    public string name { get; set; }
+    /// <summary>
+    /// Function Name
+    /// </summary>
+    public string Name { get; set; }
 
-    public string description { get; set; } = null;
+    /// <summary>
+    /// Function Description
+    /// </summary>
+    public string Description { get; set; } = null;
 
+    /// <summary>
+    /// Function Argument
+    /// </summary>
     [JsonRequired]
-    public TArgs args { get; set; }
+    public TArgs Args { get; set; }
 
+    /// <summary>
+    /// Function ReturnType
+    /// </summary>
     [JsonRequired]
-    public TReturns returnType { get; set; }
+    public TReturns ReturnType { get; set; }
+
+    /// <summary>
+    /// Type of Argument
+    /// </summary>
+    [JsonIgnore]
+    public Type TypeOfArgs => typeof(TArgs);
+
+    /// <summary>
+    /// Type of Return
+    /// </summary>
+    [JsonIgnore]
+    public Type TypeOfReturn => typeof(TReturns);
   }
 }

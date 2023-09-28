@@ -5,12 +5,12 @@ namespace Pleisto.Flappy.Interfaces
   /// <summary>
   /// Flappy Function
   /// </summary>
-  public interface FlappyFunction
+  public interface IFlappyFunction
   {
     /// <summary>
     /// Name of cuntion
     /// </summary>
-    string name { get; }
+    string Name { get; }
 
     /// <summary>
     /// System call method by CSharp Type
@@ -18,6 +18,6 @@ namespace Pleisto.Flappy.Interfaces
     /// <param name="agent"></param>
     /// <param name="args"></param>
     /// <returns></returns>
-    Task<JObject> sharp_syscall(FlappyAgent agent, JObject args);
+    Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args);
   }
 }

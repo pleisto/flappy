@@ -4,13 +4,24 @@ using Pleisto.Flappy.LLM.Interfaces;
 
 namespace Pleisto.Flappy
 {
-  public class SynthesizedFunction<TArgs, TReturn> : FlappyFunctionBase<TArgs, TReturn>, FlappyFunction
+  /// <summary>
+  /// SynthesizedFunction
+  /// </summary>
+  /// <typeparam name="TArgs">Argument of functions</typeparam>
+  /// <typeparam name="TReturn">Return of functions</typeparam>
+  public class SynthesizedFunction<TArgs, TReturn> : FlappyFunctionBase<TArgs, TReturn>, IFlappyFunction
     where TArgs : class
     where TReturn : class
   {
-    public override async Task<TReturn> call(FlappyAgent agent, TArgs args)
+    /// <summary>
+    /// Function Call
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    public override async Task<TReturn> Call(FlappyAgent agent, TArgs args)
     {
-      var describe = define.description;
+      var describe = Define.Description;
       var schema = FlappyAgent.GetSchemaGenerator();
       var returnTypeSchema = schema.Generate(typeof(TReturn)); //extractSchema(callingSchema, "returnType");
       var argsSchema = schema.Generate(typeof(TArgs)); ;
@@ -18,8 +29,8 @@ namespace Pleisto.Flappy
       var requestMessage = new ChatMLMessage[]{
                   new ChatMLMessage
                   {
-                    role = ChatMLMessageRole.system,
-                    content = $@"{describe}
+                    Role = ChatMLMessageRole.System,
+                    Content = $@"{describe}
 User reqeust according to the following JSON Schema:
 ${argsSchema}
 
@@ -28,43 +39,43 @@ Translate it into JSON objecvts according to the following JSON Schema:
                   },
                   new ChatMLMessage
                   {
-                    role = ChatMLMessageRole.user,
-                    content = $"user request:{prompt}\n\njson object:"
+                    Role = ChatMLMessageRole.User,
+                    Content = $"user request:{prompt}\n\njson object:"
                   }
               };
-      var result = await agent.llm.chatComplete(requestMessage);
+      var result = await agent.llm.ChatComplete(requestMessage);
       try
       {
-        var data = parseComplete(result);
+        var data = ParseComplete(result);
 
         return data;
       }
       catch (Exception ex)
       {
-        var repaired = await agent.llm.chatComplete(requestMessage.Union(new ChatMLMessage[]
+        var repaired = await agent.llm.ChatComplete(requestMessage.Union(new ChatMLMessage[]
         {
                     new ChatMLMessage{
-                        role = ChatMLMessageRole.assistant,
-                        content= result.data ?? ""
+                        Role = ChatMLMessageRole.Assistant,
+                        Content= result.Data ?? ""
                     },
                     new ChatMLMessage{
-                        role = ChatMLMessageRole.user,content=@$"Your response is invalid for the following reason:
+                        Role = ChatMLMessageRole.User,Content=@$"Your response is invalid for the following reason:
 ${ex.Message}
 
 Please try again."}
         }).ToArray(), null);
-        return parseComplete(repaired);
+        return ParseComplete(repaired);
       }
     }
 
-    private TReturn parseComplete(ChatMLResponse msg)
+    private TReturn ParseComplete(ChatMLResponse msg)
     {
-      var startIdx = msg.data?.IndexOf('{') ?? -1;
-      var endIdx = msg.data?.LastIndexOf('}') ?? -1;
+      var startIdx = msg.Data?.IndexOf('{') ?? -1;
+      var endIdx = msg.Data?.LastIndexOf('}') ?? -1;
       if (startIdx == -1 || endIdx == -1 || endIdx < startIdx)
         throw new InvalidDataException($"Invalid JSON response startIndex={startIdx} endIdx={endIdx}");
 
-      var content = msg.data.Substring(startIdx, endIdx - startIdx + 1).Trim();
+      var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
       try
       {
         var json = JObject.Parse(content);
@@ -72,11 +83,15 @@ Please try again."}
       }
       catch (Exception ex)
       {
-        throw new InvalidDataException($"exception on {nameof(parseComplete)} {Environment.NewLine}{content}", ex);
+        throw new InvalidDataException($"exception on {nameof(ParseComplete)} {Environment.NewLine}{content}", ex);
       }
     }
 
-    public SynthesizedFunction(InvokeFunctionDefinition<TArgs, TReturn> define) : base(define)
+    /// <summary>
+    /// Create Synthesized Function
+    /// </summary>
+    /// <param name="define">Synthesized Definition</param>
+    public SynthesizedFunction(SynthesizedFunctionDefinition<TArgs, TReturn> define) : base(define)
     {
     }
   }

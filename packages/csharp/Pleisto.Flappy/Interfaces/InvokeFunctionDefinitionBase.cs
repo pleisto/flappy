@@ -2,14 +2,26 @@ using Newtonsoft.Json;
 
 namespace Pleisto.Flappy.Interfaces
 {
+
+  /// <summary>
+  /// Basic Definition of Invoke Function
+  /// </summary>
+  /// <typeparam name="TArgs"></typeparam>
+  /// <typeparam name="TReturn"></typeparam>
   public class InvokeFunctionDefinitionBase<TArgs, TReturn>
     where TArgs : new()
     where TReturn : new()
   {
+    /// <summary>
+    /// Name
+    /// </summary>
     [JsonRequired]
-    public string name { get; set; }
+    public string Name { get; set; }
 
-    public string description { get; set; }
+    /// <summary>
+    /// Description
+    /// </summary>
+    public string Description { get; set; }
 
     //[JsonRequired]
     //public TArgs args { get; set; }

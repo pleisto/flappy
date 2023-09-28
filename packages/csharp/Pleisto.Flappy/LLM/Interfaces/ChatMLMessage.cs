@@ -1,9 +1,18 @@
 namespace Pleisto.Flappy.LLM.Interfaces
 {
+  /// <summary>
+  /// LLM Message
+  /// </summary>
   public class ChatMLMessage
   {
-    public ChatMLMessageRole role { get; set; }
+    /// <summary>
+    /// Message Role
+    /// </summary>
+    public ChatMLMessageRole Role { get; set; }
 
-    public string content { get; set; }
+    /// <summary>
+    /// Message Content
+    /// </summary>
+    public string Content { get; set; }
   }
 }

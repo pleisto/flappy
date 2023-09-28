@@ -1,0 +1,49 @@
+name: CSharp Nuget Publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    path:
+      - "**/*.csproj"
+      - ".github/workflows/csharp-publish.yaml"
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            3.1
+            6.0
+            7.0
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v4
+      - name: dotnet publish
+        run: |
+          cd packages/csharp
+          dotnet build -c Release
+          find -type f | grep nupkg$ | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }}
+          done

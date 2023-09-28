@@ -14,8 +14,8 @@ namespace Pleisto.Flappy
   public partial class FlappyAgent
   {
     internal readonly FlappyAgentConfig config;
-    internal readonly LLMBase llm;
-    internal readonly LLMBase llmPlaner;
+    internal readonly ILLMBase llm;
+    internal readonly ILLMBase llmPlaner;
 
     /// <summary>
     /// Create a flappy agent.
@@ -24,12 +24,12 @@ namespace Pleisto.Flappy
     /// <param name="llm"></param>
     /// <param name="llmPlaner"></param>
     /// <exception cref="NullReferenceException"></exception>
-    public FlappyAgent(FlappyAgentConfig config, LLMBase llm, LLMBase llmPlaner)
+    public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner)
     {
       this.config = config;
-      if ((config.functions?.Length ?? 0) <= 0)
+      if ((config.Functions?.Length ?? 0) <= 0)
         throw new NullReferenceException($"config.functions not be null");
-      this.llm = llm ?? config.llm;
+      this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? this.llm;
     }
 
@@ -37,35 +37,35 @@ namespace Pleisto.Flappy
     /// Get function definitions as a JSON Schema object array.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<FlappyFunction> functionsDefinitions() => from i in config.functions
-                                                                 select i;
+    public IEnumerable<IFlappyFunction> FunctionsDefinitions() => from i in config.Functions
+                                                                  select i;
 
     /// <summary>
     /// Find function by name.
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public FlappyFunction findFunction(string name) => (from i in config.functions
-                                                        where i.name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
-                                                        select i).FirstOrDefault();
+    public IFlappyFunction FindFunction(string name) => (from i in config.Functions
+                                                         where i.Name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
+                                                         select i).FirstOrDefault();
 
     /// <summary>
     ///  List all synthesized functions.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<FlappyFunction> synthesizedFunctions() => from i in config.functions
-                                                                 let type = i.GetType()
-                                                                 where type.BaseType == typeof(SynthesizedFunction<,>)
-                                                                 select i;
+    public IEnumerable<IFlappyFunction> SynthesizedFunctions() => from i in config.Functions
+                                                                  let type = i.GetType()
+                                                                  where type.BaseType == typeof(SynthesizedFunction<,>)
+                                                                  select i;
 
     /// <summary>
     /// List all invoke functions.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<FlappyFunction> invokeFunctions() => from i in config.functions
-                                                            let type = i.GetType()
-                                                            where type.BaseType == typeof(InvokeFunctions<,>)
-                                                            select i;
+    public IEnumerable<IFlappyFunction> InvokeFunctions() => from i in config.Functions
+                                                             let type = i.GetType()
+                                                             where type.BaseType == typeof(InvokeFunction<,>)
+                                                             select i;
 
     /// <summary>
     /// Call a function by name.
@@ -74,10 +74,10 @@ namespace Pleisto.Flappy
     /// <param name="args"></param>
     /// <returns></returns>
     /// <exception cref="InvalidProgramException"></exception>
-    public async Task<object> callFunction(string name, object args)
+    public async Task<object> CallFunction(string name, object args)
     {
-      var fn = findFunction(name) ?? throw new InvalidProgramException($"no function found: {name}");
-      return await fn.sharp_syscall(this, JObject.FromObject(args));
+      var fn = FindFunction(name) ?? throw new InvalidProgramException($"no function found: {name}");
+      return await fn.SharpSystemCall(this, JObject.FromObject(args));
     }
 
     /// <summary>
@@ -86,12 +86,12 @@ namespace Pleisto.Flappy
     /// <param name="prompt">user input prompt</param>
     /// <param name="enableCot">enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.</param>
     /// <returns></returns>
-    public async Task<object> createExecutePlan(string prompt, bool enableCot = true)
+    public async Task<object> CreateExecutePlan(string prompt, bool enableCot = true)
     {
-      var functions = new JArray(from i in functionsDefinitions()
+      var functions = new JArray(from i in FunctionsDefinitions()
                                  select JObject.FromObject(i)).JsonToString();
 
-      var zodSchema = lanOutputSchema(enableCot);
+      var zodSchema = GetLanOutputSchema(enableCot);
 
       var returnSchema = zodSchema.JsonToString();
 
@@ -99,8 +99,8 @@ namespace Pleisto.Flappy
       {
         new ChatMLMessage
         {
-          role = ChatMLMessageRole.system,
-          content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
+          Role = ChatMLMessageRole.System,
+          Content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
 Make as few plans as possible if it can solve the problem.
 The functions list is described using the following JSON schema array:
 {functions}
@@ -112,19 +112,19 @@ Only the listed functions are allowed to be used."
         },
         new ChatMLMessage
         {
-          role = ChatMLMessageRole.user,
-          content = $"Prompt: {prompt}\n\nPlan array:"
+          Role = ChatMLMessageRole.User,
+          Content = $"Prompt: {prompt}\n\nPlan array:"
         }
       };
-      var result = await llmPlaner.chatComplete(requestMessage, null);
-      if (result.success == false)
+      var result = await llmPlaner.ChatComplete(requestMessage, null);
+      if (result.Success == false)
       {
         throw new InvalidOperationException("LLM operation return not success");
       }
-      var plan = parseComplete(result);
+      var plan = ParseComplete(result);
 
-      if (plan.IsValid(zodSchema, out IList<ValidationError> _) == false)
-        throw new InvalidDataException("Json Schema is invalid");
+      if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
+        throw new InvalidDataException($"Json Schema is invalid");
 
       LanOutputSchema[] plans;
       if (enableCot)
@@ -141,9 +141,9 @@ Only the listed functions are allowed to be used."
       foreach (var step in plans)
         try
         {
-          var fn = findFunction(step.functionName) ?? throw new InvalidDataException($"Function definition not found: {step.functionName};");
+          var fn = FindFunction(step.FunctionName) ?? throw new InvalidDataException($"Function definition not found: {step.FunctionName};");
           JObject arg = new JObject();
-          foreach (var b in step.args)
+          foreach (var b in step.Args)
           {
             if (b.Value.Type == JTokenType.String && b.Value.ToString().StartsWith(STEP_PREFIX))
             {
@@ -160,8 +160,8 @@ Only the listed functions are allowed to be used."
               arg[b.Key] = b.Value;
             }
           }
-          JObject functionresult = await fn.sharp_syscall(this, arg);
-          returnStore[step.id] = functionresult;
+          JObject functionresult = await fn.SharpSystemCall(this, arg);
+          returnStore[step.Id] = functionresult;
         }
         catch (Exception ex)
         {
@@ -170,13 +170,13 @@ Only the listed functions are allowed to be used."
       return returnStore[plan.Count];
     }
 
-    private static JArray parseComplete(ChatMLResponse msg)
+    private static JArray ParseComplete(ChatMLResponse msg)
     {
-      var startIdx = msg.data?.IndexOf('[') ?? -1;
-      var endIdx = msg.data?.LastIndexOf(']') ?? -1;
+      var startIdx = msg.Data?.IndexOf('[') ?? -1;
+      var endIdx = msg.Data?.LastIndexOf(']') ?? -1;
       if (startIdx == -1 || endIdx == -1 || endIdx < startIdx)
         throw new InvalidDataException($"Invalid JSON response startIdx={startIdx} endIdx={endIdx}");
-      var content = msg.data.Substring(startIdx, endIdx - startIdx + 1).Trim();
+      var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
       try
       {
         JArray json = JArray.Parse(content);
@@ -184,12 +184,12 @@ Only the listed functions are allowed to be used."
       }
       catch (Exception ex)
       {
-        throw new InvalidDataException($"unable to parse json array startIdx={startIdx} endIdx={endIdx} raw={Environment.NewLine}{msg.data}" +
+        throw new InvalidDataException($"unable to parse json array startIdx={startIdx} endIdx={endIdx} raw={Environment.NewLine}{msg.Data}" +
             $"{Environment.NewLine}SplitedData:{Environment.NewLine}{content}", ex);
       }
     }
 
-    internal static JSchema lanOutputSchema(bool enableCot)
+    internal static JSchema GetLanOutputSchema(bool enableCot)
     {
       var schema = GetSchemaGenerator();
       if (enableCot)
@@ -200,17 +200,17 @@ Only the listed functions are allowed to be used."
 
     private class LanOutputSchemaCot : LanOutputSchema
     {
-      public string thought { get; set; }
+      public string Thought { get; set; }
     }
 
     private class LanOutputSchema
     {
-      public int id { get; set; }
+      public int Id { get; set; }
 
-      public string functionName { get; set; }
+      public string FunctionName { get; set; }
 
       [Description($"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '{STEP_PREFIX}' + the ID of the previous step (e.g. '{STEP_PREFIX}1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.")]
-      public JObject args { get; set; }
+      public JObject Args { get; set; }
     }
   }
 }

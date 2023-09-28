@@ -1,15 +1,21 @@
 # Flappy CSharp Version
+[![License](https://img.shields.io/github/license/pleisto/flappy)](../../LICENSE)
+[![NuGet version (Pleisto.Flappy)](https://img.shields.io/nuget/v/Pleisto.Flappy.svg?style=flat-square)](https://www.nuget.org/packages/Pleisto.Flappy/)
+[![NUnit test](https://github.com/pleisto/flappy/actions/workflows/csharp-test.yaml/badge.svg)](https://github.com/pleisto/flappy/actions/workflows/csharp-test.yaml)
 
-This package is the Kotlin version of the flappy implementation.
+This package is the CSharp version of the flappy implementation.
 
 ## Usage
 
 ### Installation
 
+```
+Install-Package Pleisto.Flappy
+```
 
 
 ### Create a Synthesized Function
-
+ * for csharp, the function return type and function argument type must be convert to json
 ```csharp
     class getMeta_Args
     {

@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy.Test", "Plei
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy.Example.Law", "..\..\examples\csharp\Pleisto.Flappy.Example.Law\Pleisto.Flappy.Example.Law.csproj", "{52FA5991-3BD8-4CB6-B1B4-6DAAB9AA3BF2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy.Example.Resume", "..\..\examples\csharp\Pleisto.Flappy.Example.Resume\Pleisto.Flappy.Example.Resume.csproj", "{51860847-F7C2-4A00-9491-941AE2003DCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{52FA5991-3BD8-4CB6-B1B4-6DAAB9AA3BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52FA5991-3BD8-4CB6-B1B4-6DAAB9AA3BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52FA5991-3BD8-4CB6-B1B4-6DAAB9AA3BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51860847-F7C2-4A00-9491-941AE2003DCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51860847-F7C2-4A00-9491-941AE2003DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51860847-F7C2-4A00-9491-941AE2003DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51860847-F7C2-4A00-9491-941AE2003DCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

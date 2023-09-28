@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy", "..\..\pac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy.Example.Law", "Pleisto.Flappy.Example.Law\Pleisto.Flappy.Example.Law.csproj", "{D8CBF59B-8DBB-4CDC-A05A-8F5BF5D58674}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pleisto.Flappy.Example.Resume", "Pleisto.Flappy.Example.Resume\Pleisto.Flappy.Example.Resume.csproj", "{9E3B9CBA-42A7-4D49-80D8-772C55CC7C98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{D8CBF59B-8DBB-4CDC-A05A-8F5BF5D58674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8CBF59B-8DBB-4CDC-A05A-8F5BF5D58674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8CBF59B-8DBB-4CDC-A05A-8F5BF5D58674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3B9CBA-42A7-4D49-80D8-772C55CC7C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3B9CBA-42A7-4D49-80D8-772C55CC7C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3B9CBA-42A7-4D49-80D8-772C55CC7C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3B9CBA-42A7-4D49-80D8-772C55CC7C98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,25 +3,29 @@
 	<PropertyGroup>
 		<Authors>Pleisto</Authors>
 		<ProductName>Pleisto.Flappy</ProductName>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
-		<IncludeSymbols>true</IncludeSymbols>
-		<TargetFrameworks>net7.0;net6.0;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>11.0</LangVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<AnalysisLevel>latest</AnalysisLevel>
-		<DebugType>full</DebugType>
+    <DebugType>embedded</DebugType>
 		<Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>IDE1006</WarningsAsErrors>
+    <!--Nuget Package Info-->
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.0.2-alpha</Version>
+    <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-      <None Include="../.editorconfig" Link=".editorconfig" />
-
+    <None Include="../.editorconfig" Link=".editorconfig" />
 		<None Include="../../../LICENSE" PackagePath="" Pack="True" />
-		<None Include="../README.md" PackagePath="" Pack="True" />
-    </ItemGroup>
+		<None Include="../../../README.md" PackagePath="" Pack="True" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
