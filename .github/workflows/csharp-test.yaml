@@ -3,7 +3,7 @@ name: CSharp Nuget Test
 on:
   workflow_dispatch:
   push:
-    path:
+    paths:
       - "**/*.cs"
       - "**/*.csproj"
       - "**/*.sln"

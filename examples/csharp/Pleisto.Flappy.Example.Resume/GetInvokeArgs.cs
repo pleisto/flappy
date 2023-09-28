@@ -1,4 +1,4 @@
-﻿namespace Pleisto.Flappy.Test.Resume
+namespace Pleisto.Flappy.Test.Resume
 {
   internal class GetInvokeArgs
   {

@@ -17,14 +17,14 @@
     <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.2-alpha</Version>
+    <Version>0.0.0.3-alpha</Version>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
     <None Include="../.editorconfig" Link=".editorconfig" />
-		<None Include="../../../LICENSE" PackagePath="" Pack="True" />
-		<None Include="../../../README.md" PackagePath="" Pack="True" />
+		<None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False"/>
+		<None Include="../../../README.md" PackagePath="" Pack="True" Visible="False"/>
   </ItemGroup>
 
   <ItemGroup>
