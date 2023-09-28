@@ -1,7 +1,10 @@
 package org.example.java;
 
 
-import flappy.*;
+import flappy.FlappyBaseAgent;
+import flappy.FlappyFunction;
+import flappy.FlappyInvokeFunction;
+import flappy.FlappySynthesizedFunction;
 import flappy.annotations.FlappyField;
 import flappy.llms.ChatGPT;
 import flappy.llms.ChatGPTConfig;
@@ -61,7 +64,7 @@ public class Law {
     @FlappyField
     String defendant;
 
-    @FlappyField(subType = FieldType.STRING)
+    @FlappyField
     List<String> judgeOptions;
 
     public Verdict getVerdict() {
@@ -104,7 +107,7 @@ public class Law {
     @FlappyField(description = "For demo purpose. set to False")
     Boolean arg1;
 
-    @FlappyField(description = "ignore it", subType = FieldType.STRING, optional = true)
+    @FlappyField(description = "ignore it", optional = true)
     List<String> arg2 = null;
 
     public String getPlaintiff() {

@@ -16,4 +16,9 @@ public class SchemaTestJava {
     );
   }
 
+  @Test
+  public void fail() {
+//    buildFieldProperties(list)
+  }
+
 }

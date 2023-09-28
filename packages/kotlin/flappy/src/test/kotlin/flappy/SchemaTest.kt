@@ -89,6 +89,30 @@ class SchemaTest {
   }
 
   @Test
+  fun getSubType() {
+    class Bar(
+      @FlappyField
+      val bar: Any
+    )
+
+    class Foo(
+      @FlappyField
+      val foo: List<String>,
+
+      @FlappyField
+      val enum: List<SampleEnum>,
+
+      @FlappyField
+      val bar: Bar,
+
+      @FlappyField
+      val bars: List<Bar>
+    )
+
+    println(Foo::class.java.buildFieldProperties().asString())
+  }
+
+  @Test
   fun list1() {
     // https://stackoverflow.com/a/75213023/20030734
     assertFails {
@@ -98,7 +122,7 @@ class SchemaTest {
       listOf<String>()::class.java.buildFieldProperties()
     }
 
-    val listKlass = arrayListOf<String>()::class.java
+    val listKlass = arrayListOf<String>().javaClass
     assertFails {
       listKlass.buildFieldProperties()
     }

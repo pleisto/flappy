@@ -26,7 +26,7 @@ class AgentTest {
     @FlappyField
     val defendant: String,
 
-    @FlappyField(subType = FieldType.STRING)
+    @FlappyField
     val judgeOptions: List<String>
   )
 
