@@ -1,4 +1,4 @@
-﻿[*.cs]
+[*.cs]
 
 # IDE0057: 使用范围运算符
 csharp_style_prefer_range_operator = false
@@ -64,6 +64,15 @@ csharp_style_var_for_built_in_types = false:silent
 
 # CS1584: XML 注释中有语法错误的 cref 特性
 dotnet_diagnostic.CS1584.severity = none
+csharp_style_var_when_type_is_apparent = false:silent
+csharp_style_var_elsewhere = false:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_prefer_braces = true:silent
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_static_local_function = true:suggestion
 
 [*.vb]
 #### 命名样式 ####
@@ -114,7 +123,7 @@ dotnet_naming_style.帕斯卡拼写法.word_separator =
 dotnet_naming_style.帕斯卡拼写法.capitalization = pascal_case
 
 [*.{cs,vb}]
-end_of_line = crlf
+end_of_line = lf
 dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_method = false:silent
@@ -122,3 +131,4 @@ dotnet_style_qualification_for_event = false:silent
 
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = silent
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
