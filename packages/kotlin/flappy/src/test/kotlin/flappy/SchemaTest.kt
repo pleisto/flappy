@@ -122,6 +122,7 @@ class SchemaTest {
       listOf<String>()::class.java.buildFieldProperties()
     }
 
+    // https://stackoverflow.com/a/56346866/20030734
     val listKlass = arrayListOf<String>().javaClass
     assertFails {
       listKlass.buildFieldProperties()
@@ -129,6 +130,19 @@ class SchemaTest {
 
     assertEquals(jacksonMapper.readValue("""["1","2"]""", listKlass), listOf("1", "2"))
     assertEquals(jacksonMapper.readValue("[]", listKlass), listOf())
+
+    val arrayKlass = Array<String>::class.java
+    assertEquals(arrayKlass.buildFieldProperties().asString(), """{"type":"array","items":{"type":"string"}}""")
+    assertEquals(jacksonMapper.readValue("[]", arrayKlass).size, 0)
+    assertEquals(jacksonMapper.readValue("""["foo"]""", arrayKlass).size, 1)
+
+    class Foo(
+      @FlappyField
+      val foo: String
+    )
+
+    // https://github.com/search?type=code&q=KTypeProjection+language%3AKotlin&l=Kotlin
+    val kClass = Foo::class
   }
 
 
