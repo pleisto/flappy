@@ -49,5 +49,6 @@ jobs:
             echo "Pulish: $line"
             nuget push $line \
               -Source https://api.nuget.org/v3/index.json \
-              -ApiKey ${{ secrets.NUGET_TOKEN }}
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
           done
