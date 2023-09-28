@@ -3,7 +3,7 @@ name: CSharp Nuget Publish
 on:
   workflow_dispatch:
   push:
-    #branches: [ main ]
+    branches: [ main ]
     path:
       - "**/*.csproj"
       - ".github/workflows/csharp-publish.yaml"
