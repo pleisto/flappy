@@ -18,6 +18,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.0.0.2-alpha</Version>
+    <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
