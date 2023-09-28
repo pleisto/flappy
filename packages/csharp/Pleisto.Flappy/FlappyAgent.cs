@@ -38,7 +38,7 @@ namespace Pleisto.Flappy
     /// </summary>
     /// <returns></returns>
     public IEnumerable<IFlappyFunction> FunctionsDefinitions() => from i in config.Functions
-                                                                 select i;
+                                                                  select i;
 
     /// <summary>
     /// Find function by name.
@@ -46,26 +46,26 @@ namespace Pleisto.Flappy
     /// <param name="name"></param>
     /// <returns></returns>
     public IFlappyFunction FindFunction(string name) => (from i in config.Functions
-                                                        where i.Name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
-                                                        select i).FirstOrDefault();
+                                                         where i.Name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
+                                                         select i).FirstOrDefault();
 
     /// <summary>
     ///  List all synthesized functions.
     /// </summary>
     /// <returns></returns>
     public IEnumerable<IFlappyFunction> SynthesizedFunctions() => from i in config.Functions
-                                                                 let type = i.GetType()
-                                                                 where type.BaseType == typeof(SynthesizedFunction<,>)
-                                                                 select i;
+                                                                  let type = i.GetType()
+                                                                  where type.BaseType == typeof(SynthesizedFunction<,>)
+                                                                  select i;
 
     /// <summary>
     /// List all invoke functions.
     /// </summary>
     /// <returns></returns>
     public IEnumerable<IFlappyFunction> InvokeFunctions() => from i in config.Functions
-                                                            let type = i.GetType()
-                                                            where type.BaseType == typeof(InvokeFunction<,>)
-                                                            select i;
+                                                             let type = i.GetType()
+                                                             where type.BaseType == typeof(InvokeFunction<,>)
+                                                             select i;
 
     /// <summary>
     /// Call a function by name.
@@ -123,8 +123,8 @@ Only the listed functions are allowed to be used."
       }
       var plan = ParseComplete(result);
 
-      if (plan.IsValid(zodSchema, out IList<ValidationError> _) == false)
-        throw new InvalidDataException("Json Schema is invalid");
+      if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
+        throw new InvalidDataException($"Json Schema is invalid");
 
       LanOutputSchema[] plans;
       if (enableCot)

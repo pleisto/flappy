@@ -30,31 +30,31 @@ namespace Pleisto.Flappy.Test.Law
           LLM = gpt35,
           Functions = new IFlappyFunction[]
              {
-                         new SynthesizedFunction<getMeta_Args,getMeta_Return>(new SynthesizedFunctionDefinition<getMeta_Args,getMeta_Return>
-                         {
-                             Name = "getMeta",
-                             Description = "Extract meta data from a lawsuit full text.",
-                             Args = new getMeta_Args(),
-                             ReturnType = new getMeta_Return(),
-                         }),
-                         new InvokeFunction<getLatestLawsuits_Args,getMeta_Args>(new InvokeFunctionDefinition<getLatestLawsuits_Args, getMeta_Args>
-                         {
-                             Name = "getLatestLawsuitsByPlaintiff",
-                             Description= "Get the latest lawsuits by plaintiff.",
-                             Args = new getLatestLawsuits_Args(),
-                             ReturnType = new getMeta_Args(),
-                             Resolve = (args) =>
-                             {
-                                 Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
-                                 Console.WriteLine($"getLatestLawsuitsByPlaintiff called");
-                                 Console.WriteLine(JObject.FromObject(args).ToString());
-                                 Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
-                                return Task.FromResult(new getMeta_Args
-                                {
-                                     lawsuit =MOCK_LAWSUIT_DATA
-                                });
-                             }
-                         })
+               new SynthesizedFunction<getMeta_Args,getMeta_Return>(new SynthesizedFunctionDefinition<getMeta_Args,getMeta_Return>
+               {
+                   Name = "getMeta",
+                   Description = "Extract meta data from a lawsuit full text.",
+                   Args = new getMeta_Args(),
+                   ReturnType = new getMeta_Return()
+               }),
+               new InvokeFunction<getLatestLawsuits_Args,getMeta_Args>(new InvokeFunctionDefinition<getLatestLawsuits_Args, getMeta_Args>
+               {
+                   Name = "getLatestLawsuitsByPlaintiff",
+                   Description= "Get the latest lawsuits by plaintiff.",
+                   Args = new getLatestLawsuits_Args(),
+                   ReturnType                    = new getMeta_Args(),
+                   Resolve = (args) =>
+                   {
+                      Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
+                      Console.WriteLine($"getLatestLawsuitsByPlaintiff called");
+                      Console.WriteLine(JObject.FromObject(args).ToString());
+                      Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
+                      return Task.FromResult(new getMeta_Args
+                      {
+                        lawsuit =MOCK_LAWSUIT_DATA
+                      });
+                   }
+               })
              },
         }, null, null);
         var data = (await lawAgent.CreateExecutePlan("找到原告为张三的最新案件并返回它的元数据"));

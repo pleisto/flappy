@@ -51,8 +51,8 @@ namespace Pleisto.Flappy
           ["type"] = "object",
           ["properties"] = new JObject
           {
-            ["args"] = JObject.FromObject(schemaGenerator.Generate(define.Args.GetType())),
-            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(define.ReturnType.GetType()))
+            ["args"] = JObject.FromObject(schemaGenerator.Generate(define.TypeOfArgs)),
+            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(define.TypeOfReturn))
           }
         }
       };
@@ -74,7 +74,7 @@ namespace Pleisto.Flappy
     /// <returns>Functions return (JsonObject)</returns>
     public async Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args)
     {
-      return JObject.FromObject(await Call(agent, args.ToObject<TArgs>(JsonExtensions.jsonSerializer)),JsonExtensions.jsonSerializer);
+      return (await Call(agent, args.JsonToObject<TArgs>())).ObjectToJson();
     }
   }
 }

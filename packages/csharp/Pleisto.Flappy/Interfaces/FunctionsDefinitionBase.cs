@@ -32,5 +32,17 @@ namespace Pleisto.Flappy.Interfaces
     /// </summary>
     [JsonRequired]
     public TReturns ReturnType { get; set; }
+
+    /// <summary>
+    /// Type of Argument
+    /// </summary>
+    [JsonIgnore]
+    public Type TypeOfArgs => typeof(TArgs);
+
+    /// <summary>
+    /// Type of Return
+    /// </summary>
+    [JsonIgnore]
+    public Type TypeOfReturn => typeof(TReturns);
   }
 }
