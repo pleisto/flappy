@@ -114,7 +114,7 @@ class ResumeMetaReturn(
   val experienceYears: Int,
 
   @FlappyField
-  val skills: Array<ResumeSkills>,
+  val skills: List<ResumeSkills>,
 
   @FlappyField
   val projectExperiences: Array<ResumeProjectExperiences>,

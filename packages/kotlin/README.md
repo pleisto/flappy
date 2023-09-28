@@ -14,7 +14,7 @@ This package is the Kotlin version of the flappy implementation.
 Add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
-implementation("com.pleisto:flappy:0.0.3")
+implementation("com.pleisto:flappy:0.0.5")
 ```
 
 #### Create a Synthesized Function
@@ -39,7 +39,7 @@ class LawMetaReturn(
   @FlappyField
   val defendant: String,
 
-  @FlappyField(subType = FieldType.STRING)
+  @FlappyField
   val judgeOptions: List<String>
 )
 
@@ -69,7 +69,7 @@ class LawMetaReturn {
   @FlappyField
   String defendant;
 
-  @FlappyField(subType = FieldType.STRING)
+  @FlappyField
   List<String> judgeOptions;
 }
 
@@ -95,7 +95,7 @@ class GetLatestLawsuitsArguments(
   @FlappyField(description = "For demo purpose. set to False")
   val arg1: Boolean,
 
-  @FlappyField(description = "ignore it", subType = FieldType.STRING, optional = true)
+  @FlappyField(description = "ignore it", optional = true)
   val arg2: List<String>?
 )
 
@@ -124,7 +124,7 @@ class GetLatestLawsuitsArguments {
   @FlappyField(description = "For demo purpose. set to False")
   Boolean arg1;
 
-  @FlappyField(description = "ignore it", subType = FieldType.STRING, optional = true)
+  @FlappyField(description = "ignore it", optional = true)
   List<String> arg2 = null;
 }
 

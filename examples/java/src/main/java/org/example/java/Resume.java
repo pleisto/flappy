@@ -1,7 +1,10 @@
 package org.example.java;
 
 
-import flappy.*;
+import flappy.FlappyBaseAgent;
+import flappy.FlappyFunction;
+import flappy.FlappyInvokeFunction;
+import flappy.FlappySynthesizedFunction;
 import flappy.annotations.FlappyField;
 import flappy.llms.ChatGPT;
 import flappy.llms.ChatGPTConfig;
@@ -12,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class Resume {
+  public static final String RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据";
   static final String MOCK_RESUME_DATA = """
     我是一名资深的软件工程师，拥有超过七年的前端开发经验。我热衷于构建出色的用户界面，熟练运用HTML、CSS和JavaScript，并精通React、Vue以及Angular等前端框架。我曾参与过多个大型项目，负责设计和实现前端架构，确保网站的高性能和用户友好性。此外，我还具备项目管理的经验，能够带领团队按时交付高质量的成果。
 
@@ -46,28 +50,24 @@ public class Resume {
     - 学士学位，计算机科学，北京大学，2012年
     """;
 
-  static final String RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据";
+  public static FlappyFunction<?, ?> resumeGetMeta = new FlappySynthesizedFunction(
+    "getMeta",
+    "Extract meta data from a lawsuit full text.",
+    ResumeMetaArguments.class,
+    ResumeMetaReturn.class
+  );
+
+  public static FlappyFunction<?, ?> getFrontendEngineerResumes = new FlappyInvokeFunction(
+    "getFrontendEngineerResumes",
+    "Get all frontend engineer resumes.",
+    ResumeMetaArguments.class,
+    String.class,
+    (a, agent, $completion) -> MOCK_RESUME_DATA
+  );
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
     ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
-
-    FlappyFunction<?, ?> resumeGetMeta = new FlappySynthesizedFunction(
-      "getMeta",
-      "Extract meta data from a lawsuit full text.",
-      ResumeMetaArguments.class,
-      ResumeMetaReturn.class
-    );
-
-    // https://stackoverflow.com/a/68033599/20030734
-    FlappyFunction<?, ?> getFrontendEngineerResumes = new FlappyInvokeFunction(
-      "getFrontendEngineerResumes",
-      "Get all frontend engineer resumes.",
-      ResumeMetaArguments.class,
-      GetResumesReturn.class,
-      (a, agent, $completion) -> new GetResumesReturn(List.of(MOCK_RESUME_DATA))
-
-    );
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
       llm, List.of(resumeGetMeta, getFrontendEngineerResumes)
@@ -82,16 +82,42 @@ public class Resume {
     System.out.println("################# RESULT ################");
   }
 
-  static class GetResumesReturn {
-    @FlappyField(subType = FieldType.STRING)
-    List<String> output;
+  static class ResumeProjectExperiences {
+    @FlappyField
+    String title;
 
-    public GetResumesReturn(List<String> output) {
-      this.output = output;
+    @FlappyField
+    String role;
+
+    @FlappyField
+    String description;
+
+    public String getTitle() {
+      return title;
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
+    }
+
+    public String getRole() {
+      return role;
+    }
+
+    public void setRole(String role) {
+      this.role = role;
+    }
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
     }
   }
 
-  class ResumeEducation {
+  public static class ResumeEducation {
     @FlappyField
     String degree;
 
@@ -103,15 +129,79 @@ public class Resume {
 
     @FlappyField
     Number year;
+
+    public String getDegree() {
+      return degree;
+    }
+
+    public void setDegree(String degree) {
+      this.degree = degree;
+    }
+
+    public String getFieldOfStudy() {
+      return fieldOfStudy;
+    }
+
+    public void setFieldOfStudy(String fieldOfStudy) {
+      this.fieldOfStudy = fieldOfStudy;
+    }
+
+    public String getUniversity() {
+      return university;
+    }
+
+    public void setUniversity(String university) {
+      this.university = university;
+    }
+
+    public Number getYear() {
+      return year;
+    }
+
+    public void setYear(Number year) {
+      this.year = year;
+    }
   }
 
-  class ResumeMetaArguments {
+  public static class ResumeSkills {
+    @FlappyField
+    String name;
+
+    @FlappyField
+    String proficiency;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getProficiency() {
+      return proficiency;
+    }
+
+    public void setProficiency(String proficiency) {
+      this.proficiency = proficiency;
+    }
+  }
+
+  public static class ResumeMetaArguments {
 
     @FlappyField(description = "Resume full text.")
     String text;
+
+    public String getText() {
+      return text;
+    }
+
+    public void setText(String text) {
+      this.text = text;
+    }
   }
 
-  class ResumeMetaReturn {
+  public static class ResumeMetaReturn {
     @FlappyField
     String name;
 
@@ -120,6 +210,64 @@ public class Resume {
 
     @FlappyField
     Integer experienceYears;
+
+
+    @FlappyField
+    List<ResumeSkills> skills;
+
+    @FlappyField
+    List<ResumeProjectExperiences> projectExperiences;
+
+    @FlappyField
+    ResumeEducation education;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getProfession() {
+      return profession;
+    }
+
+    public void setProfession(String profession) {
+      this.profession = profession;
+    }
+
+    public Integer getExperienceYears() {
+      return experienceYears;
+    }
+
+    public void setExperienceYears(Integer experienceYears) {
+      this.experienceYears = experienceYears;
+    }
+
+    public List<ResumeSkills> getSkills() {
+      return skills;
+    }
+
+    public void setSkills(List<ResumeSkills> skills) {
+      this.skills = skills;
+    }
+
+    public List<ResumeProjectExperiences> getProjectExperiences() {
+      return projectExperiences;
+    }
+
+    public void setProjectExperiences(List<ResumeProjectExperiences> projectExperiences) {
+      this.projectExperiences = projectExperiences;
+    }
+
+    public ResumeEducation getEducation() {
+      return education;
+    }
+
+    public void setEducation(ResumeEducation education) {
+      this.education = education;
+    }
   }
 
 

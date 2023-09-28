@@ -53,7 +53,7 @@ class FunctionTest {
     @FlappyField
     val map: Map<String, Any>,
 
-    @FlappyField(subType = FieldType.STRING)
+    @FlappyField
     val listString: List<String>,
 
     @FlappyField
@@ -129,7 +129,7 @@ class FunctionTest {
       @FlappyField(description = "For demo purpose. set to False")
       val arg1: Boolean,
 
-      @FlappyField(description = "ignore it", subType = FieldType.STRING, optional = true)
+      @FlappyField(description = "ignore it", optional = true)
       val arg2: List<String>?
     )
 

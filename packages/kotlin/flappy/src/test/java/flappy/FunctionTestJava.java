@@ -46,7 +46,7 @@ class FunctionTestJava {
     private Boolean booleanType1;
     @FlappyField
     private boolean booleanType2;
-    @FlappyField(subType = FieldType.STRING)
+    @FlappyField
     private List<String> listString;
 
 //        @FlappyArgsField
@@ -54,9 +54,9 @@ class FunctionTestJava {
 
     //        @FlappyArgsField
 //        private ArrayList<String> listString2;
-    @FlappyField(subType = FieldType.BOOLEAN)
+    @FlappyField
     private List<Boolean> listBoolean;
-    @FlappyField(subType = FieldType.INTEGER)
+    @FlappyField
     private List<Integer> listInteger;
     @FlappyField
     private Level level;

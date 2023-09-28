@@ -1,6 +1,5 @@
 package org.example.kotlin
 
-import flappy.FieldType
 import flappy.FlappyBaseAgent
 import flappy.FlappyInvokeFunction
 import flappy.FlappySynthesizedFunction
@@ -33,7 +32,7 @@ class LawMetaReturn(
   @FlappyField
   val defendant: String,
 
-  @FlappyField(subType = FieldType.STRING)
+  @FlappyField
   val judgeOptions: List<String>
 )
 
@@ -51,7 +50,7 @@ class GetLatestLawsuitsArguments(
   @FlappyField(description = "For demo purpose. set to False")
   val arg1: Boolean,
 
-  @FlappyField(description = "ignore it", subType = FieldType.STRING, optional = true)
+  @FlappyField(description = "ignore it", optional = true)
   val arg2: List<String>?
 )
 
