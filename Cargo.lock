@@ -814,7 +814,7 @@ dependencies = [
  "reqwest",
  "tokio",
  "tracing",
- "virtual-fs",
+ "virtual-fs 0.9.0",
  "virtual-mio",
  "virtual-net",
  "wasmer",
@@ -2996,6 +2996,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "virtual-fs"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d9bf81134d8ed3285b85059bcada59040a43bdd37a8aaa885b9e94579ec478f5"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "bytes",
+ "derivative",
+ "filetime",
+ "fs_extra",
+ "futures",
+ "getrandom",
+ "indexmap 1.9.3",
+ "lazy_static",
+ "libc",
+ "pin-project-lite",
+ "replace_with",
+ "slab",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "webc",
+]
+
+[[package]]
 name = "virtual-mio"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3549,7 +3575,7 @@ dependencies = [
  "tracing",
  "url",
  "urlencoding",
- "virtual-fs",
+ "virtual-fs 0.8.0",
  "virtual-mio",
  "virtual-net",
  "wai-bindgen-wasmer",

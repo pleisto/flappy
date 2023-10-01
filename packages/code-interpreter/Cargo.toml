@@ -23,7 +23,7 @@ reqwest = { version = "^0.11.20", default-features = false, features = [
   "multipart",
 ] }
 webc = "5.5.1"
-virtual-fs = {version = "0.8.0", features = ["host-fs"]}
+virtual-fs = {version = "0.9.0", features = ["host-fs"]}
 virtual-net = {version = "0.5.0", features = ["host-net"]}
 tokio = {version = "1.32.0", features = ["sync", "macros", "time", "rt-multi-thread"] }
 once_cell = "1.18.0"
