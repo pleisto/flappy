@@ -11,7 +11,7 @@ independent = true
 wasmer = "4.2.0"
 wasmer-registry = "5.6.0"
 wasmer-vm =  "4.2.0"
-wasmer-cache = {version = "4.2.0", features = ["blake3-pure"]}
+wasmer-cache = {version = "4.2.2", features = ["blake3-pure"]}
 wasmer-wasix = {version = "0.13.0", features = [ "sys", "sys-poll",  "logging", "host-fs","host-vnet","host-reqwest","host-threads","sys","sys-thread"]}
 virtual-mio = {version = "0.2.0"}
 mimalloc = "0.1.39"
