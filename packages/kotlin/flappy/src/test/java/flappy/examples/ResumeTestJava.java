@@ -1,7 +1,7 @@
 package flappy.examples;
 
 import flappy.FlappyBaseAgent;
-import flappy.FlappyLLM;
+import flappy.LLMResponse;
 import flappy.llms.Dummy;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static flappy.AgentKt.AGENT_SOURCE;
 import static org.example.java.Resume.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,8 +17,8 @@ public class ResumeTestJava {
   public void resume() throws ExecutionException, InterruptedException {
     Dummy dummy = new Dummy(((_message, source, _cfg) -> {
       switch (source) {
-        case AGENT_SOURCE:
-          return new FlappyLLM.SuccessLLMResponse(
+        case FlappyBaseAgent.AGENT_SOURCE:
+          return new LLMResponse.Success(
             """
               [
                  {
@@ -41,7 +40,7 @@ public class ResumeTestJava {
       }
 
       if (source.equals(resumeGetMeta.getSource())) {
-        return new FlappyLLM.SuccessLLMResponse(
+        return new LLMResponse.Success(
           """
             {
                 "name": "姓名",
@@ -99,7 +98,7 @@ public class ResumeTestJava {
               }
                 """.trim());
       }
-      return new FlappyLLM.SuccessLLMResponse("");
+      return new LLMResponse.Success("");
     }));
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(

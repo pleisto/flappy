@@ -6,25 +6,22 @@ import kotlinx.coroutines.future.future
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
-interface FlappyLLM {
-  interface GenerateConfig {
-    val maxTokens: Int
-    val temperature: Double
-    val topP: Double
-  }
+interface LLMGenerateConfig {
+  val maxTokens: Int
+  val temperature: Double
+  val topP: Double
+}
 
-  abstract class Response(open val data: String) {
-    abstract val success: Boolean
+sealed class LLMResponse(open val data: String) {
+  abstract val success: Boolean
 
-    override fun toString() = "[$success] $data"
-  }
+  override fun toString() = "[$success] $data"
 
-  class SuccessLLMResponse(override val data: String) : Response(data) {
+  data class Success(override val data: String) : LLMResponse(data) {
     override val success = true
-
   }
 
-  class FailLLMResponse(override val data: String) : Response(data) {
+  data class Fail(override val data: String) : LLMResponse(data) {
     override val success = false
   }
 }
@@ -37,13 +34,13 @@ abstract class FlappyLLMBase {
   abstract suspend fun chatComplete(
     messages: List<FlappyChatMessage>,
     source: String,
-    config: FlappyLLM.GenerateConfig? = null
-  ): FlappyLLM.Response
+    config: LLMGenerateConfig? = null
+  ): LLMResponse
 
   @OptIn(DelicateCoroutinesApi::class)
   fun chatCompleteAsync(
     messages: List<FlappyChatMessage>,
     source: String,
-    config: FlappyLLM.GenerateConfig? = null
-  ): CompletableFuture<FlappyLLM.Response> = GlobalScope.future { chatComplete(messages, source, config) }
+    config: LLMGenerateConfig? = null
+  ): CompletableFuture<LLMResponse> = GlobalScope.future { chatComplete(messages, source, config) }
 }

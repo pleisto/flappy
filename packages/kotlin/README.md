@@ -1,27 +1,46 @@
 # Module flappy
 
+<div align="center">
+
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/gradle.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue&label=Download)](https://central.sonatype.com/artifact/com.pleisto/flappy)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue)](https://central.sonatype.com/artifact/com.pleisto/flappy)
 [![Documentation](https://javadoc.io/badge/com.pleisto/flappy.svg)](https://javadoc.io/doc/com.pleisto/flappy)
 
 This package is the Kotlin version of the flappy implementation.
 
-## Usage
+[Install](#installation) •
+[Usage](#usage) •
+[Examples](#examples) •
+[What's next](#whats-next)
 
-### Installation
+</div>
 
-Add the following dependency to your `build.gradle.kts` file:
+## Features
+
+- [x] Easily switch between different LLMs
+- [x] Controlled, consistent, and machine-readable LLM outputs
+- [x] Implement via pure Kotlin
+
+## Installation
+
+In Gradle(Kotlin), add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
 implementation("com.pleisto:flappy:0.0.5")
 ```
 
-#### Create a Synthesized Function
+In other build system, please refer to [here](https://central.sonatype.com/artifact/com.pleisto/flappy)
+
+
+## Usage
+
+### Create a Synthesized Function
 
 A synthesized function allows developers to format natural language using configuration fields for the LLM.
 
-With **Kotlin**
+<details open>
+  <summary>Kotlin</summary>
 
 ```kotlin
 class LawMetaArguments(
@@ -51,7 +70,10 @@ val lawGetMeta = FlappySynthesizedFunction(
 )
 ```
 
-With **Java**
+</details>
+
+<details>
+  <summary>Java</summary>
 
 ```java
 class LawMetaArguments {
@@ -81,11 +103,14 @@ FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
 );
 ```
 
-#### Create an Invoke Function
+</details>
+
+### Create an Invoke Function
 
 In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `invokeFunction`.
 
-With **Kotlin**
+<details open>
+  <summary>Kotlin</summary>
 
 ```kotlin
 class GetLatestLawsuitsArguments(
@@ -114,7 +139,10 @@ val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
 )
 ```
 
-With **Java**
+</details>
+
+<details>
+  <summary>Java</summary>
 
 ```java
 class GetLatestLawsuitsArguments {
@@ -146,11 +174,14 @@ FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
 );
 ```
 
-#### Create an Agent
+</details>
+
+### Create an Agent
 
 To create an agent, you need to provide an LLM (Large Language Model) along with the methods you want the agent to use.
 
-With **Kotlin**
+<details open>
+  <summary>Kotlin</summary>
 
 ```kotlin
 val llm = ChatGPT(
@@ -165,7 +196,10 @@ val lawAgent = FlappyBaseAgent(
 )
 ```
 
-With **Java**
+</details>
+
+<details>
+  <summary>Java</summary>
 
 ```java
 ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
@@ -174,7 +208,21 @@ FlappyBaseAgent lawAgent = new FlappyBaseAgent(
 );
 ```
 
+</details>
 
-# Package flappy
+## Examples
 
-This package contains core implement of flappy.
+### Kotlin
+
+- [Resume](https://github.com/pleisto/flappy/blob/main/examples/kotlin/src/main/kotlin/org/example/kotlin/Resume.kt)
+- [Law](https://github.com/pleisto/flappy/blob/main/examples/kotlin/src/main/kotlin/org/example/kotlin/Law.kt)
+
+### Java
+
+- [Resume](https://github.com/pleisto/flappy/blob/main/examples/java/src/main/java/org/example/java/Resume.java)
+- [Law](https://github.com/pleisto/flappy/blob/main/examples/java/src/main/java/org/example/java/Law.java)
+
+## What's next
+
+- Template engine
+- Sandbox

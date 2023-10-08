@@ -1,3 +1,3 @@
 package flappy
 
-const val STEP_PREFIX = "%@_"
+internal const val STEP_PREFIX = "%@_"

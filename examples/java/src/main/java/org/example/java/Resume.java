@@ -2,12 +2,11 @@ package org.example.java;
 
 
 import flappy.FlappyBaseAgent;
-import flappy.FlappyFunction;
-import flappy.FlappyInvokeFunction;
-import flappy.FlappySynthesizedFunction;
+import flappy.FlappyFunctionBase;
 import flappy.annotations.FlappyField;
+import flappy.functions.FlappyInvokeFunction;
+import flappy.functions.FlappySynthesizedFunction;
 import flappy.llms.ChatGPT;
-import flappy.llms.ChatGPTConfig;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.List;
@@ -50,14 +49,14 @@ public class Resume {
     - 学士学位，计算机科学，北京大学，2012年
     """;
 
-  public static FlappyFunction<?, ?> resumeGetMeta = new FlappySynthesizedFunction(
+  public static FlappyFunctionBase<?, ?> resumeGetMeta = new FlappySynthesizedFunction(
     "getMeta",
     "Extract meta data from a lawsuit full text.",
     ResumeMetaArguments.class,
     ResumeMetaReturn.class
   );
 
-  public static FlappyFunction<?, ?> getFrontendEngineerResumes = new FlappyInvokeFunction(
+  public static FlappyFunctionBase<?, ?> getFrontendEngineerResumes = new FlappyInvokeFunction(
     "getFrontendEngineerResumes",
     "Get all frontend engineer resumes.",
     ResumeMetaArguments.class,
@@ -67,7 +66,7 @@ public class Resume {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
-    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
       llm, List.of(resumeGetMeta, getFrontendEngineerResumes)

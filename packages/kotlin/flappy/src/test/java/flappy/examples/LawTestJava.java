@@ -1,7 +1,7 @@
 package flappy.examples;
 
 import flappy.FlappyBaseAgent;
-import flappy.FlappyLLM;
+import flappy.LLMResponse;
 import flappy.llms.Dummy;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static flappy.AgentKt.AGENT_SOURCE;
 import static org.example.java.Law.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,8 +17,8 @@ public class LawTestJava {
   public void law() throws ExecutionException, InterruptedException {
     Dummy dummy = new Dummy(((_message, source, _cfg) -> {
       switch (source) {
-        case AGENT_SOURCE:
-          return new FlappyLLM.SuccessLLMResponse(
+        case FlappyBaseAgent.AGENT_SOURCE:
+          return new LLMResponse.Success(
             """
               [
                 {
@@ -44,7 +43,7 @@ public class LawTestJava {
       }
 
       if (source.equals(lawGetMeta.getSource())) {
-        return new FlappyLLM.SuccessLLMResponse(
+        return new LLMResponse.Success(
           """
               {
               "verdict": "Unknown",
@@ -54,7 +53,7 @@ public class LawTestJava {
             }
             """.trim());
       }
-      return new FlappyLLM.SuccessLLMResponse("");
+      return new LLMResponse.Success("");
     }));
 
     FlappyBaseAgent lawAgent = new FlappyBaseAgent(

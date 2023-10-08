@@ -1,15 +1,17 @@
 package flappy
 
-class RepairableException(message: String) : Exception(message)
-class NonRepairableException(message: String) : Exception(message)
 
+sealed class FlappyException(message: String) : Exception(message) {
 
-class CompileException(message: String) : Exception(message)
+  class RepairableException(message: String) : FlappyException(message)
 
-class FatalException(message: String) : Exception(message)
+  class NonRepairableException(message: String) : FlappyException(message)
 
-class RuntimeException(message: String) : Exception(message)
+  class CompileException(message: String) : FlappyException(message)
 
-class ParseException(message: String) : Exception(message)
+  class FatalException(message: String) : FlappyException(message)
+  
+  class ParseException(message: String) : FlappyException(message)
 
-class FieldNotFoundException(message: String) : Exception(message)
+  class FieldNotFoundException(message: String) : FlappyException(message)
+}

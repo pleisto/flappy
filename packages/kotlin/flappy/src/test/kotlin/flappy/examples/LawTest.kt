@@ -1,8 +1,7 @@
 package flappy.examples
 
-import flappy.AGENT_SOURCE
 import flappy.FlappyBaseAgent
-import flappy.FlappyLLM
+import flappy.LLMResponse
 import flappy.llms.Dummy
 import kotlinx.coroutines.runBlocking
 import org.example.kotlin.*
@@ -11,7 +10,7 @@ import kotlin.test.assertEquals
 
 val lawDummy = Dummy { _, source, _ ->
   when (source) {
-    AGENT_SOURCE -> FlappyLLM.SuccessLLMResponse(
+    FlappyBaseAgent.AGENT_SOURCE -> LLMResponse.Success(
       """
           [
             {
@@ -35,7 +34,7 @@ val lawDummy = Dummy { _, source, _ ->
         """.trimIndent()
     )
 
-    lawGetMeta.source -> FlappyLLM.SuccessLLMResponse(
+    lawGetMeta.source -> LLMResponse.Success(
       """
           {
             "verdict": "Unknown",
@@ -46,7 +45,7 @@ val lawDummy = Dummy { _, source, _ ->
         """.trimIndent()
     )
 
-    else -> FlappyLLM.SuccessLLMResponse("")
+    else -> LLMResponse.Success("")
   }
 }
 

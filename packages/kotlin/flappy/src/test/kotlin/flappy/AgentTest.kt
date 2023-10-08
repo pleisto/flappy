@@ -2,6 +2,7 @@ package flappy
 
 import com.aallam.openai.client.OpenAI
 import flappy.annotations.FlappyField
+import flappy.functions.FlappySynthesizedFunction
 import flappy.llms.ChatGPT
 import kotlin.test.Test
 import kotlin.test.assertEquals
