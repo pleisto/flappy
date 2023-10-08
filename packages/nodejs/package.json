@@ -9,7 +9,7 @@
   "types": "./src/index.ts",
   "dependencies": {
     "radash": "^11.0.0",
-    "zod": "^3.22.2",
+    "zod": "^3.22.3",
     "zod-to-json-schema": "^3.21.4"
   },
   "optionalDependencies": {
