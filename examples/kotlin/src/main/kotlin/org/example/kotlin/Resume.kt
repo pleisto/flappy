@@ -60,7 +60,7 @@ val MOCK_RESUME_DATA = """
 
             """.trimIndent()
 
-val RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据"
+const val RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据"
 
 
 class ResumeProjectExperiences(
