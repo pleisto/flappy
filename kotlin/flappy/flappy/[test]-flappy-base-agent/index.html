@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>[test]FlappyBaseAgent</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            flappy
+                    </a>
+            </div>
+            <div class="library-version">
+0.0.5            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":flappy:dokkaHtml/test">test</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="flappy::flappy/FlappyBaseAgent///PointingToDeclaration//-919815459">
+  <div class="breadcrumbs"><a href="../../../index.html">flappy</a><span class="delimiter">/</span><a href="../index.html">flappy</a><span class="delimiter">/</span><span class="current">[test]FlappyBaseAgent</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Flappy</span><wbr></wbr><span>Base</span><wbr></wbr><span><span>Agent</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">FlappyBaseAgent</a> <span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a> </span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>inferenceLLM<span class="token operator">: </span><a href="../[test]-flappy-l-l-m-base/index.html">FlappyLLMBase</a><span class="token punctuation">, </span></span><span class="parameter ">functions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-any-flappy-function/index.html">AnyFlappyFunction</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">maxRetry<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/pleisto/flappy/tree/main/packages/kotlin/flappy/src/main/kotlin/flappy/Agent.kt#L14">source</a>)</span></span></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1598714222%2FConstructors%2F-919815459" anchor-label="FlappyBaseAgent" id="1598714222%2FConstructors%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-flappy-base-agent.html"><span>Flappy</span><wbr></wbr><span>Base</span><wbr></wbr><span><span>Agent</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1598714222%2FConstructors%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a></div></div><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inferenceLLM<span class="token operator">: </span><a href="../[test]-flappy-l-l-m-base/index.html">FlappyLLMBase</a><span class="token punctuation">, </span></span><span class="parameter ">functions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-any-flappy-function/index.html">AnyFlappyFunction</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">maxRetry<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1756769259%2FClasslikes%2F-919815459" anchor-label="BaseStep" id="1756769259%2FClasslikes%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-base-step/index.html"><span>Base</span><wbr></wbr><span><span>Step</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1756769259%2FClasslikes%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-base-step/index.html">BaseStep</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>functionName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>args<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>thought<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-135541011%2FProperties%2F-919815459" anchor-label="finalMaxRetry" id="-135541011%2FProperties%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="final-max-retry.html"><span>final</span><wbr></wbr><span>Max</span><wbr></wbr><span><span>Retry</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-135541011%2FProperties%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="final-max-retry.html">finalMaxRetry</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-350556009%2FProperties%2F-919815459" anchor-label="functionDefinitionString" id="-350556009%2FProperties%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="function-definition-string.html"><span>function</span><wbr></wbr><span>Definition</span><wbr></wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-350556009%2FProperties%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="function-definition-string.html">functionDefinitionString</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1606331327%2FProperties%2F-919815459" anchor-label="inferenceLLM" id="1606331327%2FProperties%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="inference-l-l-m.html"><span>inference</span><wbr></wbr><span><span>LLM</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1606331327%2FProperties%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inference-l-l-m.html">inferenceLLM</a><span class="token operator">: </span><a href="../[test]-flappy-l-l-m-base/index.html">FlappyLLMBase</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1698926021%2FProperties%2F-919815459" anchor-label="lanOutputSchemaString" id="-1698926021%2FProperties%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="lan-output-schema-string.html"><span>lan</span><wbr></wbr><span>Output</span><wbr></wbr><span>Schema</span><wbr></wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1698926021%2FProperties%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="lan-output-schema-string.html">lanOutputSchemaString</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1850285928%2FFunctions%2F-919815459" anchor-label="callFunctionAsync" id="1850285928%2FFunctions%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="call-function-async.html"><span>call</span><wbr></wbr><span>Function</span><wbr></wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1850285928%2FFunctions%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="call-function-async.html">R</a><span class="token operator">&gt; </span><a href="call-function-async.html"><span class="token function">callFunctionAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">args<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/concurrent/CompletableFuture.html">CompletableFuture</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="call-function-async.html">R</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-657903941%2FFunctions%2F-919815459" anchor-label="executePlan" id="-657903941%2FFunctions%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="execute-plan.html"><span>execute</span><wbr></wbr><span><span>Plan</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-657903941%2FFunctions%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="execute-plan.html">R</a><span class="token operator">&gt; </span><a href="execute-plan.html"><span class="token function">executePlan</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="execute-plan.html">R</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="921527279%2FFunctions%2F-919815459" anchor-label="executePlanAsync" id="921527279%2FFunctions%2F-919815459" data-filterable-set=":flappy:dokkaHtml/test"></a>
+          <div class="table-row" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="execute-plan-async.html"><span>execute</span><wbr></wbr><span>Plan</span><wbr></wbr><span><span>Async</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="921527279%2FFunctions%2F-919815459"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/test" data-active="" data-toggle=":flappy:dokkaHtml/test">test</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/test"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="execute-plan-async.html">R</a><span class="token operator">&gt; </span><a href="execute-plan-async.html"><span class="token function">executePlanAsync</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/concurrent/CompletableFuture.html">CompletableFuture</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="execute-plan-async.html">R</a><span class="token operator">&gt;</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
