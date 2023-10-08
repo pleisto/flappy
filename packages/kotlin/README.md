@@ -1,9 +1,9 @@
-# Flappy Kotlin version
+# Package com.pleisto.flappy
 
 [![License](https://img.shields.io/github/license/pleisto/flappy)](../../LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/gradle.yml?label=ci)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue&label=Download)](https://central.sonatype.com/artifact/com.pleisto/flappy)
-[![Documentation](https://img.shields.io/badge/docs-api-a97bff.svg?logo=kotlin)](https://pleisto.github.io/flappy/kotlin/)
+[![Documentation](https://javadoc.io/badge/com.pleisto/flappy.svg)](https://javadoc.io/doc/com.pleisto/flappy)
 
 This package is the Kotlin version of the flappy implementation.
 
