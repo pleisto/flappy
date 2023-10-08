@@ -127,7 +127,7 @@ tasks.withType<DokkaTask>().configureEach {
   offlineMode.set(false)
 
   dokkaSourceSets {
-    configureEach {
+    named("main") {
       suppress.set(false)
       displayName.set(name)
       documentedVisibilities.set(setOf(Visibility.PUBLIC))
