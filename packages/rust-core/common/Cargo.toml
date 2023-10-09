@@ -16,7 +16,7 @@ wasmer-wasix = {version = "0.15.0", features = [ "sys", "sys-poll",  "logging", 
 virtual-mio = {version = "0.3.0"}
 anyhow = "1.0"
 dirs = "5.0.1"
-reqwest = { version = "^0.11.20", default-features = false, features = [
+reqwest = { version = "^0.11.22", default-features = false, features = [
   "native-tls",
   "json",
   "multipart",
