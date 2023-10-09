@@ -9,19 +9,23 @@ import kotlinx.coroutines.future.future
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
-const val AGENT_SOURCE = "#agent"
-
 class FlappyBaseAgent @JvmOverloads constructor(
   val inferenceLLM: FlappyLLMBase,
   private val functions: List<AnyFlappyFunction>,
   maxRetry: Int? = null,
 ) {
+
+  companion object {
+    /** @suppress */
+    const val AGENT_SOURCE = "#agent"
+  }
+
   private val logger = Logger.getLogger(this.javaClass.name)
-  val finalMaxRetry = maxRetry ?: 1
+  internal val finalMaxRetry = maxRetry ?: 1
 
   private val functionsDefinition = functions.map { it.definition() }
 
-  data class BaseStep(
+  private data class BaseStep(
     @FlappyField(description = "Increment id starting from 1")
     val id: Int,
 
@@ -39,25 +43,25 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
   private val stepSchema = BaseStep::class.java.buildFieldProperties("Base step.")
 
-  val functionDefinitionString: String = functionsDefinition.asString()
-  val lanOutputSchemaString: String = object {
+  internal val functionDefinitionString: String = functionsDefinition.asString()
+  internal val lanOutputSchemaString: String = object {
     val items = stepSchema
     val type = FieldType.LIST.typeName
     val description = "An array storing the steps."
   }.asString()
 
   init {
-    if (finalMaxRetry <= 0) throw CompileException("retry should be positive")
-    if (functions.isEmpty()) throw CompileException("functions is blank")
+    if (finalMaxRetry <= 0) throw FlappyException.CompileException("retry should be positive")
+    if (functions.isEmpty()) throw FlappyException.CompileException("functions is blank")
 
     val names = functions.map { it.name }
-    if (names.size != names.toSet().size) throw CompileException("functions is not unique")
+    if (names.size != names.toSet().size) throw FlappyException.CompileException("functions is not unique")
   }
 
 
   private fun findFunction(name: String) =
     functions.find { it.name == name }
-      ?: throw FatalException("function `$name` not found, supported: ${functions.map { it.name }}")
+      ?: throw FlappyException.FatalException("function `$name` not found, supported: ${functions.map { it.name }}")
 
   private fun buildUserMessage(prompt: String) = UserMessage(
     """
@@ -140,14 +144,14 @@ class FlappyBaseAgent @JvmOverloads constructor(
     try {
       return jacksonMapper.readValue<List<BaseStep>>(input)
     } catch (e: MismatchedInputException) {
-      throw ParseException(e.message ?: e.originalMessage)
+      throw FlappyException.ParseException(e.message ?: e.originalMessage)
     }
   }
 
   private fun parseSteps(data: String): List<BaseStep> {
     val startIndex = data.indexOf("[")
     val endIndex = data.lastIndexOf("]")
-    if (startIndex !in 0..<endIndex) throw ParseException("Invalid JSON response")
+    if (startIndex !in 0..<endIndex) throw FlappyException.ParseException("Invalid JSON response")
     val body = data.slice(startIndex..endIndex)
     return castSteps(body)
   }
@@ -164,4 +168,4 @@ class FlappyBaseAgent @JvmOverloads constructor(
 }
 
 
-typealias ResultStore = MutableMap<Int, Any>
+internal typealias ResultStore = MutableMap<Int, Any>

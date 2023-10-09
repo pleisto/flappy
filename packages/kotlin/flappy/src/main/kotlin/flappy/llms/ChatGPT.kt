@@ -12,14 +12,20 @@ import com.aallam.openai.client.OpenAIHost
 import flappy.*
 
 
-class ChatGPTConfig @JvmOverloads constructor(val token: String, val host: String? = null)
-
+/**
+ * ChatGPT LLM
+ *
+ *
+ */
 class ChatGPT @JvmOverloads constructor(
   private val model: String,
   private val chatGPTConfig: ChatGPTConfig? = null,
   private val openai: OpenAI? = null,
 ) :
   FlappyLLMBase() {
+
+  class ChatGPTConfig @JvmOverloads constructor(val token: String, val host: String? = null)
+
   private val openaiClient =
     openai ?: chatGPTConfig?.let {
       OpenAI(
@@ -28,7 +34,7 @@ class ChatGPT @JvmOverloads constructor(
         host = OpenAIHost(it.host ?: OpenAIHost.OpenAI.baseUrl)
       )
     }
-    ?: throw CompileException("openai client missing")
+    ?: throw FlappyException.CompileException("openai client missing")
 
   override val defaultMaxTokens: Int
     get() {
@@ -45,8 +51,8 @@ class ChatGPT @JvmOverloads constructor(
   override suspend fun chatComplete(
     messages: List<FlappyChatMessage>,
     source: String,
-    config: FlappyLLM.GenerateConfig?
-  ): FlappyLLM.Response {
+    config: LLMGenerateConfig?
+  ): LLMResponse {
     logger.info("openai input $messages")
 
     val chatCompletionRequest = ChatCompletionRequest(
@@ -72,7 +78,7 @@ class ChatGPT @JvmOverloads constructor(
     val choice = completion.choices.firstOrNull()
 
     return if (choice === null)
-      FlappyLLM.FailLLMResponse("failed") else
-      FlappyLLM.SuccessLLMResponse(choice.message.content!!)
+      LLMResponse.Fail("failed") else
+      LLMResponse.Success(choice.message.content!!)
   }
 }

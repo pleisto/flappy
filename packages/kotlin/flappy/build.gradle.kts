@@ -127,7 +127,7 @@ tasks.withType<DokkaTask>().configureEach {
   offlineMode.set(false)
 
   dokkaSourceSets {
-    configureEach {
+    named("main") {
       suppress.set(false)
       displayName.set(name)
       documentedVisibilities.set(setOf(Visibility.PUBLIC))
@@ -135,15 +135,21 @@ tasks.withType<DokkaTask>().configureEach {
       skipEmptyPackages.set(true)
       skipDeprecated.set(false)
       suppressGeneratedFiles.set(true)
+      includeNonPublic.set(false)
 
       jdkVersion.set(19)
       includes.from(project.files(), "../README.md")
-      sourceRoots.from(file("src"))
+      sourceRoots.from(file("src/main"))
 
       sourceLink {
         localDirectory.set(projectDir.resolve("src"))
         remoteUrl.set(URL("https://github.com/pleisto/flappy/tree/main/packages/kotlin/flappy/src"))
         remoteLineSuffix.set("#L")
+      }
+
+      perPackageOption {
+        matchingRegex.set("flappy.examples")
+        suppress.set(true)
       }
     }
   }

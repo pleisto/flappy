@@ -6,7 +6,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.CoroutineContext
 
 //https://stackoverflow.com/a/72712129/20030734
-interface CoroutineCallback<RESULT> {
+internal interface CoroutineCallback<RESULT> {
   companion object {
     @JvmOverloads
     fun <R> call(

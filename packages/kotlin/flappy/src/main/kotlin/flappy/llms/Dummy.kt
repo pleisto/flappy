@@ -1,25 +1,27 @@
 package flappy.llms
 
 import flappy.FlappyChatMessage
-import flappy.FlappyLLM
 import flappy.FlappyLLMBase
+import flappy.LLMGenerateConfig
+import flappy.LLMResponse
 
-typealias MockChat = (
+internal typealias MockChat = (
   messages: List<FlappyChatMessage>,
   source: String,
-  config: FlappyLLM.GenerateConfig?
-) -> FlappyLLM.Response
+  config: LLMGenerateConfig?
+) -> LLMResponse
 
-val defaultMockChat: MockChat = { _, _, _ -> FlappyLLM.SuccessLLMResponse("") }
+internal val defaultMockChat: MockChat = { _, _, _ -> LLMResponse.Success("") }
 
+/** @suppress */
 class Dummy(
   val mockChat: MockChat = defaultMockChat
 ) : FlappyLLMBase() {
   override suspend fun chatComplete(
     messages: List<FlappyChatMessage>,
     source: String,
-    config: FlappyLLM.GenerateConfig?
-  ): FlappyLLM.Response {
+    config: LLMGenerateConfig?
+  ): LLMResponse {
     return mockChat(messages, source, config)
   }
 }

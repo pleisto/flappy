@@ -2,11 +2,11 @@ package flappy
 
 import java.util.logging.Logger
 
-typealias AnyFlappyFunction = FlappyFunction<*, *>
+internal typealias AnyFlappyFunction = FlappyFunctionBase<*, *>
 
-typealias AnyClass = Class<*>
+internal typealias AnyClass = Class<*>
 
-abstract class FlappyFunction<Args : Any, Ret : Any>(
+abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
   val name: String,
   private val description: String,
   val argsType: Class<Args>,
@@ -22,7 +22,7 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
   val argsTypeSchemaPropertiesString: String = argsTypeSchemaProperties.asString()
   val returnTypeSchemaPropertiesString: String = returnTypeSchemaProperties.asString()
 
-  fun definition() = FunctionSchema(
+  internal fun definition() = FunctionSchema(
     name = name,
     description = description,
     parameters = FunctionParameters(
@@ -69,78 +69,19 @@ abstract class FlappyFunction<Args : Any, Ret : Any>(
     return jacksonMapper.writeValueAsString(args)
   }
 
-  protected fun parseComplete(resp: FlappyLLM.Response): Ret {
-    if (!resp.success) throw NonRepairableException(resp.data)
-    if (isInvalidJson(resp.data)) throw RepairableException("invalid json")
+  protected fun parseComplete(resp: LLMResponse): Ret {
+    if (!resp.success) throw FlappyException.NonRepairableException(resp.data)
+    if (isInvalidJson(resp.data)) throw FlappyException.RepairableException("invalid json")
 
     return resp.data.castBy(returnType)
   }
 
-  abstract suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null): Ret
+  abstract suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: LLMGenerateConfig? = null): Ret
 
-  suspend fun call(args: String, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null) =
+  suspend fun call(args: String, agent: FlappyBaseAgent, config: LLMGenerateConfig? = null) =
     invoke(args.castBy(argsType), agent, config)
 
-  suspend fun call(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig? = null) {
+  suspend fun call(args: Args, agent: FlappyBaseAgent, config: LLMGenerateConfig? = null) {
     invoke(if (args is String) (args.castBy(argsType)) else args, agent, config)
   }
-}
-
-class FlappySynthesizedFunction<Args : Any, Ret : Any>(
-  name: String,
-  description: String,
-  args: Class<Args>,
-  returnType: Class<Ret>
-) : FlappyFunction<Args, Ret>(
-  name,
-  description,
-  args,
-  returnType
-) {
-  override suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig?): Ret {
-    val chatMessages = this.buildChatMessages(args)
-
-    val maxRetry = agent.finalMaxRetry
-    var retry = maxRetry
-    var repairMessages: List<FlappyChatMessage> = listOf()
-
-    while (true) {
-      val finalMessage = chatMessages + repairMessages
-      logger.info("$name call input $finalMessage")
-      val resp = agent.inferenceLLM.chatComplete(finalMessage, source, config)
-      logger.info("<$retry/$maxRetry> $name call resp $resp")
-      try {
-        return parseComplete(resp)
-      } catch (e: Exception) {
-        logger.info("<$retry/$maxRetry> $name $e")
-        retry -= 1
-
-        if (retry <= 0) throw RuntimeException("Interrupted, function call failed. Please refer to the error message above.")
-
-        when (e) {
-          is NonRepairableException -> {}
-          else -> {
-            repairMessages = buildRepairMessages(resp.data, e.message ?: e.localizedMessage)
-          }
-        }
-      }
-    }
-  }
-}
-
-class FlappyInvokeFunction<Args : Any, Ret : Any>(
-  name: String,
-  description: String,
-  args: Class<Args>,
-  returnType: Class<Ret>,
-  val invoker: suspend (args: Args, agent: FlappyBaseAgent) -> Ret,
-) : FlappyFunction<Args, Ret>(
-  name,
-  description,
-  args,
-  returnType
-) {
-  override suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: FlappyLLM.GenerateConfig?): Ret =
-    invoker(args, agent)
-
 }

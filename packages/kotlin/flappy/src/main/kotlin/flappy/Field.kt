@@ -5,12 +5,12 @@ import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
+/** @suppress */
 sealed class FlappyClass {
   data object Null : FlappyClass()
 }
 
-
-enum class FieldType {
+internal enum class FieldType {
   NULL {
     override val typeName = "null"
   },
@@ -52,7 +52,7 @@ enum class FieldType {
   abstract val typeName: String
 }
 
-sealed class FieldTypeClass(open val type: Type) {
+internal sealed class FieldTypeClass(open val type: Type) {
   fun buildKlass() = type.getRawClass()
   open val isLiteral: Boolean = true
   abstract var fieldType: FieldType
@@ -143,7 +143,7 @@ sealed class FieldTypeClass(open val type: Type) {
   }
 }
 
-fun AnyClass.getFlappyFieldType(type: Type): FieldTypeClass {
+internal fun AnyClass.getFlappyFieldType(type: Type): FieldTypeClass {
   if (this.isEnum) return FieldTypeClass.ENUM(type)
   if (this.isArray) return FieldTypeClass.LIST(type)
 
@@ -192,20 +192,19 @@ fun AnyClass.getFlappyFieldType(type: Type): FieldTypeClass {
 }
 
 @JvmOverloads
-fun Type.buildFieldProperties(description: String? = null) =
+internal fun Type.buildFieldProperties(description: String? = null) =
   this.getRawFieldType().toFieldPropertyOrProperties(description)
 
-fun Type.getRawClass(): AnyClass =
+internal fun Type.getRawClass(): AnyClass =
   when (this) {
     is AnyClass -> (this)
     is ParameterizedType -> this.rawType.getRawClass()
-    else -> throw FatalException("invalid type ${this.typeName}")
+    else -> throw FlappyException.FatalException("invalid type ${this.typeName}")
   }
 
-fun Type.getRawFieldType() = this.getRawClass().getFlappyFieldType(this)
+internal fun Type.getRawFieldType() = this.getRawClass().getFlappyFieldType(this)
 
-
-fun Type.getSubType(): Type? {
+internal fun Type.getSubType(): Type? {
   return when (this) {
     is AnyClass -> if (this.isArray) this.componentType else null
     is ParameterizedType -> {
@@ -223,12 +222,11 @@ fun Type.getSubType(): Type? {
       }
     }
 
-    else -> throw FatalException("invalid type ${this.typeName}")
+    else -> throw FlappyException.FatalException("invalid type ${this.typeName}")
   }
 }
 
-
-data class FieldMetadata(
+internal data class FieldMetadata(
   val field: Field,
   val description: String,
   val optional: Boolean,
@@ -243,12 +241,12 @@ data class FieldMetadata(
 
   init {
     if (this.fieldType is FieldTypeClass.UNKNOWN) {
-      throw CompileException("`$name`: Type is not supported")
+      throw FlappyException.CompileException("`$name`: Type is not supported")
     }
 
     if (subType !== null) {
       if (subType.getRawFieldType() is FieldTypeClass.UNKNOWN) {
-        throw CompileException("`$name` - `$subType`: sub type is not supported")
+        throw FlappyException.CompileException("`$name` - `$subType`: sub type is not supported")
       }
     }
   }

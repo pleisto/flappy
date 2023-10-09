@@ -2,11 +2,10 @@ package org.example.kotlin
 
 import flappy.FlappyBaseAgent
 import flappy.FlappyClass
-import flappy.FlappyInvokeFunction
-import flappy.FlappySynthesizedFunction
 import flappy.annotations.FlappyField
+import flappy.functions.FlappyInvokeFunction
+import flappy.functions.FlappySynthesizedFunction
 import flappy.llms.ChatGPT
-import flappy.llms.ChatGPTConfig
 import io.github.cdimascio.dotenv.dotenv
 
 val resumeGetMeta = FlappySynthesizedFunction(
@@ -129,7 +128,7 @@ suspend fun main(args: Array<String>) {
 
   val llm = ChatGPT(
     model = "gpt-3.5-turbo",
-    chatGPTConfig = ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
   )
 
 

@@ -2,6 +2,8 @@ package flappy
 
 import flappy.annotations.FlappyField
 import flappy.annotations.flappyFieldMetadataList
+import flappy.functions.FlappyInvokeFunction
+import flappy.functions.FlappySynthesizedFunction
 import flappy.llms.Dummy
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -100,11 +102,11 @@ class FunctionTest {
 
   @Test
   fun parse() {
-    assertFailsWith<ParseException> {
+    assertFailsWith<FlappyException.ParseException> {
       "".castBy(sampleFunction.returnType)
     }
 
-    assertFailsWith<ParseException> {
+    assertFailsWith<FlappyException.ParseException> {
       "".castBy(sampleFunction.argsType)
     }
 

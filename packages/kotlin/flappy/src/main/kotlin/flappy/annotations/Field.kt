@@ -13,7 +13,7 @@ annotation class FlappyField(
 )
 
 
-fun AnyClass.flappyFieldMetadataList(): List<FieldMetadata> {
+internal fun AnyClass.flappyFieldMetadataList(): List<FieldMetadata> {
   return this.declaredFields.filter { it.isAnnotationPresent((FlappyField::class.java)) }
     .map {
       val annotation = it.getAnnotation(FlappyField::class.java)
