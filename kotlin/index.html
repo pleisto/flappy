@@ -49,7 +49,6 @@
         </div>
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":flappy:dokkaHtml/main">main</button>
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":flappy:dokkaHtml/test">test</button>
         </div>
     </div>
     <div class="navigation-controls">
@@ -62,82 +61,85 @@
                 <div class="sidebar--inner" id="sideMenu"></div>
             </div>
             <div id="main">
-<div class="main-content" id="content" pageIds="flappy::////PointingToDeclaration//-1495679732">
+<div class="main-content" id="content" pageIds="flappy::////PointingToDeclaration//-1684293763">
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>flappy</span></span></h1>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":flappy:dokkaHtml/main"><div align="center"><p class="paragraph"><a href="https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/pleisto/flappy.svg"></a> <a href="https://github.com/pleisto/flappy/actions/workflows/gradle.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/pleisto/flappy/gradle.yml.svg"></a> <a href="https://central.sonatype.com/artifact/com.pleisto/flappy"></a> <a href="https://javadoc.io/doc/com.pleisto/flappy"><img alt="Documentation" src="https://javadoc.io/badge/com.pleisto/flappy.svg"></a></p><p class="paragraph">This package is the Kotlin version of the flappy implementation.</p><p class="paragraph">#installation • #usage • #examples • #whats-next</p></div><h2 class=""> Features</h2><ul><li><p class="paragraph">Easily switch between different LLMs</p></li><li><p class="paragraph">Controlled, consistent, and machine-readable LLM outputs</p></li><li><p class="paragraph">Implement via pure Kotlin</p></li></ul><h2 class=""> Installation</h2><p class="paragraph">In Gradle(Kotlin), add the following dependency to your <code class="lang-kotlin">build.gradle.kts</code> file:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">implementation(&quot;com.pleisto:flappy:0.0.5&quot;)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">In other build system, please refer to <a href="https://central.sonatype.com/artifact/com.pleisto/flappy">here</a></p><h2 class=""> Usage</h2><h3 class=""> Create a Synthesized Function</h3><p class="paragraph">A synthesized function allows developers to format natural language using configuration fields for the LLM.</p><details open>
+  <summary>Kotlin</summary><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class LawMetaArguments(<br>  @FlappyField(description = &quot;Lawsuit full text.&quot;)<br>  val lawsuit: String<br>)<br><br>class LawMetaReturn(<br>  @FlappyField<br>  val verdict: Verdict,<br><br>  @FlappyField<br>  val plaintiff: String,<br><br>  @FlappyField<br>  val defendant: String,<br><br>  @FlappyField<br>  val judgeOptions: List&lt;String&gt;<br>)<br><br>val lawGetMeta = FlappySynthesizedFunction(<br>  name = &quot;getMeta&quot;,<br>  description = &quot;Extract meta data from a lawsuit full text.&quot;,<br>  args = LawMetaArguments::class.java,<br>  returnType = LawMetaReturn::class.java,<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><details>
+  <summary>Java</summary><div class="sample-container"><pre><code class="block lang-java" theme="idea">class LawMetaArguments {<br>  @FlappyField(description = &quot;Lawsuit full text.&quot;)<br>  String lawsuit;<br>}<br><br>class LawMetaReturn {<br>  @FlappyField<br>  Verdict verdict;<br><br>  @FlappyField<br>  String plaintiff;<br><br>  @FlappyField<br>  String defendant;<br><br>  @FlappyField<br>  List&lt;String&gt; judgeOptions;<br>}<br><br>FlappyFunction&lt;?, ?&gt; lawGetMeta = new FlappySynthesizedFunction(<br>  &quot;getMeta&quot;,<br>  &quot;Extract meta data from a lawsuit full text.&quot;,<br>  LawMetaArguments.class,<br>  LawMetaReturn.class<br>);</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><h3 class=""> Create an Invoke Function</h3><p class="paragraph">In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including <code class="lang-kotlin">invokeFunction</code>.</p><details open>
+  <summary>Kotlin</summary><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class GetLatestLawsuitsArguments(<br>  @FlappyField<br>  val plaintiff: String,<br><br>  @FlappyField(description = &quot;For demo purpose. set to False&quot;)<br>  val arg1: Boolean,<br><br>  @FlappyField(description = &quot;ignore it&quot;, optional = true)<br>  val arg2: List&lt;String&gt;?<br>)<br><br>class GetLatestLawsuitsReturn(<br>  @FlappyField<br>  val output: String<br>)<br><br><br>val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(<br>  name = &quot;getLatestLawsuitsByPlaintiff&quot;,<br>  description = &quot;Get the latest lawsuits by plaintiff.&quot;,<br>  args = GetLatestLawsuitsArguments::class.java,<br>  returnType = GetLatestLawsuitsReturn::class.java,<br>  invoker = { _, _ -&gt; GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA) }<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><details>
+  <summary>Java</summary><div class="sample-container"><pre><code class="block lang-java" theme="idea">class GetLatestLawsuitsArguments {<br>  @FlappyField<br>  String plaintiff;<br><br>  @FlappyField(description = &quot;For demo purpose. set to False&quot;)<br>  Boolean arg1;<br><br>  @FlappyField(description = &quot;ignore it&quot;, optional = true)<br>  List&lt;String&gt; arg2 = null;<br>}<br><br>static class GetLatestLawsuitsReturn {<br>  @FlappyField<br>  String output;<br><br>  public GetLatestLawsuitsReturn(String output) {<br>    this.output = output;<br>  }<br>}<br><br>FlappyFunction&lt;?, ?&gt; lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(<br>  &quot;getLatestLawsuitsByPlaintiff&quot;,<br>  &quot;Get the latest lawsuits by plaintiff.&quot;,<br>  GetLatestLawsuitsArguments.class,<br>  GetLatestLawsuitsReturn.class,<br>  (a, agent, $completion) -&gt; new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)<br>);</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><h3 class=""> Create an Agent</h3><p class="paragraph">To create an agent, you need to provide an LLM (Large Language Model) along with the methods you want the agent to use.</p><details open>
+  <summary>Kotlin</summary><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val llm = ChatGPT(<br>  model = &quot;gpt-3.5-turbo&quot;,<br>  chatGPTConfig = ChatGPTConfig(token = dotenv[&quot;OPENAI_TOKEN&quot;], host = dotenv[&quot;OPENAI_API_BASE&quot;])<br>)<br><br>val lawAgent = FlappyBaseAgent(<br>  maxRetry = 2,<br>  inferenceLLM = llm,<br>  functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><details>
+  <summary>Java</summary><div class="sample-container"><pre><code class="block lang-java" theme="idea">ChatGPT llm = new ChatGPT(&quot;gpt-3.5-turbo&quot;, new ChatGPTConfig(dotenv.get(&quot;OPENAI_TOKEN&quot;), dotenv.get(&quot;OPENAI_API_BASE&quot;)));<br>FlappyBaseAgent lawAgent = new FlappyBaseAgent(<br>  llm, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)<br>);</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></details><h2 class=""> Examples</h2><h3 class=""> Kotlin</h3><ul><li><p class="paragraph"><a href="https://github.com/pleisto/flappy/blob/main/examples/kotlin/src/main/kotlin/org/example/kotlin/Resume.kt">Resume</a></p></li><li><p class="paragraph"><a href="https://github.com/pleisto/flappy/blob/main/examples/kotlin/src/main/kotlin/org/example/kotlin/Law.kt">Law</a></p></li></ul><h3 class=""> Java</h3><ul><li><p class="paragraph"><a href="https://github.com/pleisto/flappy/blob/main/examples/java/src/main/java/org/example/java/Resume.java">Resume</a></p></li><li><p class="paragraph"><a href="https://github.com/pleisto/flappy/blob/main/examples/java/src/main/java/org/example/java/Law.java">Law</a></p></li></ul><h2 class=""> What's next</h2><ul><li><p class="paragraph">Template engine</p></li><li><p class="paragraph">Sandbox</p></li></ul></div></div>
   </div>
   <h2 class="">Packages</h2>
-  <div class="table"><a data-name="1701030816%2FPackages%2F-1495679732" anchor-label="flappy" id="1701030816%2FPackages%2F-1495679732" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test"></a>
-    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test">
+  <div class="table"><a data-name="1701030816%2FPackages%2F-1684293763" anchor-label="flappy" id="1701030816%2FPackages%2F-1684293763" data-filterable-set=":flappy:dokkaHtml/main"></a>
+    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main" data-filterable-set=":flappy:dokkaHtml/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="flappy/flappy/index.html">flappy</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1701030816%2FPackages%2F-1495679732"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1701030816%2FPackages%2F-1684293763"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">main</div>
-              <div class="platform-tag jvm-like">test</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="1951381846%2FPackages%2F-1495679732" anchor-label="flappy.annotations" id="1951381846%2FPackages%2F-1495679732" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test"></a>
-    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test">
+<a data-name="1951381846%2FPackages%2F-1684293763" anchor-label="flappy.annotations" id="1951381846%2FPackages%2F-1684293763" data-filterable-set=":flappy:dokkaHtml/main"></a>
+    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main" data-filterable-set=":flappy:dokkaHtml/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="flappy/flappy.annotations/index.html">flappy.annotations</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1951381846%2FPackages%2F-1495679732"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1951381846%2FPackages%2F-1684293763"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">main</div>
-              <div class="platform-tag jvm-like">test</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="741741467%2FPackages%2F-1495679732" anchor-label="flappy.examples" id="741741467%2FPackages%2F-1495679732" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test"></a>
-    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test">
+<a data-name="230122253%2FPackages%2F-1684293763" anchor-label="flappy.functions" id="230122253%2FPackages%2F-1684293763" data-filterable-set=":flappy:dokkaHtml/main"></a>
+    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main" data-filterable-set=":flappy:dokkaHtml/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
-              <div><a href="flappy/flappy.examples/index.html">flappy.examples</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="741741467%2FPackages%2F-1495679732"></span>
+              <div><a href="flappy/flappy.functions/index.html">flappy.functions</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="230122253%2FPackages%2F-1684293763"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">main</div>
-              <div class="platform-tag jvm-like">test</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="1281163320%2FPackages%2F-1495679732" anchor-label="flappy.llms" id="1281163320%2FPackages%2F-1495679732" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test"></a>
-    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test" data-filterable-set=":flappy:dokkaHtml/main,:flappy:dokkaHtml/test">
+<a data-name="1281163320%2FPackages%2F-1684293763" anchor-label="flappy.llms" id="1281163320%2FPackages%2F-1684293763" data-filterable-set=":flappy:dokkaHtml/main"></a>
+    <div class="table-row" data-filterable-current=":flappy:dokkaHtml/main" data-filterable-set=":flappy:dokkaHtml/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="flappy/flappy.llms/index.html">flappy.llms</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1281163320%2FPackages%2F-1495679732"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1281163320%2FPackages%2F-1684293763"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
           <div class="pull-right">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">main</div>
-              <div class="platform-tag jvm-like">test</div>
             </div>
           </div>
         </div>
