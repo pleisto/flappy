@@ -11,24 +11,12 @@
       "path": "examples/nodejs"
     },
     {
-      "name": "@pleisto/kotlin-example",
-      "path": "examples/kotlin"
-    },
-    {
-      "name": "@pleisto/java-example",
-      "path": "examples/java"
-    },
-    {
-      "name": "@pleisto/code-interpreter",
-      "path": "packages/code-interpreter"
-    },
-    {
       "name": "@pleisto/node-flappy",
       "path": "packages/nodejs"
     },
     {
-      "name": "@pleisto/kotlin-flappy",
-      "path": "packages/kotlin"
+      "name": "@pleisto/rust-core",
+      "path": "packages/rust-core"
     },
     {
       "name": "@pleisto/flappy-devkit",

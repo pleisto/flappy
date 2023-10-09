@@ -1,0 +1,10 @@
+{
+  "name": "@pleisto/flappy-core",
+  "private": true,
+  "scripts": {
+    "test": "cargo test --workspace -- --nocapture"
+  },
+  "workspaces": [
+    "nodejs"
+  ]
+}

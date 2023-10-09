@@ -3,7 +3,7 @@ use std::io::{self, Write};
 use virtual_fs::{FsError, Result, VirtualFile};
 
 pub trait BufferedVirtualFile: VirtualFile {
-    fn get_buf(&self) -> &Vec<u8>;
+  fn get_buf(&self) -> &Vec<u8>;
 }
 
 macro_rules! impl_virtualfile_on_std_streams {
@@ -172,14 +172,14 @@ macro_rules! impl_virtualfile_on_std_streams {
 }
 
 impl_virtualfile_on_std_streams!(Stdin {
-    readable: true,
-    writable: false,
+  readable: true,
+  writable: false,
 });
 impl_virtualfile_on_std_streams!(Stdout {
-    readable: false,
-    writable: true,
+  readable: false,
+  writable: true,
 });
 impl_virtualfile_on_std_streams!(Stderr {
-    readable: false,
-    writable: true,
+  readable: false,
+  writable: true,
 });

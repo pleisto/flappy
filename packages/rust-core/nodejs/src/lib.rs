@@ -5,4 +5,4 @@ use mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
-pub mod runtime;
+pub mod code_interpreter;

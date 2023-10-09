@@ -1,5 +1,5 @@
 [workspace]
-members = ["./packages/code-interpreter"]
+members = ["./common", "./nodejs"]
 resolver = "2"
 package.license = "Apache-2.0"
 
