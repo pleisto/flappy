@@ -15,12 +15,12 @@ import kotlin.reflect.jvm.isAccessible
 
 
 //https://stackoverflow.com/a/56115232/20030734
-inline fun <reified T> Any.getField(fieldName: String): T {
+internal inline fun <reified T> Any.getField(fieldName: String): T {
   this::class.memberProperties.forEach { kCallable ->
     kCallable.isAccessible = true
     if (fieldName == kCallable.name) {
       return kCallable.getter.call(this) as T
     }
   }
-  throw FieldNotFoundException("$fieldName not found")
+  throw FlappyException.FieldNotFoundException("$fieldName not found")
 }
