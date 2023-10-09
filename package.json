@@ -34,7 +34,7 @@
       "@commitlint/config-conventional"
     ]
   },
-  "packageManager": "yarn@3.6.3",
+  "packageManager": "yarn@3.6.4",
   "devDependencies": {
     "@pleisto/eslint-plugin": "^1.4.84",
     "@types/node": "^20.8.3",
