@@ -1,7 +1,0 @@
-{
-  "name": "@pleisto/code-interpreter",
-  "private": true,
-  "scripts": {
-    "test": "cargo test -- --nocapture"
-  }
-}

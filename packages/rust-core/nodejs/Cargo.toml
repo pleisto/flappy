@@ -1,0 +1,27 @@
+[package]
+name = "flappy-nodejs-bindings"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.workspaces]
+independent = true
+
+[lib]
+crate-type = ["cdylib"]
+
+
+[dependencies]
+flappy-common = { path = "../common" }
+mimalloc = {version = "0.1.39", default-features = false}
+napi = { version = "2", default-features = false, features = ["napi8","async"] }
+napi-derive = "2"
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.dev]
+incremental=true

@@ -1,0 +1,9 @@
+{
+  "name": "@flappy/flappy-nodejs-bindings",
+  "devDependencies": {
+    "@napi-rs/cli": "2.16.3"
+  },
+  "scripts": {
+    "build": "napi build --release"
+  }
+}

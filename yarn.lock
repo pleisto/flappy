@@ -12,9 +12,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:16.2.3, @angular-devkit/core@npm:^16.2.3":
-  version: 16.2.3
-  resolution: "@angular-devkit/core@npm:16.2.3"
+"@angular-devkit/core@npm:16.2.5, @angular-devkit/core@npm:^16.2.5":
+  version: 16.2.5
+  resolution: "@angular-devkit/core@npm:16.2.5"
   dependencies:
     ajv: 8.12.0
     ajv-formats: 2.1.1
@@ -27,36 +27,36 @@ __metadata:
   peerDependenciesMeta:
     chokidar:
       optional: true
-  checksum: e040a043f18c140bdcd4f12e1cafd1114d6c8f489d5c5cf6c789157db3f6922a6e546e7ea70af6a9b6956d2f56f5c650ec6dfe4d3f1574745f6e7585f41d3aef
+  checksum: 7d9115e561c856019e1b19797e29df7c83a3801560a0386a18fc380ae0d12b837e13526886b2caab99a469bac60817ccccae6711c41c1bc32fe104717a711f63
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics-cli@npm:^16.2.3":
-  version: 16.2.3
-  resolution: "@angular-devkit/schematics-cli@npm:16.2.3"
+"@angular-devkit/schematics-cli@npm:^16.2.5":
+  version: 16.2.5
+  resolution: "@angular-devkit/schematics-cli@npm:16.2.5"
   dependencies:
-    "@angular-devkit/core": 16.2.3
-    "@angular-devkit/schematics": 16.2.3
+    "@angular-devkit/core": 16.2.5
+    "@angular-devkit/schematics": 16.2.5
     ansi-colors: 4.1.3
     inquirer: 8.2.4
     symbol-observable: 4.0.0
     yargs-parser: 21.1.1
   bin:
     schematics: bin/schematics.js
-  checksum: 2117168b39d9979db8e968d07a9c960d9837e0fb2b5ef5d694e7788bfcc3843a6cd0a0925c426807c9fcc530c0a06b0da0b804739853aa066e863e1905383f73
+  checksum: 6c22a1aa989075f4bc5ca2e4f85227de3fdc021dc1e7bb7cc39e6cecb440ec02b66f1335f4ff8bc3101e6cf63548ce1b8bfe22c9ec837c16f96a5d41efca6dd2
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:16.2.3, @angular-devkit/schematics@npm:^16.2.3":
-  version: 16.2.3
-  resolution: "@angular-devkit/schematics@npm:16.2.3"
+"@angular-devkit/schematics@npm:16.2.5, @angular-devkit/schematics@npm:^16.2.5":
+  version: 16.2.5
+  resolution: "@angular-devkit/schematics@npm:16.2.5"
   dependencies:
-    "@angular-devkit/core": 16.2.3
+    "@angular-devkit/core": 16.2.5
     jsonc-parser: 3.2.0
     magic-string: 0.30.1
     ora: 5.4.1
     rxjs: 7.8.1
-  checksum: 1e9189e5427ff30992176d812cc48cb5e51ca3bc84f1bcb55f2eb7fc44e04888bb0d911d687fbec5f5d99084cd47de39e51e5cf5b79b2de298fb62617529b310
+  checksum: 3bbdff53cf4537c90c4994867a315ecbfd3a6e35ff5dd83c7c6e2d292e089ad1697f27f3a2bc83d08d6f5ee4ee07930169a0dd59d48e978ebc08a1418a2344da
   languageName: node
   linkType: hard
 
@@ -203,12 +203,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:8.50.0":
-  version: 8.50.0
-  resolution: "@eslint/js@npm:8.50.0"
-  checksum: 302478f2acaaa7228729ec6a04f56641590185e1d8cd1c836a6db8a6b8009f80a57349341be9fbb9aa1721a7a569d1be3ffc598a33300d22816f11832095386c
+"@eslint/js@npm:8.51.0":
+  version: 8.51.0
+  resolution: "@eslint/js@npm:8.51.0"
+  checksum: 0228bf1e1e0414843e56d9ff362a2a72d579c078f93174666f29315690e9e30a8633ad72c923297f7fd7182381b5a476805ff04dac8debe638953eb1ded3ac73
   languageName: node
   linkType: hard
+
+"@flappy/flappy-nodejs-bindings@workspace:*, @flappy/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs":
+  version: 0.0.0-use.local
+  resolution: "@flappy/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs"
+  dependencies:
+    "@napi-rs/cli": 2.16.3
+  languageName: unknown
+  linkType: soft
 
 "@humanwhocodes/config-array@npm:^0.11.11":
   version: 0.11.11
@@ -259,6 +267,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@napi-rs/cli@npm:2.16.3":
+  version: 2.16.3
+  resolution: "@napi-rs/cli@npm:2.16.3"
+  bin:
+    napi: scripts/index.js
+  checksum: 11f78b09548bc5c22df56e4fab4a87b68c2d3f2a18a55cf11e775e6a4cb5739ec0e21a14e614db2cdc2b9773cb42536c6bd00c3f85d3b461f956594f8a89ddcb
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -286,12 +303,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pleisto/code-interpreter@workspace:packages/code-interpreter":
-  version: 0.0.0-use.local
-  resolution: "@pleisto/code-interpreter@workspace:packages/code-interpreter"
-  languageName: unknown
-  linkType: soft
-
 "@pleisto/eslint-plugin@npm:^1.4.84":
   version: 1.4.84
   resolution: "@pleisto/eslint-plugin@npm:1.4.84"
@@ -314,17 +325,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pleisto/flappy-core@workspace:packages/rust-core":
+  version: 0.0.0-use.local
+  resolution: "@pleisto/flappy-core@workspace:packages/rust-core"
+  languageName: unknown
+  linkType: soft
+
 "@pleisto/flappy-devkit@workspace:tools/devkit":
   version: 0.0.0-use.local
   resolution: "@pleisto/flappy-devkit@workspace:tools/devkit"
   dependencies:
-    "@angular-devkit/core": ^16.2.3
-    "@angular-devkit/schematics": ^16.2.3
-    "@angular-devkit/schematics-cli": ^16.2.3
+    "@angular-devkit/core": ^16.2.5
+    "@angular-devkit/schematics": ^16.2.5
+    "@angular-devkit/schematics-cli": ^16.2.5
     "@swc/core": 1.3.82
-    "@swc/helpers": ^0.5.2
-    "@types/node": ^20.7.0
-    "@types/yargs": ^17.0.25
+    "@swc/helpers": ^0.5.3
+    "@types/node": ^20.8.3
+    "@types/yargs": ^17.0.28
     chalk: ^4.1.2
     jsonc: ^2.0.0
     ts-node: ^10.9.1
@@ -339,7 +356,7 @@ __metadata:
   resolution: "@pleisto/node-example@workspace:examples/nodejs"
   dependencies:
     "@pleisto/node-flappy": "workspace:^"
-    openai: ^4.10.0
+    openai: ^4.11.1
     ts-node: ^10.9.1
   languageName: unknown
   linkType: soft
@@ -348,9 +365,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:
-    openai: ^4.10.0
+    "@flappy/flappy-nodejs-bindings": "workspace:*"
+    openai: ^4.11.1
     radash: ^11.0.0
-    zod: ^3.22.2
+    zod: ^3.22.4
     zod-to-json-schema: ^3.21.4
   dependenciesMeta:
     openai:
@@ -473,12 +491,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.2":
-  version: 0.5.2
-  resolution: "@swc/helpers@npm:0.5.2"
+"@swc/helpers@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "@swc/helpers@npm:0.5.3"
   dependencies:
     tslib: ^2.4.0
-  checksum: 51d7e3d8bd56818c49d6bfbd715f0dbeedc13cf723af41166e45c03e37f109336bbcb57a1f2020f4015957721aeb21e1a7fff281233d797ff7d3dd1f447fa258
+  checksum: 61c3f7ccd47fc70ad91437df88be6b458cdc11e311cb331288827d7c50befffc72aa18fe913ec2a9e70fbf44e4b818bed38bfd7c329d689e1ff3c198d084cd02
   languageName: node
   linkType: hard
 
@@ -541,10 +559,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.7.0":
-  version: 20.7.0
-  resolution: "@types/node@npm:20.7.0"
-  checksum: 1b2919925c213f4d2039ada7a8354c998e144f7291db8d719ef58ea9924ab636c113690073b0ec3b82ba62907385f7e0f51e9d1583c1a818776daa5156d3a590
+"@types/node@npm:*, @types/node@npm:^20.8.3":
+  version: 20.8.3
+  resolution: "@types/node@npm:20.8.3"
+  checksum: bfb88b341faeb19f8fd37306a3bf433721b876c6491d10fcb0b13fd26601fa36ee45113dd82b1e1c23e3c957dff5b99f81a16493cefa03abe797e41a2487a4f7
   languageName: node
   linkType: hard
 
@@ -576,12 +594,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:^17.0.25":
-  version: 17.0.25
-  resolution: "@types/yargs@npm:17.0.25"
+"@types/yargs@npm:^17.0.28":
+  version: 17.0.28
+  resolution: "@types/yargs@npm:17.0.28"
   dependencies:
     "@types/yargs-parser": "*"
-  checksum: ef57926de514f5eb0a182167a63930bd7d2eb33d89b6041760f690d50b2019d7901b30c33ab7d03b3fa66a5004f0f81e36186d8f9e5e583a27b9ce331d2a5276
+  checksum: f78c5e5c29903933c0557b4ffcd1d0b8564d66859c8ca4aa51da3714e49109ed7c2644334a1918d033df19028f4cecc91fd2e502651bb8e8451f246c371da847
   languageName: node
   linkType: hard
 
@@ -1927,14 +1945,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.50.0":
-  version: 8.50.0
-  resolution: "eslint@npm:8.50.0"
+"eslint@npm:^8.51.0":
+  version: 8.51.0
+  resolution: "eslint@npm:8.51.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
     "@eslint-community/regexpp": ^4.6.1
     "@eslint/eslintrc": ^2.1.2
-    "@eslint/js": 8.50.0
+    "@eslint/js": 8.51.0
     "@humanwhocodes/config-array": ^0.11.11
     "@humanwhocodes/module-importer": ^1.0.1
     "@nodelib/fs.walk": ^1.2.8
@@ -1970,7 +1988,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: 9ebfe5615dc84700000d218e32ddfdcfc227ca600f65f18e5541ec34f8902a00356a9a8804d9468fd6c8637a5ef6a3897291dad91ba6579d5b32ffeae5e31768
+  checksum: 214fa5d1fcb67af1b8992ce9584ccd85e1aa7a482f8b8ea5b96edc28fa838a18a3b69456db45fc1ed3ef95f1e9efa9714f737292dc681e572d471d02fda9649c
   languageName: node
   linkType: hard
 
@@ -2196,10 +2214,10 @@ __metadata:
   resolution: "flappy-monorepo-root@workspace:."
   dependencies:
     "@pleisto/eslint-plugin": ^1.4.84
-    "@types/node": ^20.7.0
+    "@types/node": ^20.8.3
     commitizen: ^4.3.0
     cz-conventional-changelog: ^3.3.0
-    eslint: ^8.50.0
+    eslint: ^8.51.0
     husky: ^8.0.3
     lint-staged: ^14.0.1
     prettier: ^3.0.3
@@ -3591,9 +3609,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.10.0":
-  version: 4.10.0
-  resolution: "openai@npm:4.10.0"
+"openai@npm:^4.11.1":
+  version: 4.11.1
+  resolution: "openai@npm:4.11.1"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -3605,7 +3623,7 @@ __metadata:
     node-fetch: ^2.6.7
   bin:
     openai: bin/cli
-  checksum: bdbf4d39f25a83c3ab551ce16d5d12b39217af4556bbf93c1c57f3eef9324e97098144de29e5b95d0b092a5f9e03efa8b05e15d96957c8a30a3aab916000f50b
+  checksum: b737ef7686dd533a34183e4832be367937cb7e527271fbdf90a708e24e00864e5fd28bb2fddc70fea016662212a9a432d911601904bbda1560da3d8eeaa6f6f8
   languageName: node
   linkType: hard
 
@@ -4790,9 +4808,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.22.2":
-  version: 3.22.2
-  resolution: "zod@npm:3.22.2"
-  checksum: 231e2180c8eabb56e88680d80baff5cf6cbe6d64df3c44c50ebe52f73081ecd0229b1c7215b9552537f537a36d9e36afac2737ddd86dc14e3519bdbc777e82b9
+"zod@npm:^3.22.4":
+  version: 3.22.4
+  resolution: "zod@npm:3.22.4"
+  checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
   languageName: node
   linkType: hard

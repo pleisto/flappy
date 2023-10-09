@@ -3,11 +3,12 @@
   "license": "Apache-2.0",
   "scripts": {
     "law": "ts-node ./src/law.ts",
-    "resume": "ts-node ./src/resume.ts"
+    "resume": "ts-node ./src/resume.ts",
+    "code-interpreter": "ts-node ./src/codeInterpreter.ts"
   },
   "dependencies": {
     "@pleisto/node-flappy": "workspace:^",
-    "openai": "^4.10.0",
+    "openai": "^4.11.1",
     "ts-node": "^10.9.1"
   }
 }

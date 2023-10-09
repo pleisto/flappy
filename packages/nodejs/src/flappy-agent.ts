@@ -11,6 +11,7 @@ import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { ZodType as z } from './flappy-type'
 import { zodToCleanJsonSchema } from './utils'
+import { evalPythonCode } from '@flappy/flappy-nodejs-bindings'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
@@ -96,7 +97,70 @@ export class FlappyAgent<
     TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
   >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
     const fn = this.findFunction(name)
-    return fn.call(this, args)
+    return await fn.call(this, args)
+  }
+
+  public async callCodeInterpreter(prompt: string): Promise<any> {
+    const config = (this.config as FlappyAgentConfig).codeInterpreter
+    if (!config) throw new Error('Code interpreter is not enabled.')
+    const originalRequestMessage: ChatMLMessage[] = [
+      {
+        role: 'system',
+        content: `You are an AI that writes Python code using only the built-in library. After you supply the Python code, it will be run in a safe sandbox. The execution time is limited to 120 seconds. The task is to define a function named "main" that doesn't take any parameters. The output should be a JSON object: {"code": string}.
+        Network access is ${config.enableNetwork ? 'enabled' : 'disabled'}`
+      },
+      {
+        role: 'user',
+        content: `${prompt}\n\noutput json:\n`
+      }
+    ]
+    let requestMessage = originalRequestMessage
+    let retry = this.retry
+    let result: ChatMLResponse | undefined
+
+    while (true) {
+      try {
+        if (retry !== this.retry) console.debug('Attempt retry: ', this.retry - retry)
+        console.dir(requestMessage, { depth: null })
+        result = await this.llm.chatComplete(requestMessage)
+        const data = JSON.parse(result.data!)?.code?.replace(/\\n/g, '\n')
+        if (!data) throw new Error('Invalid JSON response')
+        if (!data.includes('def main():')) throw new Error('Function "main" not found')
+        console.debug('Generated Code:\n', data)
+        const execResult = await evalPythonCode(
+          `${data}\nprint(main())`,
+          config.enableNetwork ?? false,
+          Object.entries(config.env ?? {}),
+          config.cacheDir
+        )
+        if (execResult.stderr) throw new Error(execResult.stderr)
+        console.debug('CodeInterpreter Output', execResult.stdout)
+        return execResult.stdout
+      } catch (err) {
+        console.error(err)
+        if (retry <= 0) throw new Error('Interrupted, function call failed. Please refer to the error message above.')
+
+        retry -= 1
+        // if the response came from chatComplete is failed, retry it directly.
+        // Otherwise, update message for repairing
+        if (result?.success && result.data) {
+          requestMessage = [
+            ...originalRequestMessage,
+            {
+              role: 'assistant',
+              content: result?.data ?? ''
+            },
+            {
+              role: 'user',
+              content: `You response is invalid for the following reason:
+          ${(err as Error).message}
+
+          Please try again.`
+            }
+          ]
+        }
+      }
+    }
   }
 
   /**
