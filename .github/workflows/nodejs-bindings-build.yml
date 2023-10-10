@@ -71,6 +71,9 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             build: |-
               set -e &&
+              sudo apt-get update &&
+              sudo apt-get install build-essential -y &&
+              sudo apt-get install perl -y &&
               sudo apt-get install pkg-config libssl-dev -y &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu &&
               aarch64-unknown-linux-gnu-strip *.node
