@@ -48,7 +48,7 @@ jobs:
             build: |-
               set -e &&
               sudo apt-get update &&
-              sudo apt-get install build-essential &&
+              sudo apt-get install build-essential -y &&
               sudo apt-get install perl -y &&
               sudo apt-get install pkg-config libssl-dev -y &&
               export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
@@ -71,6 +71,7 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             build: |-
               set -e &&
+              sudo apt-get install pkg-config libssl-dev -y &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu &&
               aarch64-unknown-linux-gnu-strip *.node
           - host: ubuntu-latest
@@ -86,7 +87,6 @@ jobs:
             target: aarch64-linux-android
             build: |
               yarn build:nodejs-bindings --target aarch64-linux-android
-              ls
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip flappy-nodejs-bindings.android-arm64.node.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
@@ -98,6 +98,7 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |-
               set -e &&
+              apk add pkgconfig openssl-dev &&
               rustup target add aarch64-unknown-linux-musl &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl &&
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip *.node
