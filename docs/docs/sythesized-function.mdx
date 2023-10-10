@@ -1,0 +1,67 @@
+---
+sidebar_position: 3
+---
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+# Sythesized Function
+
+A SynthesizedFunction is a key functionality offered within the Flappy. This powerful feature interacts with Language Learning Models (LLMs) and requires only the definition of its description, inputs, and outputs, significantly simplifying the process of AI integration in your projects.
+
+SynthesizedFunction is designed to delegate the execution logic to the underlying LLM, such as GPT-3.5 Turbo. This approach allows developers to describe what they want the function to achieve, leaving the execution details to the LLM.
+
+## Usage
+
+Creating a SynthesizedFunction involves specifying a description, along with the structures of the inputs and outputs. These definitions can be made using your preferred programming language, enhancing ease-of-use and accessibility. Flappy then parses these definitions using Abstract Syntax Tree (AST) parsing to transform them into a JSON Schema schema for machine readability and interoperability.
+
+Here's a typical example of a SynthesizedFunction:
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
+
+```ts
+import { createSynthesizedFunction, ZodType as z } from '@pleisto/node-flappy'
+
+createSynthesizedFunction({
+  name: 'getMeta',
+  description: 'Extract meta data from a lawsuit full text.',
+  args: z.object({
+    lawsuit: z.string().describe('Lawsuit full text.')
+  }),
+  returnType: z.object({
+    verdict: z.nativeEnum(Verdict),
+    plaintiff: z.string(),
+    defendant: z.string(),
+    judgeOptions: z.array(z.string())
+  })
+})
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+In this scenario, the getMeta function is aimed at extracting metadata from a lawsuit text. The function takes a lawsuit text string as input and returns an object containing the verdict, plaintiff, defendant, and judge options.
+
+## Benefits
+
+The SynthesizedFunction presents several key advantages:
+
+1. Simplicity: Developers need only define the function's purpose, inputs, and outputs, freeing them from the complexities of implementation details.
+2. Flexibility: The feature allows for defining intricate functions without explicitly programming the logic, lending to robust design possibilities.
+3. Efficiency: SynthesizedFunction capitalizes on AI's power to handle complex data processing tasks, enhancing productivity.
+
+By harnessing SynthesizedFunction in the Flappy SDK, developers can more effectively incorporate AI into their applications, achieving new levels of reliability and efficiency.
+
+## Error Handling
+
+The SynthesizedFunction feature is designed to be robust and reliable. Flappy will validate the LLM's response and try to repair it if it is invalid. If the response is still invalid, Flappy will throw an error.
+
+## Credits
+
+This feature is inspired by the Microsoft's [TypeChat](https://github.com/microsoft/TypeChat) project.

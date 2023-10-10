@@ -7,6 +7,10 @@
       "path": "."
     },
     {
+      "name": "@pleisto/flappy-docs",
+      "path": "docs"
+    },
+    {
       "name": "@pleisto/node-example",
       "path": "examples/nodejs"
     },
@@ -15,8 +19,12 @@
       "path": "packages/nodejs"
     },
     {
-      "name": "@pleisto/rust-core",
+      "name": "@pleisto/flappy-core",
       "path": "packages/rust-core"
+    },
+    {
+      "name": "@flappy/flappy-nodejs-bindings",
+      "path": "packages/rust-core/nodejs"
     },
     {
       "name": "@pleisto/flappy-devkit",

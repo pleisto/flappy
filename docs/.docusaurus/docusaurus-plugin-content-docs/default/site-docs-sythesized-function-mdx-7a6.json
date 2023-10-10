@@ -1,0 +1,27 @@
+{
+  "unversionedId": "sythesized-function",
+  "id": "sythesized-function",
+  "title": "Sythesized Function",
+  "description": "A SynthesizedFunction is a key functionality offered within the Flappy. This powerful feature interacts with Language Learning Models (LLMs) and requires only the definition of its description, inputs, and outputs, significantly simplifying the process of AI integration in your projects.",
+  "source": "@site/docs/sythesized-function.mdx",
+  "sourceDirName": ".",
+  "slug": "/sythesized-function",
+  "permalink": "/docs/sythesized-function",
+  "draft": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/sythesized-function.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "docSidebar",
+  "previous": {
+    "title": "Quick Start",
+    "permalink": "/docs/quick-start"
+  },
+  "next": {
+    "title": "Invoke Function",
+    "permalink": "/docs/invoke-function"
+  }
+}

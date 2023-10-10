@@ -1,0 +1,18 @@
+{
+  "extends": "../tools/typescript/tsconfig.cjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "lib": ["dom"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "types": ["node", "@docusaurus/module-type-aliases", "@docusaurus/theme-classic"],
+    "paths": {
+      "@site/*": ["./*"]
+    },
+    "skipLibCheck": true
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "unversionedId": "invoke-function",
+  "id": "invoke-function",
+  "title": "Invoke Function",
+  "description": "InvokeFunction is a critical feature in the Flappy SDK, a production-ready Language Learning Model (LLM) Application/Agent SDK. This feature allows developers to define functions that an LLM agent can execute to interact with its surrounding environment. This interaction can range from database queries to network requests or any operation that involves system interaction outside of the agent itself.",
+  "source": "@site/docs/invoke-function.mdx",
+  "sourceDirName": ".",
+  "slug": "/invoke-function",
+  "permalink": "/docs/invoke-function",
+  "draft": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/invoke-function.mdx",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "sidebar_position": 4
+  },
+  "sidebar": "docSidebar",
+  "previous": {
+    "title": "Sythesized Function",
+    "permalink": "/docs/sythesized-function"
+  },
+  "next": {
+    "title": "Code Interpreter",
+    "permalink": "/docs/code-interpreter"
+  }
+}
