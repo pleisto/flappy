@@ -34,9 +34,15 @@ jobs:
             build: |
               yarn build:nodejs-bindings
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
-          - host: windows-latest
+          - host: ubuntu-latest
             build: yarn build:nodejs-bindings
-            target: x86_64-pc-windows-msvc
+            target: x86_64-pc-windows-gnu
+            build: |-
+              set -e &&
+              sudo apt-get install build-essential -y &&
+              sudo apt-get install perl -y &&
+              sudo apt-get install pkg-config libssl-dev -y &&
+              sudo apt-get install -y gcc-mingw-w64-x86-64-win32
           - host: windows-latest
             build: |
               yarn build:nodejs-bindings --target i686-pc-windows-msvc
