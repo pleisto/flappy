@@ -46,8 +46,12 @@ jobs:
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: |-
-              sudo apt-get install pkg-config libssl-dev &&
               set -e &&
+              sudo apt-get update &&
+              sudo apt-get install perl -y &&
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
               yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu &&
               strip *.node
           - host: ubuntu-latest
