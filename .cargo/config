@@ -27,3 +27,7 @@ rustflags = ["-C", "target-cpu=apple-m1",  "-C", "link-arg=-undefined",
 # Since Haswell is released in 2013, we can assume that most
 # of our macOS users have a CPU that supports these instructions.
 rustflags = ["-C", "target-cpu=haswell"]
+
+[target.aarch64-unknown-linux-musl]
+linker = "aarch64-linux-musl-gcc"
+rustflags = ["-C", "target-feature=-crt-static"]
