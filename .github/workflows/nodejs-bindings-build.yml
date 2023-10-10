@@ -182,54 +182,53 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
-  build-freebsd:
-    runs-on: macos-12
-    name: Build FreeBSD
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build
-        id: build
-        uses: vmactions/freebsd-vm@v0
-        env:
-          DEBUG: napi:*
-          RUSTUP_HOME: /usr/local/rustup
-          CARGO_HOME: /usr/local/cargo
-          RUSTUP_IO_THREADS: 1
-        with:
-          envs: DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS
-          usesh: true
-          mem: 3000
-          prepare: |
-            pkg install -y -f curl node libnghttp2 npm yarn
-            curl https://sh.rustup.rs -sSf --output rustup.sh
-            sh rustup.sh -y --profile minimal --default-toolchain beta
-            export PATH="/usr/local/cargo/bin:$PATH"
-            echo "~~~~ rustc --version ~~~~"
-            rustc --version
-            echo "~~~~ node -v ~~~~"
-            node -v
-            echo "~~~~ yarn --version ~~~~"
-            yarn --version
-          run: |
-            export PATH="/usr/local/cargo/bin:$PATH"
-            pwd
-            ls -lah
-            whoami
-            env
-            freebsd-version
-            yarn install --immutable
-            yarn build:nodejs-bindings
-            strip -x packages/rust-core/nodejs/*.node
-            yarn test
-            rm -rf node_modules
-            rm -rf packages/rust-core/target
-            rm -rf .yarn/cache
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-freebsd
-          path: ${{ env.APP_NAME }}.*.node
-          if-no-files-found: error
+  # build-freebsd:
+  #   runs-on: macos-12
+  #   name: Build FreeBSD
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build
+  #       id: build
+  #       uses: vmactions/freebsd-vm@v0
+  #       env:
+  #         DEBUG: napi:*
+  #         RUSTUP_HOME: /usr/local/rustup
+  #         CARGO_HOME: /usr/local/cargo
+  #         RUSTUP_IO_THREADS: 1
+  #       with:
+  #         envs: DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS
+  #         usesh: true
+  #         mem: 3000
+  #         prepare: |
+  #           pkg install -y -f curl node libnghttp2 npm yarn
+  #           curl https://sh.rustup.rs -sSf --output rustup.sh
+  #           sh rustup.sh -y --profile minimal --default-toolchain beta
+  #           export PATH="/usr/local/cargo/bin:$PATH"
+  #           echo "~~~~ rustc --version ~~~~"
+  #           rustc --version
+  #           echo "~~~~ node -v ~~~~"
+  #           node -v
+  #           echo "~~~~ yarn --version ~~~~"
+  #           yarn --version
+  #         run: |
+  #           export PATH="/usr/local/cargo/bin:$PATH"
+  #           pwd
+  #           ls -lah
+  #           whoami
+  #           env
+  #           freebsd-version
+  #           yarn install --immutable
+  #           yarn build:nodejs-bindings
+  #           strip -x packages/rust-core/nodejs/*.node
+  #           rm -rf node_modules
+  #           rm -rf packages/rust-core/target
+  #           rm -rf .yarn/cache
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: bindings-freebsd
+  #         path: ${{ env.APP_NAME }}.*.node
+  #         if-no-files-found: error
   # test-macOS-windows-binding:
   #   name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
   #   needs:
@@ -447,39 +446,39 @@ jobs:
   #           set -e
   #           yarn test
   #           ls -la
-  # universal-macOS:
-  #   name: Build universal macOS binary
-  #   needs:
-  #     - build
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Setup node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #         check-latest: true
-  #         cache: yarn
-  #     - name: Install dependencies
-  #       run: yarn install --immutable
-  #     - name: Download macOS x64 artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: bindings-x86_64-apple-darwin
-  #         path: artifacts
-  #     - name: Download macOS arm64 artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: bindings-aarch64-apple-darwin
-  #         path: artifacts
-  #     - name: Combine binaries
-  #       run: yarn universal
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: bindings-universal-apple-darwin
-  #         path: ${{ env.APP_NAME }}.*.node
-  #         if-no-files-found: error
+  universal-macOS:
+    name: Build universal macOS binary
+    needs:
+      - build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          check-latest: true
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Download macOS x64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bindings-x86_64-apple-darwin
+          path: artifacts
+      - name: Download macOS arm64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bindings-aarch64-apple-darwin
+          path: artifacts
+      - name: Combine binaries
+        run: yarn universal:node-bindings
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-universal-apple-darwin
+          path: ${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
   # publish:
   #   name: Publish
   #   runs-on: ubuntu-latest
