@@ -35,10 +35,10 @@ jobs:
               yarn build:nodejs-bindings
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
-            build: yarn build:nodejs-bindings
             target: x86_64-pc-windows-gnu
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
+              yarn build:nodejs-bindings
           - host: windows-latest
             build: |
               yarn build:nodejs-bindings --target i686-pc-windows-msvc
