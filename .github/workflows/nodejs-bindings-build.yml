@@ -6,7 +6,7 @@ concurrency:
 
 env:
   DEBUG: napi:*
-  APP_NAME: flappy-nodejs-bindings
+  APP_NAME: packages/rust-core/nodejs/flappy-nodejs-bindings
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 
 permissions:
@@ -59,7 +59,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: apk add pkgconfig openssl-dev && set -e && RUST_BACKTRACE=1 yarn build:nodejs-bindings && ll && strip *.node
+            build: apk add pkgconfig openssl-dev gcc g++ make perl && set -e && RUST_BACKTRACE=1 yarn build:nodejs-bindings && ll && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
@@ -84,6 +84,9 @@ jobs:
             target: armv7-unknown-linux-gnueabihf
             setup: |
               sudo apt-get update
+              sudo apt-get install build-essential -y &&
+              sudo apt-get install perl -y &&
+              sudo apt-get install pkg-config libssl-dev -y &&
               sudo apt-get install gcc-arm-linux-gnueabihf -y
             build: |
               export OPENSSL_DIR="/usr/lib/ssl"
@@ -104,7 +107,7 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |-
               set -e &&
-              apk add pkgconfig openssl-dev &&
+              apk add pkgconfig openssl-dev gcc g++ make perl &&
               rustup target add aarch64-unknown-linux-musl &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl &&
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/rust-core/nodejs/*.node
