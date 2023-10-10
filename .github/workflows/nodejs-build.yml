@@ -1,7 +1,7 @@
 name: Nodejs Build
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
 
 on:
@@ -10,7 +10,7 @@ on:
     paths:
       - 'packages/nodejs/src/**'
       - 'packages/nodejs/tsconfig.json'
-      - '.github/workflows/nodejs/build.yml'
+      - '.github/workflows/nodejs-build.yml'
 
 jobs:
   build:
