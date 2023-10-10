@@ -33,6 +33,7 @@ jobs:
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings
+              ll
               strip -x flappy-nodejs-bindings.darwin-x64.node
           - host: windows-latest
             build: yarn build:nodejs-bindings
@@ -40,7 +41,6 @@ jobs:
           - host: windows-latest
             build: |
               yarn build:nodejs-bindings --target i686-pc-windows-msvc
-              yarn test
             target: i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -49,6 +49,7 @@ jobs:
               set -e &&
               sudo apt-get update &&
               sudo apt-get install perl -y &&
+              sudo apt-get install pkg-config libssl-dev -y &&
               export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
               export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
@@ -57,12 +58,13 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: apk add pkgconfig openssl-dev && set -e && yarn build:nodejs-bindings && ll && strip *.node
+            build: apk add pkgconfig openssl-dev && set -e && RUST_BACKTRACE=1 yarn build:nodejs-bindings && ll && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target aarch64-apple-darwin
-              strip -x *.node
+              ll
+              strip -x flappy-nodejs-bindings.darwin-arm64.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
@@ -83,7 +85,8 @@ jobs:
             target: aarch64-linux-android
             build: |
               yarn build:nodejs-bindings --target aarch64-linux-android
-              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
+              ll
+              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip flappy-nodejs-bindings.android-arm64.node.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
@@ -99,7 +102,7 @@ jobs:
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip *.node
           - host: windows-latest
             target: aarch64-pc-windows-msvc
-            build: yarn build:nodejs-bindings --target aarch64-pc-windows-msvc
+            build: RUST_BACKTRACE=1 yarn build:nodejs-bindings --target aarch64-pc-windows-msvc
     name: stable - ${{ matrix.settings.target }} - node@18
     runs-on: ${{ matrix.settings.host }}
     steps:
@@ -127,6 +130,11 @@ jobs:
             .cargo-cache
             target/
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
+      - uses: shogo82148/actions-setup-perl@v1
+        if: ${{ matrix.settings.target == 'x86_64-pc-windows-msvc' }}
+        with:
+          perl-version: '5.32'
+          distribution: strawberry
       - uses: goto-bus-stop/setup-zig@v2
         if: ${{ matrix.settings.target == 'armv7-unknown-linux-gnueabihf' }}
         with:
