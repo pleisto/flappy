@@ -1,4 +1,4 @@
-name: Gradle publish
+name: Kotlin Publish
 
 on:
   workflow_dispatch:

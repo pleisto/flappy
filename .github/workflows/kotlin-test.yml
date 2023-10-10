@@ -1,4 +1,4 @@
-name: Gradle test
+name: Kotlin Test
 
 on:
   workflow_dispatch:
@@ -7,10 +7,10 @@ on:
       - '**/*.kt'
       - '**/*.kts'
       - '**/*.java'
+      - '.github/workflows/kotlin-test.yml'
 
-# This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
