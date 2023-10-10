@@ -46,13 +46,14 @@ jobs:
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: |-
+              sudo apt-get install libssl-dev &&
               set -e &&
               yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu &&
               strip *.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: set -e && yarn build:nodejs-bindings && strip *.node
+            build: sudo apt-get install libssl-dev && set -e && yarn build:nodejs-bindings && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
@@ -61,6 +62,8 @@ jobs:
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+            setup: |
+              sudo apt-get install libssl-dev
             build: |-
               set -e &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu &&
@@ -70,16 +73,21 @@ jobs:
             setup: |
               sudo apt-get update
               sudo apt-get install gcc-arm-linux-gnueabihf -y
+              sudo apt-get install libssl-dev
             build: |
               yarn build:nodejs-bindings --target armv7-unknown-linux-gnueabihf
               arm-linux-gnueabihf-strip *.node
           - host: ubuntu-latest
             target: aarch64-linux-android
+            setup: |
+              sudo apt-get install libssl-dev
             build: |
               yarn build:nodejs-bindings --target aarch64-linux-android
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
+            setup: |
+              sudo apt-get install libssl-dev
             build: |
               yarn build:nodejs-bindings --target armv7-linux-androideabi
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
@@ -87,6 +95,7 @@ jobs:
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |-
+              sudo apt-get install libssl-dev &&
               set -e &&
               rustup target add aarch64-unknown-linux-musl &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl &&
