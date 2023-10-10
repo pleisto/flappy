@@ -895,6 +895,7 @@ dependencies = [
  "napi",
  "napi-build",
  "napi-derive",
+ "openssl",
 ]
 
 [[package]]
@@ -1711,6 +1712,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "166b5ef52a3ab5575047a9fe8d4a030cdd0f63c96f071cd6907674453b07bae3"
 dependencies = [
  "libloading",
+]
+
+[[package]]
+name = "napi-test"
+version = "0.0.0"
+dependencies = [
+ "napi",
+ "napi-build",
+ "napi-derive",
 ]
 
 [[package]]

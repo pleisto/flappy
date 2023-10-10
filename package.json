@@ -30,6 +30,9 @@
     "build:nodejs": "yarn workspace @pleisto/node-flappy build",
     "build:nodejs-bindings": "yarn workspace @pleisto/flappy-nodejs-bindings build",
     "artifacts:nodejs-bindings": "yarn workspace @pleisto/flappy-nodejs-bindings artifacts",
+    "build": "yarn workspace napi-test build",
+    "artifacts": "yarn workspace napi-test artifacts",
+    "test": "yarn workspace napi-test test",
     "commit": "cz",
     "postinstall": "run dev is-ci || husky install"
   },

@@ -5,6 +5,7 @@
     "test": "cargo test --workspace -- --nocapture"
   },
   "workspaces": [
-    "nodejs"
+    "nodejs",
+    "napi-test"
   ]
 }
