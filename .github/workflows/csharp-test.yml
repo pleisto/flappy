@@ -1,9 +1,8 @@
-name: CSharp Nuget Publish
+name: CSharp Nuget Test
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
     paths:
       - "**/*.cs"
       - "**/*.csproj"
@@ -12,9 +11,8 @@ on:
       - "packages/csharp/**/*"
       - ".github/workflows/csharp-*"
 
-# This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -27,6 +25,8 @@ jobs:
             3.1
             6.0
             7.0
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v3
         with:
@@ -36,19 +36,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - uses: nuget/setup-nuget@v1
-        with:
-          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/checkout@v4
-      - name: dotnet publish
+      - name: dotnet test
+        env:
+          OPENAI_API_KEY:
         run: |
-          cd packages/csharp
-          dotnet build -c Release
-          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-            echo "Pulish: $line"
-            nuget push $line \
-              -Source https://api.nuget.org/v3/index.json \
-              -ApiKey ${{ secrets.NUGET_TOKEN }} \
-              -SkipDuplicate
-          done
+          cd packages/csharp;
+          dotnet test -e NO_GPT_TEST=true

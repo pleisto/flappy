@@ -19,6 +19,18 @@
       "path": "packages/rust-core"
     },
     {
+      "name": "@pleisto/kotlin-flappy",
+      "path": "packages/kotlin"
+    },
+    {
+      "name": "@pleisto/kotlin-example",
+      "path": "examples/kotlin"
+    },
+    {
+      "name": "@pleisto/java-example",
+      "path": "examples/java"
+    },
+    {
       "name": "@pleisto/flappy-devkit",
       "path": "tools/devkit"
     }
