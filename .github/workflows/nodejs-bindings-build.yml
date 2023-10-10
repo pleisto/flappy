@@ -21,12 +21,12 @@ on:
     paths:
       - 'packages/rust-core/**'
       - '.github/workflows/nodejs-bindings-build.yml'
-    # paths-ignore:
-    #   - '**/*.md'
-    #   - LICENSE
-    #   - '**/*.gitignore'
-    #   - .editorconfig
-    #   - docs/**
+    paths-ignore:
+      - '**/*.md'
+      - LICENSE
+      - '**/*.gitignore'
+      - .editorconfig
+      - docs/**
   # pull_request: null
 jobs:
   build:
