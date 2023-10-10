@@ -1,14 +1,24 @@
 {
   "name": "@pleisto/node-flappy",
+  "version": "0.0.1-alpha",
   "license": "Apache-2.0",
   "exports": {
     ".": {
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf ./dist && yarn run -T tsc -p tsconfig.build.json"
+  },
   "dependencies": {
-    "@flappy/flappy-nodejs-bindings": "workspace:*",
+    "@flappy/flappy-nodejs-bindings": "0.0.1-alpha",
     "radash": "^11.0.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.21.4"

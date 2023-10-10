@@ -1,0 +1,43 @@
+name: Nodejs Build
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'packages/nodejs/src/**'
+      - 'packages/nodejs/tsconfig.json'
+      - '.github/workflows/nodejs/build.yml'
+
+jobs:
+  build:
+    name: Nodejs Building
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Detect what files changed
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          token: ${{ github.token }}
+          filters: |
+            src_or_deps_changed:
+              - 'packages/nodejs/src/**'
+              - '**/*.[tj]{s,sx}'
+              - 'packages/nodejs/package.json'
+              - '**/yarn.lock'
+      - name: Install Dependencies
+        if: steps.changes.outputs.src_or_deps_changed == 'true'
+        run: yarn install
+      - name: Run build
+        if: steps.changes.outputs.src_or_deps_changed == 'true'
+        run: yarn build:nodejs

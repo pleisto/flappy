@@ -27,6 +27,7 @@
   "scripts": {
     "dev": "yarn workspace @pleisto/flappy-devkit dev",
     "node-example": "yarn workspace @pleisto/node-example",
+    "build:nodejs": "yarn workspace @pleisto/node-flappy build",
     "commit": "cz",
     "postinstall": "run dev is-ci || husky install"
   },
