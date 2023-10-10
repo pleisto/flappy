@@ -1,11 +1,18 @@
 name: Nodejs Bindings Build
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 env:
   DEBUG: napi:*
   APP_NAME: flappy-nodejs-bindings
   MACOSX_DEPLOYMENT_TARGET: '10.13'
+
 permissions:
   contents: write
   id-token: write
+
 on:
   workflow_dispatch:
   push:
@@ -14,12 +21,12 @@ on:
     paths:
       - 'packages/rust-core/**'
       - '.github/workflows/nodejs-bindings-build.yml'
-    paths-ignore:
-      - '**/*.md'
-      - LICENSE
-      - '**/*.gitignore'
-      - .editorconfig
-      - docs/**
+    # paths-ignore:
+    #   - '**/*.md'
+    #   - LICENSE
+    #   - '**/*.gitignore'
+    #   - .editorconfig
+    #   - docs/**
   # pull_request: null
 jobs:
   build:
