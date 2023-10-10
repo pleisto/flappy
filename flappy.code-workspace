@@ -7,20 +7,28 @@
       "path": "."
     },
     {
-      "name": "@pleisto/node-example",
-      "path": "examples/nodejs"
+      "name": "@pleisto/rust-core",
+      "path": "packages/rust-core"
     },
     {
       "name": "@pleisto/node-flappy",
       "path": "packages/nodejs"
     },
     {
-      "name": "@pleisto/rust-core",
-      "path": "packages/rust-core"
-    },
-    {
       "name": "@pleisto/kotlin-flappy",
       "path": "packages/kotlin"
+    },
+    {
+      "name": "@pleisto/csharp-flappy",
+      "path": "packages/csharp"
+    },
+    {
+      "name": "@pleisto/flappy-devkit",
+      "path": "tools/devkit"
+    },
+    {
+      "name": "@pleisto/node-example",
+      "path": "examples/nodejs"
     },
     {
       "name": "@pleisto/kotlin-example",
@@ -31,8 +39,8 @@
       "path": "examples/java"
     },
     {
-      "name": "@pleisto/flappy-devkit",
-      "path": "tools/devkit"
+      "name": "@pleisto/csharp-example",
+      "path": "examples/csharp"
     }
   ]
 }
