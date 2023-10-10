@@ -10,6 +10,7 @@ on:
     paths:
       - 'packages/nodejs/src/**'
       - 'packages/nodejs/tsconfig.json'
+      - 'packages/nodejs/package.json'
       - '.github/workflows/nodejs-build.yml'
 
 jobs:
