@@ -53,7 +53,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: apk add libressl-dev && set -e && yarn build:nodejs-bindings && strip *.node
+            build: apk add pkgconfig openssl-dev && set -e && yarn build:nodejs-bindings && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
@@ -73,8 +73,8 @@ jobs:
             setup: |
               sudo apt-get update
               sudo apt-get install gcc-arm-linux-gnueabihf -y
+              sudo apt-get install pkg-config libssl-dev
             build: |
-              export OPENSSL_DIR="/usr/lib/ssl"
               yarn build:nodejs-bindings --target armv7-unknown-linux-gnueabihf
               arm-linux-gnueabihf-strip *.node
           - host: ubuntu-latest
