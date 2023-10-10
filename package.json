@@ -29,6 +29,7 @@
     "node-example": "yarn workspace @pleisto/node-example",
     "build:nodejs": "yarn workspace @pleisto/node-flappy build",
     "build:nodejs-bindings": "yarn workspace @pleisto/flappy-nodejs-bindings build",
+    "artifacts:nodejs-bindings": "yarn workspace @pleisto/flappy-nodejs-bindings artifacts",
     "commit": "cz",
     "postinstall": "run dev is-ci || husky install"
   },

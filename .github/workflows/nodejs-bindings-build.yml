@@ -32,6 +32,9 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
+              sudo apt-get install pkg-config libssl-dev -y
+              export OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu"
+              export OPENSSL_INCLUDE="/usr/include/openssl"
               yarn build:nodejs-bindings
               strip -x *.node
           - host: windows-latest
