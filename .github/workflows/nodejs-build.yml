@@ -36,9 +36,10 @@ jobs:
               - '**/*.[tj]{s,sx}'
               - 'packages/nodejs/package.json'
               - '**/yarn.lock'
-      - name: Install Dependencies
+      - name: Install yarn dependencies
         if: steps.changes.outputs.src_or_deps_changed == 'true'
-        run: yarn install
+        run: yarn install --immutable
+        shell: bash
       - name: Run build
         if: steps.changes.outputs.src_or_deps_changed == 'true'
         run: yarn build:nodejs

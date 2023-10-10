@@ -11,7 +11,7 @@ import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { z } from './flappy-type'
 import { zodToCleanJsonSchema } from './utils'
-import { evalPythonCode } from '@flappy/flappy-nodejs-bindings'
+import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
