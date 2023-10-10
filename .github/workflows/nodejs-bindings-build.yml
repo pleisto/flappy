@@ -39,10 +39,10 @@ jobs:
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               yarn build:nodejs-bindings
-          - host: windows-latest
-            build: |
-              yarn build:nodejs-bindings --target i686-pc-windows-msvc
-            target: i686-pc-windows-msvc
+          # - host: windows-latest
+          #   build: |
+          #     yarn build:nodejs-bindings --target i686-pc-windows-msvc
+          #   target: i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
@@ -77,28 +77,28 @@ jobs:
               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu &&
               aarch64-unknown-linux-gnu-strip packages/rust-core/nodejs/*.node
-          - host: ubuntu-latest
-            target: armv7-unknown-linux-gnueabihf
-            setup: |
-              sudo apt-get update
-              sudo apt-get install build-essential -y &&
-              sudo apt-get install perl -y &&
-              sudo apt-get install pkg-config libssl-dev -y &&
-              sudo apt-get install gcc-arm-linux-gnueabihf -y
-            build: |
-              export OPENSSL_DIR="/usr/lib/ssl"
-              yarn build:nodejs-bindings --target armv7-unknown-linux-gnueabihf
-              arm-linux-gnueabihf-strip packages/rust-core/nodejs/*.node
+          # - host: ubuntu-latest
+          #   target: armv7-unknown-linux-gnueabihf
+          #   setup: |
+          #     sudo apt-get update
+          #     sudo apt-get install build-essential -y &&
+          #     sudo apt-get install perl -y &&
+          #     sudo apt-get install pkg-config libssl-dev -y &&
+          #     sudo apt-get install gcc-arm-linux-gnueabihf -y
+          #   build: |
+          #     export OPENSSL_DIR="/usr/lib/ssl"
+          #     yarn build:nodejs-bindings --target armv7-unknown-linux-gnueabihf
+          #     arm-linux-gnueabihf-strip packages/rust-core/nodejs/*.node
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               yarn build:nodejs-bindings --target aarch64-linux-android
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
-          - host: ubuntu-latest
-            target: armv7-linux-androideabi
-            build: |
-              yarn build:nodejs-bindings --target armv7-linux-androideabi
-              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
+          # - host: ubuntu-latest
+          #   target: armv7-linux-androideabi
+          #   build: |
+          #     yarn build:nodejs-bindings --target armv7-linux-androideabi
+          #     ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
@@ -108,9 +108,9 @@ jobs:
               rustup target add aarch64-unknown-linux-musl &&
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl &&
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/rust-core/nodejs/*.node
-          - host: windows-latest
-            target: aarch64-pc-windows-msvc
-            build: RUST_BACKTRACE=1 yarn build:nodejs-bindings --target aarch64-pc-windows-msvc
+          # - host: windows-latest
+          #   target: aarch64-pc-windows-msvc
+          #   build: RUST_BACKTRACE=1 yarn build:nodejs-bindings --target aarch64-pc-windows-msvc
     name: stable - ${{ matrix.settings.target }} - node@18
     runs-on: ${{ matrix.settings.host }}
     steps:
@@ -182,54 +182,54 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
-  # build-freebsd:
-  #   runs-on: macos-12
-  #   name: Build FreeBSD
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Build
-  #       id: build
-  #       uses: vmactions/freebsd-vm@v0
-  #       env:
-  #         DEBUG: napi:*
-  #         RUSTUP_HOME: /usr/local/rustup
-  #         CARGO_HOME: /usr/local/cargo
-  #         RUSTUP_IO_THREADS: 1
-  #       with:
-  #         envs: DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS
-  #         usesh: true
-  #         mem: 3000
-  #         prepare: |
-  #           pkg install -y -f curl node libnghttp2 npm yarn
-  #           curl https://sh.rustup.rs -sSf --output rustup.sh
-  #           sh rustup.sh -y --profile minimal --default-toolchain beta
-  #           export PATH="/usr/local/cargo/bin:$PATH"
-  #           echo "~~~~ rustc --version ~~~~"
-  #           rustc --version
-  #           echo "~~~~ node -v ~~~~"
-  #           node -v
-  #           echo "~~~~ yarn --version ~~~~"
-  #           yarn --version
-  #         run: |
-  #           export PATH="/usr/local/cargo/bin:$PATH"
-  #           pwd
-  #           ls -lah
-  #           whoami
-  #           env
-  #           freebsd-version
-  #           yarn install --immutable
-  #           yarn build:nodejs-bindings
-  #           strip -x *.node
-  #           yarn test
-  #           rm -rf node_modules
-  #           rm -rf target
-  #           rm -rf .yarn/cache
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: bindings-freebsd
-  #         path: ${{ env.APP_NAME }}.*.node
-  #         if-no-files-found: error
+  build-freebsd:
+    runs-on: macos-12
+    name: Build FreeBSD
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        id: build
+        uses: vmactions/freebsd-vm@v0
+        env:
+          DEBUG: napi:*
+          RUSTUP_HOME: /usr/local/rustup
+          CARGO_HOME: /usr/local/cargo
+          RUSTUP_IO_THREADS: 1
+        with:
+          envs: DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS
+          usesh: true
+          mem: 3000
+          prepare: |
+            pkg install -y -f curl node libnghttp2 npm yarn
+            curl https://sh.rustup.rs -sSf --output rustup.sh
+            sh rustup.sh -y --profile minimal --default-toolchain beta
+            export PATH="/usr/local/cargo/bin:$PATH"
+            echo "~~~~ rustc --version ~~~~"
+            rustc --version
+            echo "~~~~ node -v ~~~~"
+            node -v
+            echo "~~~~ yarn --version ~~~~"
+            yarn --version
+          run: |
+            export PATH="/usr/local/cargo/bin:$PATH"
+            pwd
+            ls -lah
+            whoami
+            env
+            freebsd-version
+            yarn install --immutable
+            yarn build:nodejs-bindings
+            strip -x packages/rust-core/nodejs/*.node
+            yarn test
+            rm -rf node_modules
+            rm -rf packages/rust-core/target
+            rm -rf .yarn/cache
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-freebsd
+          path: ${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
   # test-macOS-windows-binding:
   #   name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
   #   needs:
