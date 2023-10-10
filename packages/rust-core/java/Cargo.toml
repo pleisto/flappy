@@ -1,0 +1,23 @@
+[package]
+name = "flappy-java-bindings"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.workspaces]
+independent = true
+
+[lib]
+crate-type = ["cdylib"]
+
+
+[dependencies]
+flappy-common = { path = "../common" }
+mimalloc = {version = "0.1.39", default-features = false}
+jni = "0.21.1"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.dev]
+incremental=true

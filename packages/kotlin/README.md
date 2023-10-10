@@ -226,4 +226,3 @@ FlappyBaseAgent lawAgent = new FlappyBaseAgent(
 
 - Template Engine
 - Sandbox
-- Code Interpreter
