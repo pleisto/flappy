@@ -33,6 +33,7 @@ jobs:
             target: x86_64-apple-darwin
             build: |
               yarn build
+              ls
               strip -x *.node
           - host: windows-latest
             build: yarn build
@@ -48,15 +49,17 @@ jobs:
             build: |-
               set -e &&
               yarn build --target x86_64-unknown-linux-gnu &&
+              ls
               strip *.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: set -e && yarn build && strip *.node
+            build: set -e && yarn build && ls && strip *.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               yarn build --target aarch64-apple-darwin
+              ls
               strip -x *.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
@@ -64,6 +67,7 @@ jobs:
             build: |-
               set -e &&
               yarn build --target aarch64-unknown-linux-gnu &&
+              ls &&
               aarch64-unknown-linux-gnu-strip *.node
           - host: ubuntu-latest
             target: armv7-unknown-linux-gnueabihf
@@ -72,16 +76,19 @@ jobs:
               sudo apt-get install gcc-arm-linux-gnueabihf -y
             build: |
               yarn build --target armv7-unknown-linux-gnueabihf
+              ls
               arm-linux-gnueabihf-strip *.node
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               yarn build --target aarch64-linux-android
+              ls
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
               yarn build --target armv7-linux-androideabi
+              ls
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip *.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
@@ -90,6 +97,7 @@ jobs:
               set -e &&
               rustup target add aarch64-unknown-linux-musl &&
               yarn build --target aarch64-unknown-linux-musl &&
+              ls &&
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip *.node
           - host: windows-latest
             target: aarch64-pc-windows-msvc
