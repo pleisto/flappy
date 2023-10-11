@@ -33,60 +33,92 @@ val resumeDummy = Dummy { _, source, _ ->
 
     lawGetMeta.source -> LLMResponse.Success(
       """
-          {
-            "name": "姓名",
-            "profession": "软件工程师",
-            "experienceYears": 7,
-            "skills": [
-              {
-                "name": "HTML",
-                "proficiency": "熟练"
-              },
-              {
-                "name": "CSS",
-                "proficiency": "熟练"
-              },
-              {
-                "name": "JavaScript",
-                "proficiency": "熟练"
-              },
-              {
-                "name": "React",
-                "proficiency": "精通"
-              },
-              {
-                "name": "Vue",
-                "proficiency": "精通"
-              },
-              {
-                "name": "Angular",
-                "proficiency": "精通"
-              }
-            ],
-            "projectExperiences": [
-              {
-                "title": "电商网站重构",
-                "role": "前端技术负责人",
-                "description": "负责参与了ABC公司旗下电商网站的重构项目，担任前端技术负责人。使用React框架重建网站前端，实现了页面响应式设计和动态加载功能，提升了用户体验。优化前端性能，减少了页面加载时间，提高了网站整体性能。设计并实施了用户行为跟踪和分析系统，为市场营销团队提供了关键的数据支持。"
-              },
-              {
-                "title": "社交媒体应用开发",
-                "role": "前端开发团队领导",
-                "description": "领导一个四人的前端开发团队，从零开始开发了一款社交媒体应用。采用了Vue.js框架和Vuex进行状态管理，实现了实时聊天、帖子发布和用户互动功能。集成了第三方登录和分享功能，提升了用户注册和活跃度。成功将应用推向市场，用户数量从零增长到五万以上。"
-              },
-              {
-                "title": "内部管理系统升级",
-                "role": "系统升级负责人",
-                "description": "负责升级公司内部管理系统，从传统的后端渲染转变为现代化的前后端分离架构。使用Angular框架开发新的前端界面，实现了快速的数据加载和交互功能。利用GraphQL优化了与后端的数据通信，减少了不必要的请求次数，提高了系统效率。通过培训和文档编写，帮助团队成员顺利过渡到新的技术栈。"
-              }
-            ],
-            "education": {
-              "degree": "学士学位",
-              "fieldOfStudy": "计算机科学",
-              "university": "北京大学",
-              "year": "2012"
+        {
+          "name": "John Doe",
+          "profession": "Software Engineer",
+          "experienceYears": 7,
+          "skills": [
+            {
+              "name": "HTML",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "CSS",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "JavaScript",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "React",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Vue",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Angular",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Redux",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "GraphQL",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Webpack",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Babel",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "ESLint",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Agile",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Scrum",
+              "proficiency": "Expert"
+            },
+            {
+              "name": "Jira",
+              "proficiency": "Expert"
             }
+          ],
+          "projectExperiences": [
+            {
+              "title": "E-commerce Website Refactoring (ABC Company)",
+              "role": "Front-end Technical Lead",
+              "description": "Participated in the refactoring project of an e-commerce website under ABC Company, rebuilt the website frontend using the React framework, implemented responsive design and dynamic loading features, optimized front-end performance, and designed and implemented a system for user behavior tracking and analysis."
+            },
+            {
+              "title": "Social Media Application Development (XYZ Startup)",
+              "role": "Team Lead",
+              "description": "Led a four-person front-end development team, developed a social media application from scratch using the Vue.js framework and Vuex for state management, integrated third-party login and sharing features, and successfully launched the application to the market."
+            },
+            {
+              "title": "Internal Management System Upgrade (DEF Enterprise)",
+              "role": "Front-end Developer",
+              "description": "Responsible for upgrading the company's internal management system, developed a new front-end interface using the Angular framework, optimized data communication with the back-end using GraphQL, and facilitated the transition of team members to the new technology stack through training and documentation."
+            }
+          ],
+          "education": {
+            "degree": "Bachelor's Degree",
+            "fieldOfStudy": "Computer Science",
+            "university": "Peking University",
+            "year": 2012
           }
+        }
         """.trimIndent()
     )
 

@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlin.test.Test
 
-private class LibraryTest {
+private class MapperTest {
 
   @Test
-  fun github437() {
+  fun mapper() {
     data class KmsCmkSecret(val cmkIdentifier: String, val dataKeyCiphertext: String)
 
     val secretJson = """{"cmkIdentifier": "foo", "dataKeyCiphertext":"bar"}"""
@@ -23,9 +23,9 @@ private class LibraryTest {
     val kmsCmkSecretArray = jacksonMapper.readValue<List<KmsCmkSecret>>(secretArrayJSON)
     println(kmsCmkSecretArray)
   }
-  
+
   @Test
-  fun xxx() {
+  fun mapper2() {
     data class Foo(val xxx: String)
 
     data class Bar(val foo: Foo)

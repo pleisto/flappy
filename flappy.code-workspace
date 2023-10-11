@@ -7,20 +7,48 @@
       "path": "."
     },
     {
-      "name": "@pleisto/node-example",
-      "path": "examples/nodejs"
+      "name": "@pleisto/flappy-docs",
+      "path": "docs"
     },
     {
       "name": "@pleisto/node-flappy",
       "path": "packages/nodejs"
     },
     {
-      "name": "@pleisto/rust-core",
+      "name": "@pleisto/flappy-core",
       "path": "packages/rust-core"
+    },
+    {
+      "name": "@pleisto/kotlin-flappy",
+      "path": "packages/kotlin"
+    },
+    {
+      "name": "@pleisto/csharp-flappy",
+      "path": "packages/csharp"
+    },
+    {
+      "name": "@flappy/flappy-nodejs-bindings",
+      "path": "packages/rust-core/nodejs"
     },
     {
       "name": "@pleisto/flappy-devkit",
       "path": "tools/devkit"
+    },
+    {
+      "name": "@pleisto/node-example",
+      "path": "examples/nodejs"
+    },
+    {
+      "name": "@pleisto/kotlin-example",
+      "path": "examples/kotlin"
+    },
+    {
+      "name": "@pleisto/java-example",
+      "path": "examples/java"
+    },
+    {
+      "name": "@pleisto/csharp-example",
+      "path": "examples/csharp"
     }
   ]
 }

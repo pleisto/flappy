@@ -12,17 +12,14 @@ import com.aallam.openai.client.OpenAIHost
 import flappy.*
 
 
-/**
- * ChatGPT LLM
- *
- *
- */
 class ChatGPT @JvmOverloads constructor(
   private val model: String,
   private val chatGPTConfig: ChatGPTConfig? = null,
   private val openai: OpenAI? = null,
 ) :
   FlappyLLMBase() {
+
+  override fun close() {}
 
   class ChatGPTConfig @JvmOverloads constructor(val token: String, val host: String? = null)
 
