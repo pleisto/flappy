@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>Pleisto</Authors>
 		<ProductName>Pleisto.Flappy</ProductName>
-		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>11.0</LangVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
@@ -11,6 +11,7 @@
 		<Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>IDE1006</WarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!--Nuget Package Info-->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -19,12 +20,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.0.0.3-alpha</Version>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
+    
 	</PropertyGroup>
 
 	<ItemGroup>
     <None Include="../.editorconfig" Link=".editorconfig" />
-		<None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False"/>
-		<None Include="../../../README.md" PackagePath="" Pack="True" Visible="False"/>
+		<None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False" />
+		<None Include="../../../README.md" PackagePath="" Pack="True" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>

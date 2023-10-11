@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Pleisto.Flappy.CodeInterpreter;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.LLM.Interfaces;
@@ -16,6 +17,8 @@ namespace Pleisto.Flappy
     internal readonly FlappyAgentConfig config;
     internal readonly ILLMBase llm;
     internal readonly ILLMBase llmPlaner;
+    private int retry = 0;
+    private const int DEFAULT_RETRY = 1;
 
     /// <summary>
     /// Create a flappy agent.
@@ -31,6 +34,7 @@ namespace Pleisto.Flappy
         throw new NullReferenceException($"config.functions not be null");
       this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? this.llm;
+      this.retry = config.Retry ?? DEFAULT_RETRY;
     }
 
     /// <summary>
@@ -186,6 +190,82 @@ Only the listed functions are allowed to be used."
       {
         throw new InvalidDataException($"unable to parse json array startIdx={startIdx} endIdx={endIdx} raw={Environment.NewLine}{msg.Data}" +
             $"{Environment.NewLine}SplitedData:{Environment.NewLine}{content}", ex);
+      }
+    }
+
+    /// <summary>
+    /// Call by code interpreter
+    /// </summary>
+    /// <param name="prompt"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<object> CallCodeInterpreter(string prompt)
+    {
+      if (config.CodeInterpreter == null)
+        throw new Exception($"Code interpreter is not enabled!");
+      var originalRequestMessage = new ChatMLMessage[]
+      {
+        new ChatMLMessage
+        {
+          Role = ChatMLMessageRole.System,
+          Content= $@"You are an AI that writes Python code using only the built-in library. After you supply the Python code, it will be run in a safe sandbox. The execution time is limited to 120 seconds. The task is to define a function named ""main"" that doesn't take any parameters. The output should be a JSON object: {{""code"": string}}.
+            Network access is {(config.CodeInterpreter.EnableNetwork == true ? "enabled" : "disabled")}"
+        },
+        new ChatMLMessage
+        {
+          Role = ChatMLMessageRole.User,
+          Content = $"{prompt}\n\noutput json:\n"
+        }
+      };
+
+      var retry = this.retry;
+      var requestMessage = originalRequestMessage;
+      ChatMLResponse result = null;
+      while (true)
+      {
+        try
+        {
+          if (retry != this.retry)
+            Console.WriteLine($"Attempt retry: {this.retry - retry}");
+          result = await llm.ChatComplete(requestMessage);
+          var data = JObject.Parse(result.Data)["code"]?.ToString()?.Replace("\\n", "\n");
+          if (data == null)
+            throw new Exception("Invalid JSON response");
+          if (data.Contains("def main():"))
+            throw new Exception("Function \"main\" not found");
+          Console.WriteLine($"Generated Code: \n {data}");
+          var pythonResult = NativeHandler.EvalPythonCode($"{data}\nprint(main())", config.CodeInterpreter.EnableNetwork == true, config.CodeInterpreter.Env ?? new Dictionary<string, string>(), config.CodeInterpreter.CacheDir);
+          if (string.IsNullOrWhiteSpace(pythonResult.StdErr))
+            throw new Exception(data);
+          Console.WriteLine($"CodeInterpreter Output: {pythonResult.StdOut}");
+          return pythonResult.StdOut;
+        }
+        catch (Exception ex)
+        {
+          Console.Error.WriteLine(ex.ToString());
+          if (retry <= 0)
+            throw new Exception($"Interrupted, function call failed. Please refer to the error message above.");
+          retry -= 1;
+          if (result?.Success == true && result.Data != null)
+          {
+            requestMessage = requestMessage.Union(new ChatMLMessage[]
+            {
+              new ChatMLMessage
+              {
+                Role = ChatMLMessageRole.Assistant,
+                Content = result?.Data
+              },
+              new ChatMLMessage
+              {
+                Role = ChatMLMessageRole.User,
+                Content= @$"You response is invalid for the following reason:
+            {ex.Message}
+
+            Please try again."
+              }
+            }).ToArray();
+          }
+        }
       }
     }
 
