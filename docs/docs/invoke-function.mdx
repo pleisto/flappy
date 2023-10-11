@@ -1,0 +1,83 @@
+---
+sidebar_position: 4
+---
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+# Invoke Function
+
+InvokeFunction is a critical feature in the Flappy SDK, a production-ready Language Learning Model (LLM) Application/Agent SDK. This feature allows developers to define functions that an LLM agent can execute to interact with its surrounding environment. This interaction can range from database queries to network requests or any operation that involves system interaction outside of the agent itself.
+
+## Understanding InvokeFunction
+
+InvokeFunction is defined by its input and output parameters. These structures must be clear for the Language Learning Model (LLM) to interact efficiently. The InvokeFunction in Flappy is designed to work in harmony with the LLM, and the understanding of these parameters and the function's role is crucial for making the interaction efficient and cost-effective.
+
+The InvokeFunction plays a significant role in task planning as it helps in defining clear structures for interactions between user requests, the LLM, and the external environment. With a well-defined InvokeFunction, an LLM agent can efficiently devise and execute a plan based on the user's prompt.
+
+Unlike the ReAct paradigm used in existing Agent libraries in the market such as AutoGPT and LangChain, Flappy is built on the ReWOO paradigm. [ReAct](https://arxiv.org/abs/2210.03629) and [ReWOO](https://arxiv.org/abs/2305.18323) are two techniques introduced recently in the world of Language Learning Model Agents. Both play crucial roles in how an agent interacts with its environment, but they have different approaches and implications, especially regarding cost-effectiveness in a production environment.
+
+
+### ReAct
+
+ReAct is a technique that emphasizes the interaction of agents with their surroundings before generating subsequent actions. It stimulates the agents with examples that have already been pre-defined. It enforces the idea that an agent should engage in intermediate thinking before executing an action. While this method introduces a new realm of possibilities for LLM agents, it might not be the most cost-effective choice in a production environment due to its relatively higher token output.
+
+### ReWOO
+
+ReWOO, on the other hand, introduces additional planning processes for LLM agents. It emphasizes the separation of reasoning from observation, which has been shown to increase the effectiveness of LLM agents. More importantly, ReWOO minimizes LLM token output, which is crucial for cost-efficiency in a production environment.
+
+
+### Why Flappy Chooses ReWOO Over ReAct
+
+Flappy opts for the ReWOO paradigm over ReAct due to its cost-effectiveness and efficiency in a production environment. With ReWOO, Flappy can minimize LLM token output, which is crucial for keeping costs under control in a production setting. This makes Flappy a more robust and affordable solution for developers looking to integrate AI capabilities into their applications.
+
+## How to Define an InvokeFunction
+
+
+Defining an `InvokeFunction` allows an agent in the Flappy, regardless of its implementation language, to interact with external systems, such as a database or network resources. Here's the general process:
+
+1. **Identify the External Operation**: Determine what kind of operation the agent needs to perform. This could be anything from querying data, making a network request, or any other interaction with external systems.
+
+2. **Define the Function**: Using the functionality provided by Flappy, define your function. This usually involves a special function or method provided by the Flappy SDK, like `createInvokeFunction` in the JavaScript implementation. This function requires an object that describes the properties of your function.
+
+3. **Specify Function Properties**: These properties generally include:
+
+   - `name`: A unique identifier for your function.
+   - `description`: A brief explanation of what your function does.
+   - `args`: The arguments that your function accepts. This usually involves specifying the argument's name and type.
+   - `returnType`: The type of data your function returns.
+   - `resolve`: A method that contains the logic to perform the external operation.
+
+Keep in mind that the specific syntax and naming can differ across different language implementations of Flappy. However, the general concept and process remain the same. The goal is to provide a way for the agent to interact with the external world in a structured and predictable manner.
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
+
+```ts
+import { createInvokeFunction, ZodType as z } from '@pleisto/node-flappy'
+
+createInvokeFunction({
+      name: 'getLatestLawsuitsByPlaintiff',
+      description: 'Get the latest lawsuits by plaintiff.',
+      args: z.object({
+        plaintiff: z.string(),
+        arg1: z.boolean().describe('For demo purpose. set to False'),
+        arg2: z.array(z.string()).describe('ignore it').optional()
+      }),
+      returnType: z.string(),
+      resolve: async args => {
+        // Do something
+        // e.g. query SQL database
+        console.debug('getLatestLawsuitsByPlaintiff called', args)
+        return MOCK_LAWSUIT_DATA
+      }
+})
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>

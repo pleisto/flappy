@@ -1,0 +1,4 @@
+root: true
+
+extends:
+  - plugin:@pleisto/eslint-plugin/react

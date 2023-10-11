@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Flappy",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Flappy",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Quick Start": {
+    "message": "快速上手",
+    "description": "Navbar item with label Quick Start"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}
