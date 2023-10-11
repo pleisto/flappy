@@ -5,7 +5,18 @@
   width: 100%;
 }
 
+.feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--ifm-heading-margin-top) 0 var(--ifm-heading-margin-bottom) 0;
+}
+
 .featureSvg {
   height: 4em;
   width: 4em;
+}
+
+.featureTitle {
+  text-align: center;
 }
