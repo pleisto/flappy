@@ -1,4 +1,4 @@
-name: Docs Deployment
+name: Docs Building and Deployment
 
 defaults:
   run:
@@ -9,9 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
     paths:
       - 'docs/**/*'
       - '.github/workflows/doc-*'
@@ -23,10 +22,11 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy to GitHub Pages
+    name: GitHub Pages Building & Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -40,11 +40,12 @@ jobs:
       # Popular action to deploy to GitHub Pages:
       # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
       - name: Deploy to GitHub Pages
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Build output to publish to the `gh-pages` branch:
-          publish_dir: ./build
+          publish_dir: ./docs/build
           # The following lines assign commit authorship to the official
           # GH-Actions bot for deploys to `gh-pages` branch:
           # https://github.com/actions/checkout/issues/13#issuecomment-724415212
