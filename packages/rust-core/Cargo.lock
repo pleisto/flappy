@@ -1341,6 +1341,7 @@ checksum = "d5477fe2230a79769d8dc68e0eabf5437907c0457a5614a9e8dddb67f65eb65d"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.0",
+ "serde",
 ]
 
 [[package]]
@@ -1895,7 +1896,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f4c021e1093a56626774e81216a4ce732a735e5bad4868a03f3ed65ca0c3919"
 dependencies = [
  "once_cell",
- "toml_edit",
+ "toml_edit 0.19.15",
 ]
 
 [[package]]
@@ -2860,7 +2861,19 @@ dependencies = [
  "serde",
  "serde_spanned",
  "toml_datetime",
- "toml_edit",
+ "toml_edit 0.19.15",
+]
+
+[[package]]
+name = "toml"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "185d8ab0dfbb35cf1399a6344d8484209c088f75f8f68230da55d48d95d43e3d"
+dependencies = [
+ "serde",
+ "serde_spanned",
+ "toml_datetime",
+ "toml_edit 0.20.2",
 ]
 
 [[package]]
@@ -2877,6 +2890,19 @@ name = "toml_edit"
 version = "0.19.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b5bb770da30e5cbfde35a2d7b9b8a2c4b8ef89548a7a6aeab5c9a576e3e7421"
+dependencies = [
+ "indexmap 2.0.0",
+ "serde",
+ "serde_spanned",
+ "toml_datetime",
+ "winnow",
+]
+
+[[package]]
+name = "toml_edit"
+version = "0.20.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "396e4d48bbb2b7554c944bde63101b5ae446cff6ec4a24227428f15eb72ef338"
 dependencies = [
  "indexmap 2.0.0",
  "serde",
@@ -3519,7 +3545,7 @@ dependencies = [
  "tokio",
  "toml 0.5.11",
  "url",
- "wasmer-toml",
+ "wasmer-toml 0.8.0",
  "whoami",
 ]
 
@@ -3539,6 +3565,24 @@ dependencies = [
  "serde_yaml 0.9.25",
  "thiserror",
  "toml 0.5.11",
+]
+
+[[package]]
+name = "wasmer-toml"
+version = "0.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d21472954ee9443235ca32522b17fc8f0fe58e2174556266a0d9766db055cc52"
+dependencies = [
+ "anyhow",
+ "derive_builder",
+ "indexmap 2.0.0",
+ "semver",
+ "serde",
+ "serde_cbor",
+ "serde_json",
+ "serde_yaml 0.9.25",
+ "thiserror",
+ "toml 0.8.2",
 ]
 
 [[package]]
@@ -3709,9 +3753,9 @@ dependencies = [
 
 [[package]]
 name = "webc"
-version = "5.5.1"
+version = "5.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b56acc943f6b80cc2842231f34f99a02cd406896a23f3c6dacd8130c24ab3d1"
+checksum = "d56e44a162b95647aef18b6b37b870836a0ada3e67124ef60022e0445e2734f5"
 dependencies = [
  "anyhow",
  "base64",
@@ -3736,7 +3780,7 @@ dependencies = [
  "toml 0.7.8",
  "url",
  "walkdir",
- "wasmer-toml",
+ "wasmer-toml 0.9.2",
 ]
 
 [[package]]
