@@ -1,19 +1,26 @@
-name: Test deployment
+name: Docs Build
 
 defaults:
   run:
     working-directory: ./docs
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'docs/**/*'
+      - '.github/workflows/doc-*'
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
 jobs:
   test-deploy:
-    name: Test deployment
+    name: Building Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

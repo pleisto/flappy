@@ -1,13 +1,20 @@
-name: Deploy Doc to GitHub Pages
+name: Docs Deployment
 
 defaults:
   run:
     working-directory: ./docs
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**/*'
+      - '.github/workflows/doc-*'
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
