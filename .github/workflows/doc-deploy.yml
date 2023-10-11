@@ -1,4 +1,4 @@
-name: Docs Deployment
+name: Docs Building and Deployment
 
 defaults:
   run:
@@ -12,9 +12,9 @@ on:
   pull_request:
     branches:
       - main
-    # push:
-    #   branches:
-    #     - main
+  push:
+    branches:
+      - main
     paths:
       - 'docs/**/*'
       - '.github/workflows/doc-*'
@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy to GitHub Pages
+    name: GitHub Pages Building & Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +43,7 @@ jobs:
       # Popular action to deploy to GitHub Pages:
       # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
       - name: Deploy to GitHub Pages
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
