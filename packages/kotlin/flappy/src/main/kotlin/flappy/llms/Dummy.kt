@@ -17,6 +17,8 @@ internal val defaultMockChat: MockChat = { _, _, _ -> LLMResponse.Success("") }
 class Dummy(
   val mockChat: MockChat = defaultMockChat
 ) : FlappyLLMBase() {
+  override fun close() {}
+  
   override suspend fun chatComplete(
     messages: List<FlappyChatMessage>,
     source: String,

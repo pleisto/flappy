@@ -13,7 +13,11 @@ class FlappyBaseAgent @JvmOverloads constructor(
   val inferenceLLM: FlappyLLMBase,
   private val functions: List<AnyFlappyFunction>,
   maxRetry: Int? = null,
-) {
+) : AutoCloseable {
+
+  override fun close() {
+    inferenceLLM.close()
+  }
 
   companion object {
     /** @suppress */

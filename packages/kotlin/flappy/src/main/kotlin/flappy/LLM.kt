@@ -27,7 +27,7 @@ sealed class LLMResponse(open val data: String) {
 }
 
 
-abstract class FlappyLLMBase {
+abstract class FlappyLLMBase : AutoCloseable {
   open val defaultMaxTokens: Int = 0
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
 
