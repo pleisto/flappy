@@ -9,9 +9,12 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    # push:
+    #   branches:
+    #     - main
     paths:
       - 'docs/**/*'
       - '.github/workflows/doc-*'
@@ -39,6 +42,8 @@ jobs:
 
       # Popular action to deploy to GitHub Pages:
       # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
+      - name: Check files
+        run: ls
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
