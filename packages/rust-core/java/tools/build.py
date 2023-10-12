@@ -22,13 +22,13 @@ def classifier_to_target(classifier: str) -> str:
 
 def get_cargo_artifact_name(classifier: str) -> str:
     if classifier == "osx-aarch_64":
-        return "libopendal_java.dylib"
+        return "libflappy_java_bindings.dylib"
     if classifier == "osx-x86_64":
-        return "libopendal_java.dylib"
+        return "libflappy_java_bindings.dylib"
     if classifier == "linux-x86_64":
-        return "libopendal_java.so"
+        return "libflappy_java_bindings.so"
     if classifier == "windows-x86_64":
-        return "opendal_java.dll"
+        return "flappy_java_bindings.dll"
     raise Exception(f"Unsupported classifier: {classifier}")
 
 
@@ -39,13 +39,9 @@ if __name__ == "__main__":
     parser.add_argument("--classifier", type=str, required=True)
     parser.add_argument("--target", type=str, default="")
     parser.add_argument("--profile", type=str, default="dev")
-    parser.add_argument("--features", type=str, default="default")
     args = parser.parse_args()
 
     cmd = ["cargo", "build", "--color=always", f"--profile={args.profile}"]
-
-    if args.features:
-        cmd += ["--features", args.features]
 
     if args.target:
         target = args.target

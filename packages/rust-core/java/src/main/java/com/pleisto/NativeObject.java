@@ -79,7 +79,7 @@ public abstract class NativeObject implements AutoCloseable {
     private static void doLoadLibrary() throws IOException {
         try {
             // try dynamic library - the search path can be configured via "-Djava.library.path"
-            System.loadLibrary("opendal_java");
+            System.loadLibrary("flappy_java_bindings");
             return;
         } catch (UnsatisfiedLinkError ignore) {
             // ignore - try from classpath
@@ -104,7 +104,7 @@ public abstract class NativeObject implements AutoCloseable {
 
     private static String bundledLibraryPath() {
         final String classifier = Environment.getClassifier();
-        final String libraryName = System.mapLibraryName("opendal_java");
+        final String libraryName = System.mapLibraryName("flappy_java_bindings");
         return "/native/" + classifier + "/" + libraryName;
     }
 

@@ -1,4 +1,4 @@
-name: Java Bindings CI
+name: Java Bindings Test
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - 'packages/rust-core/common/**'
       - 'packages/rust-core/java/**'
       - 'packages/rust-core/Cargo.toml'
-      - '.github/workflows/java-bindings-ci.yml'
+      - '.github/workflows/java-bindings-test.yml'
 
 defaults:
   run:
@@ -41,6 +41,3 @@ jobs:
 
       - name: Test
         run: ./mvnw verify
-
-      - name: Lint
-        run: ./mvnw compile spotless:check

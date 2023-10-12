@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pleisto</groupId>
-    <artifactId>opendal-java</artifactId>
+    <artifactId>flappy-nodejs-bindings</artifactId>
     <version>0.41.0</version>
 
     <url>https://github.com/pleisto/flappy</url>
@@ -167,8 +167,6 @@
                                 <argument>${cargo-build.target}</argument>
                                 <argument>--profile</argument>
                                 <argument>${cargo-build.profile}</argument>
-                                <argument>--features</argument>
-                                <argument>${cargo-build.features}</argument>
                             </arguments>
                         </configuration>
                     </execution>
