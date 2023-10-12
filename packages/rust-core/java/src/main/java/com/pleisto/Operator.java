@@ -200,6 +200,8 @@ public class Operator extends NativeObject {
 
     private static native long createDir(long nativeHandle, String path);
 
+    public static native long evalPythonCode(long nativeHandle, String path);
+
     private static native long copy(long nativeHandle, String sourcePath, String targetPath);
 
     private static native long rename(long nativeHandle, String sourcePath, String targetPath);

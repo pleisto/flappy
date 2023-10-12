@@ -57,24 +57,6 @@ fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<
   Ok(result)
 }
 
-#[no_mangle]
-pub extern "system" fn Java_HelloWorld_hello<'local>(
-  mut env: JNIEnv<'local>,
-  class: JClass<'local>,
-  input: JString<'local>,
-) -> jstring {
-  let input: String = env
-    .get_string(&input)
-    .expect("Couldn't get java string!")
-    .into();
-
-  let output = env
-    .new_string(format!("Hello, {}!", input))
-    .expect("Couldn't create java string!");
-
-  output.into_raw()
-}
-
 pub struct StdOutput {
   pub stdout: String,
   pub stderr: String,
@@ -87,6 +69,37 @@ impl From<SandboxOutput> for StdOutput {
       stderr: output.stderr,
     }
   }
+}
+
+#[no_mangle]
+pub unsafe extern "system" fn Java_com_pleisto_Operator_evalPythonCode(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut Operator,
+  code: JString,
+) -> jlong {
+  intern_create_dir(&mut env, op, code).unwrap_or_else(|e| {
+    e.throw(&mut env);
+    0
+  })
+}
+
+fn intern_create_dir(env: &mut JNIEnv, op: *mut Operator, path: JString) -> Result<jlong> {
+  let op = unsafe { &mut *op };
+  let id = request_id(env)?;
+
+  let path = jstring_to_string(env, &path)?;
+
+  unsafe { get_global_runtime() }.spawn(async move {
+    let result = do_create_dir(op, path).await;
+    complete_future(id, result.map(|_| JValueOwned::Void))
+  });
+
+  Ok(id)
+}
+
+async fn do_create_dir(op: &mut Operator, path: String) -> Result<()> {
+  Ok(op.create_dir(&path).await?)
 }
 
 async fn eval_python_code(
