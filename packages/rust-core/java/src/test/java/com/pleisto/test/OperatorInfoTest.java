@@ -20,7 +20,12 @@
 package com.pleisto.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import com.pleisto.BlockingOperator;
+import com.pleisto.Operator;
+import com.pleisto.OperatorInfo;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -29,7 +34,54 @@ public class OperatorInfoTest {
     private static Path tempDir;
 
     @Test
-    public void testBlockingOperatorInfo() {
+    public void ok() {
         assertThat(true).isTrue();
+    }
+
+    @Test
+    public void testBlockingOperatorInfo() {
+        final Map<String, String> conf = new HashMap<>();
+        conf.put("root", tempDir.toString());
+
+        try (final BlockingOperator op = BlockingOperator.of("fs", conf)) {
+            final OperatorInfo info = op.info;
+            assertThat(info).isNotNull();
+            assertThat(info.scheme).isEqualTo("fs");
+
+            assertThat(info.fullCapability).isNotNull();
+            assertThat(info.fullCapability.read).isTrue();
+            assertThat(info.fullCapability.write).isTrue();
+            assertThat(info.fullCapability.delete).isTrue();
+            assertThat(info.fullCapability.writeCanAppend).isTrue();
+            assertThat(info.fullCapability.writeMultiAlignSize).isEqualTo(-1);
+            assertThat(info.fullCapability.writeMultiMaxSize).isEqualTo(-1);
+            assertThat(info.fullCapability.writeMultiMinSize).isEqualTo(-1);
+            assertThat(info.fullCapability.batchMaxOperations).isEqualTo(-1);
+
+            assertThat(info.nativeCapability).isNotNull();
+        }
+    }
+
+    @Test
+    public void testOperatorInfo() {
+        final Map<String, String> conf = new HashMap<>();
+        conf.put("root", "/opendal/");
+        try (final Operator op = Operator.of("memory", conf)) {
+            final OperatorInfo info = op.info;
+            assertThat(info).isNotNull();
+            assertThat(info.scheme).isEqualTo("memory");
+
+            assertThat(info.fullCapability).isNotNull();
+            assertThat(info.fullCapability.read).isTrue();
+            assertThat(info.fullCapability.write).isTrue();
+            assertThat(info.fullCapability.delete).isTrue();
+            assertThat(info.fullCapability.writeCanAppend).isFalse();
+            assertThat(info.fullCapability.writeMultiAlignSize).isEqualTo(-1);
+            assertThat(info.fullCapability.writeMultiMaxSize).isEqualTo(-1);
+            assertThat(info.fullCapability.writeMultiMinSize).isEqualTo(-1);
+            assertThat(info.fullCapability.batchMaxOperations).isEqualTo(-1);
+
+            assertThat(info.nativeCapability).isNotNull();
+        }
     }
 }

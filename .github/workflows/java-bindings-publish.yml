@@ -66,8 +66,8 @@ jobs:
             -Dcargo-build.features=services-all \
             -DaltStagingDirectory=local-staging \
             -DskipRemoteStaging=true \
-            -DserverId=apache.releases.https \
-            -DnexusUrl=https://repository.apache.org
+            -DserverId=ossrh \
+            -DnexusUrl=https://s01.oss.sonatype.org
         env:
           MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
@@ -138,8 +138,8 @@ jobs:
           ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged \
             -DaltStagingDirectory=$LOCAL_STAGING_DIR \
             -DskipStagingRepositoryClose=true \
-            -DserverId=apache.releases.https \
-            -DnexusUrl=https://repository.apache.org
+            -DserverId=ossrh \
+            -DnexusUrl=https://s01.oss.sonatype.org
         env:
           MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}

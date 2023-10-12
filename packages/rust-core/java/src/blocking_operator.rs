@@ -31,178 +31,178 @@ use crate::Result;
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_disposeInternal(
-    _: JNIEnv,
-    _: JObject,
-    op: *mut BlockingOperator,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_disposeInternal(
+  _: JNIEnv,
+  _: JObject,
+  op: *mut BlockingOperator,
 ) {
-    drop(Box::from_raw(op));
+  drop(Box::from_raw(op));
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_read(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_read(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  path: JString,
 ) -> jbyteArray {
-    intern_read(&mut env, &mut *op, path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-        JByteArray::default().into_raw()
-    })
+  intern_read(&mut env, &mut *op, path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+    JByteArray::default().into_raw()
+  })
 }
 
 fn intern_read(env: &mut JNIEnv, op: &mut BlockingOperator, path: JString) -> Result<jbyteArray> {
-    let path = jstring_to_string(env, &path)?;
-    let content = op.read(&path)?;
-    let result = env.byte_array_from_slice(content.as_slice())?;
-    Ok(result.into_raw())
+  let path = jstring_to_string(env, &path)?;
+  let content = op.read(&path)?;
+  let result = env.byte_array_from_slice(content.as_slice())?;
+  Ok(result.into_raw())
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_write(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    path: JString,
-    content: JByteArray,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_write(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  path: JString,
+  content: JByteArray,
 ) {
-    intern_write(&mut env, &mut *op, path, content).unwrap_or_else(|e| {
-        e.throw(&mut env);
-    })
+  intern_write(&mut env, &mut *op, path, content).unwrap_or_else(|e| {
+    e.throw(&mut env);
+  })
 }
 
 fn intern_write(
-    env: &mut JNIEnv,
-    op: &mut BlockingOperator,
-    path: JString,
-    content: JByteArray,
+  env: &mut JNIEnv,
+  op: &mut BlockingOperator,
+  path: JString,
+  content: JByteArray,
 ) -> Result<()> {
-    let path = jstring_to_string(env, &path)?;
-    let content = env.convert_byte_array(content)?;
-    Ok(op.write(&path, content)?)
+  let path = jstring_to_string(env, &path)?;
+  let content = env.convert_byte_array(content)?;
+  Ok(op.write(&path, content)?)
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_stat(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_stat(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  path: JString,
 ) -> jlong {
-    intern_stat(&mut env, &mut *op, path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-        0
-    })
+  intern_stat(&mut env, &mut *op, path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+    0
+  })
 }
 
 fn intern_stat(env: &mut JNIEnv, op: &mut BlockingOperator, path: JString) -> Result<jlong> {
-    let path = jstring_to_string(env, &path)?;
-    let metadata = op.stat(&path)?;
-    Ok(Box::into_raw(Box::new(metadata)) as jlong)
+  let path = jstring_to_string(env, &path)?;
+  let metadata = op.stat(&path)?;
+  Ok(Box::into_raw(Box::new(metadata)) as jlong)
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_delete(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_delete(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  path: JString,
 ) {
-    intern_delete(&mut env, &mut *op, path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-    })
+  intern_delete(&mut env, &mut *op, path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+  })
 }
 
 fn intern_delete(env: &mut JNIEnv, op: &mut BlockingOperator, path: JString) -> Result<()> {
-    let path = jstring_to_string(env, &path)?;
-    Ok(op.delete(&path)?)
+  let path = jstring_to_string(env, &path)?;
+  Ok(op.delete(&path)?)
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_createDir(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_createDir(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  path: JString,
 ) {
-    intern_create_dir(&mut env, &mut *op, path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-    })
+  intern_create_dir(&mut env, &mut *op, path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+  })
 }
 
 fn intern_create_dir(env: &mut JNIEnv, op: &mut BlockingOperator, path: JString) -> Result<()> {
-    let path = jstring_to_string(env, &path)?;
-    Ok(op.create_dir(&path)?)
+  let path = jstring_to_string(env, &path)?;
+  Ok(op.create_dir(&path)?)
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_copy(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    source_path: JString,
-    target_path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_copy(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  source_path: JString,
+  target_path: JString,
 ) {
-    intern_copy(&mut env, &mut *op, source_path, target_path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-    })
+  intern_copy(&mut env, &mut *op, source_path, target_path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+  })
 }
 
 fn intern_copy(
-    env: &mut JNIEnv,
-    op: &mut BlockingOperator,
-    source_path: JString,
-    target_path: JString,
+  env: &mut JNIEnv,
+  op: &mut BlockingOperator,
+  source_path: JString,
+  target_path: JString,
 ) -> Result<()> {
-    let source_path = jstring_to_string(env, &source_path)?;
-    let target_path = jstring_to_string(env, &target_path)?;
+  let source_path = jstring_to_string(env, &source_path)?;
+  let target_path = jstring_to_string(env, &target_path)?;
 
-    Ok(op.copy(&source_path, &target_path)?)
+  Ok(op.copy(&source_path, &target_path)?)
 }
 
 /// # Safety
 ///
 /// This function should not be called before the Operator are ready.
 #[no_mangle]
-pub unsafe extern "system" fn Java_org_apache_opendal_BlockingOperator_rename(
-    mut env: JNIEnv,
-    _: JClass,
-    op: *mut BlockingOperator,
-    source_path: JString,
-    target_path: JString,
+pub unsafe extern "system" fn Java_com_pleisto_BlockingOperator_rename(
+  mut env: JNIEnv,
+  _: JClass,
+  op: *mut BlockingOperator,
+  source_path: JString,
+  target_path: JString,
 ) {
-    intern_rename(&mut env, &mut *op, source_path, target_path).unwrap_or_else(|e| {
-        e.throw(&mut env);
-    })
+  intern_rename(&mut env, &mut *op, source_path, target_path).unwrap_or_else(|e| {
+    e.throw(&mut env);
+  })
 }
 
 fn intern_rename(
-    env: &mut JNIEnv,
-    op: &mut BlockingOperator,
-    source_path: JString,
-    target_path: JString,
+  env: &mut JNIEnv,
+  op: &mut BlockingOperator,
+  source_path: JString,
+  target_path: JString,
 ) -> Result<()> {
-    let source_path = jstring_to_string(env, &source_path)?;
-    let target_path = jstring_to_string(env, &target_path)?;
+  let source_path = jstring_to_string(env, &source_path)?;
+  let target_path = jstring_to_string(env, &target_path)?;
 
-    Ok(op.rename(&source_path, &target_path)?)
+  Ok(op.rename(&source_path, &target_path)?)
 }
