@@ -35,6 +35,7 @@ jobs:
               sudo apt-get update
               sudo apt-get install build-essential -y
               sudo apt-get install clang gcc g++ zlib1g-dev libmpc-dev libmpfr-dev libgmp-dev -y
+              export CFLAGS="-ansi -D_SVID_SOURCE -DOSS_AUDIO -D'ARCH=\"$host_cpu\"' $CFLAGS"
               export TARGET_CC=clang
               export CC=o64-clang
               export CXX=o64-clang++
