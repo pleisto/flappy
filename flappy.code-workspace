@@ -31,6 +31,10 @@
       "path": "packages/rust-core/nodejs"
     },
     {
+      "name": "@flappy/flappy-java-bindings",
+      "path": "packages/rust-core/java"
+    },
+    {
       "name": "@pleisto/flappy-devkit",
       "path": "tools/devkit"
     },
