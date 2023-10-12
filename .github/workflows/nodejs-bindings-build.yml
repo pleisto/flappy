@@ -32,6 +32,8 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-apple-darwin
             build: |
+              sudo apt-get install gcc-aarch64-linux-gnu
+              export CROSS_COMPILE=aarch64-linux-gnu-
               yarn build:nodejs-bindings --target x86_64-apple-darwin
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
