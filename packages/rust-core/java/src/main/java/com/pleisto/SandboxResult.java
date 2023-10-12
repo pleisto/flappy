@@ -4,11 +4,11 @@ import lombok.NonNull;
 import lombok.ToString;
 
 @ToString
-public class SandboxOutput {
+public class SandboxResult {
     public final String stdout;
     public final String stderr;
 
-    public SandboxOutput(@NonNull String stdout, @NonNull String stderr) {
+    public SandboxResult(@NonNull String stdout, @NonNull String stderr) {
         this.stdout = stdout;
         this.stderr = stderr;
     }

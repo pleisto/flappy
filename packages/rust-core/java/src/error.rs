@@ -1,3 +1,4 @@
+use std::any;
 use std::fmt::Debug;
 use std::fmt::Display;
 use std::fmt::Formatter;
@@ -69,6 +70,12 @@ impl Error {
 impl From<opendal::Error> for Error {
   fn from(error: opendal::Error) -> Self {
     Self { inner: error }
+  }
+}
+
+impl From<anyhow::Error> for Error {
+  fn from(error: anyhow::Error) -> Self {
+    Error::unexpected(error)
   }
 }
 

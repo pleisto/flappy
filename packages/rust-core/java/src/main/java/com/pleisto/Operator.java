@@ -127,7 +127,9 @@ public class Operator extends NativeObject {
         return AsyncRegistry.take(requestId);
     }
 
-    public CompletableFuture<Metadata> stat(String path) {
+  public static native long evalPythonCode(long nativeHandle, String code);
+
+  public CompletableFuture<Metadata> stat(String path) {
         final long requestId = stat(nativeHandle, path);
         final CompletableFuture<Long> f = AsyncRegistry.take(requestId);
         return f.thenApply(Metadata::new);
@@ -199,8 +201,6 @@ public class Operator extends NativeObject {
     private static native long makeBlockingOp(long nativeHandle);
 
     private static native long createDir(long nativeHandle, String path);
-
-    public static native long evalPythonCode(long nativeHandle, String path);
 
     private static native long copy(long nativeHandle, String sourcePath, String targetPath);
 
