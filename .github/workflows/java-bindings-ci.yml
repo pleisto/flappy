@@ -43,4 +43,4 @@ jobs:
         run: ./mvnw verify
 
       - name: Lint
-        run: ./mvnw spotless:check
+        run: ./mvnw compile spotless:check

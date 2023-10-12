@@ -3,6 +3,8 @@ name: Java Bindings Publish
 on:
   workflow_dispatch:
   push:
+    paths:
+      - 'packages/rust-core/java/pom.xml'
 
 defaults:
   run:
@@ -31,6 +33,7 @@ jobs:
             classifier: osx-aarch_64
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
@@ -40,16 +43,19 @@ jobs:
           server-id: apache.releases.https
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       - name: Install Protoc
         uses: arduino/setup-protoc@v2
         with:
           version: '23.4'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Local staging
         shell: bash
         run: |
@@ -66,6 +72,7 @@ jobs:
           MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+
       - name: Upload local staging directory
         uses: actions/upload-artifact@v3
         with:
@@ -91,7 +98,7 @@ jobs:
           server-id: apache.releases.https
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Prepare environment variables
