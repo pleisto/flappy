@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - runs-on: self-hosted
+          - host: self-hosted
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings
