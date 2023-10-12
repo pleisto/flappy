@@ -39,7 +39,106 @@ createSynthesizedFunction({
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+  public static FlappyFunctionBase<?, ?> lawGetMeta = new FlappySynthesizedFunction(
+    "getMeta",
+    "Extract meta data from a lawsuit full text.",
+    LawMetaArguments.class,
+    LawMetaReturn.class
+  );
+
+  static class LawMetaArguments {
+    @FlappyField(description = "Lawsuit full text.")
+    String lawsuit;
+
+    public String getLawsuit() {
+      return lawsuit;
+    }
+
+    public void setLawsuit(String lawsuit) {
+      this.lawsuit = lawsuit;
+    }
+  }
+
+  public static class LawMetaReturn {
+    @FlappyField
+    Verdict verdict;
+
+    @FlappyField
+    String plaintiff;
+
+    @FlappyField
+    String defendant;
+
+    @FlappyField
+    List<String> judgeOptions;
+
+    public Verdict getVerdict() {
+      return verdict;
+    }
+
+    public void setVerdict(Verdict verdict) {
+      this.verdict = verdict;
+    }
+
+    public String getPlaintiff() {
+      return plaintiff;
+    }
+
+    public void setPlaintiff(String plaintiff) {
+      this.plaintiff = plaintiff;
+    }
+
+    public String getDefendant() {
+      return defendant;
+    }
+
+    public void setDefendant(String defendant) {
+      this.defendant = defendant;
+    }
+
+    public List<String> getJudgeOptions() {
+      return judgeOptions;
+    }
+
+    public void setJudgeOptions(List<String> judgeOptions) {
+      this.judgeOptions = judgeOptions;
+    }
+  }
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+val lawGetMeta = FlappySynthesizedFunction(
+  name = "getMeta",
+  description = "Extract meta data from a lawsuit full text.",
+  args = LawMetaArguments::class.java,
+  returnType = LawMetaReturn::class.java,
+)
+
+class LawMetaArguments(
+  @FlappyField(description = "Lawsuit full text.")
+  val lawsuit: String
+)
+
+class LawMetaReturn(
+  @FlappyField
+  val verdict: Verdict,
+
+  @FlappyField
+  val plaintiff: String,
+
+  @FlappyField
+  val defendant: String,
+
+  @FlappyField
+  val judgeOptions: List<String>
+)
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon

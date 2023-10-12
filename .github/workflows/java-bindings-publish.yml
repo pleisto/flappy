@@ -3,8 +3,8 @@ name: Java Bindings Publish
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'packages/rust-core/java/pom.xml'
+    # paths:
+    #   - 'packages/rust-core/java/pom.xml'
 
 defaults:
   run:
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   stage-snapshot:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 60
     environment:
       name: Maven
     strategy:
@@ -83,7 +83,7 @@ jobs:
   deploy-staged-snapshots:
     runs-on: ubuntu-latest
     needs: [stage-snapshot]
-    timeout-minutes: 30
+    timeout-minutes: 60
     environment:
       name: Maven
     steps:
