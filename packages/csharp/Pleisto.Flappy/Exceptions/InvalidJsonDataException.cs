@@ -30,7 +30,7 @@ namespace Pleisto.Flappy.Exceptions
     /// <param name="endIdx"></param>
     /// <param name="raw"></param>
     /// <param name="innerException"></param>
-    internal InvalidJsonDataException(int startIdx, int endIdx, string raw, Exception innerException=null)
+    internal InvalidJsonDataException(int startIdx, int endIdx, string raw, Exception innerException = null)
       : base($"unable to locate json data, startIndex={startIdx} endIndex={endIdx} raw={raw}", innerException)
     {
       StartIndex = startIdx;

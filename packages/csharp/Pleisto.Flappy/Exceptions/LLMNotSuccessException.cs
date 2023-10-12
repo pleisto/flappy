@@ -1,4 +1,4 @@
-﻿namespace Pleisto.Flappy.Exceptions
+namespace Pleisto.Flappy.Exceptions
 {
   /// <summary>
   /// LLM not success

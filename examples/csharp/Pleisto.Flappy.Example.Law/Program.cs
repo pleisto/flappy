@@ -11,10 +11,10 @@ namespace Pleisto.Flappy.Test.Law
     private static string OpenApiKey => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new Exception("no environment found: OPENAI_API_KEY");
 
     public static bool ConsoleRun { get; set; } = true;
-  static  readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
-    {
-      builder.AddConsole();
-    });
+    static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
+      {
+        builder.AddConsole();
+      });
     public static async Task Main()
     {
       try

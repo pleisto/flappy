@@ -1,4 +1,4 @@
-﻿namespace Pleisto.Flappy.Interfaces
+namespace Pleisto.Flappy.Interfaces
 {
   /// <summary>
   /// Core Interpreter Options

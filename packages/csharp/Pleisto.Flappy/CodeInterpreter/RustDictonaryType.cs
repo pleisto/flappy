@@ -25,7 +25,7 @@ namespace Pleisto.Flappy.CodeInterpreter
       Key = Marshal.StringToHGlobalAnsi(pair.Key);
       Value = Marshal.StringToHGlobalAnsi(pair.Value);
     }
-    
+
     public void Dispose()
     {
       if (Key != IntPtr.Zero)

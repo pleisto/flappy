@@ -52,7 +52,7 @@ namespace Pleisto.Flappy.Test.Resume
                   })
                })
              },
-        }, null, null,new LoggerFactory().CreateLogger<FlappyAgent>());
+        }, null, null, new LoggerFactory().CreateLogger<FlappyAgent>());
         var data = (await lawAgent.CreateExecutePlan("找到前端工程师的简历并返回他的元数据"));
         Console.WriteLine($"====================== Final Result =========================");
         Console.WriteLine(data.ToString());

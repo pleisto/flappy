@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema;
 using System.Text;
 
 namespace Pleisto.Flappy.Exceptions
