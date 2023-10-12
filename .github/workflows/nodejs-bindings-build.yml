@@ -34,8 +34,10 @@ jobs:
             build: |
               sudo apt-get update
               sudo apt-get install build-essential -y
-              sudo apt-get install clang -y
+              apt install clang gcc g++ zlib1g-dev libmpc-dev libmpfr-dev libgmp-dev -y
               export TARGET_CC=clang
+              export CC=o64-clang
+              export CXX=o64-clang++
               yarn build:nodejs-bindings --target x86_64-apple-darwin
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
