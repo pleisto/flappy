@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Pleisto.Flappy.CodeInterpreter;
@@ -19,6 +20,7 @@ namespace Pleisto.Flappy
     internal readonly ILLMBase llmPlaner;
     private int retry = 0;
     private const int DEFAULT_RETRY = 1;
+    private readonly ILogger<FlappyAgent> logger;
 
     /// <summary>
     /// Create a flappy agent.
@@ -26,8 +28,9 @@ namespace Pleisto.Flappy
     /// <param name="config">config of flappy</param>
     /// <param name="llm"></param>
     /// <param name="llmPlaner"></param>
+    /// <param name="logger">Logger of FlappyAgent</param>
     /// <exception cref="NullReferenceException"></exception>
-    public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner)
+    public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner, ILogger<FlappyAgent> logger)
     {
       this.config = config;
       if ((config.Functions?.Length ?? 0) <= 0)
@@ -35,6 +38,7 @@ namespace Pleisto.Flappy
       this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? this.llm;
       this.retry = config.Retry ?? DEFAULT_RETRY;
+      this.logger = logger;
     }
 
     /// <summary>
@@ -226,23 +230,25 @@ Only the listed functions are allowed to be used."
         try
         {
           if (retry != this.retry)
-            Console.WriteLine($"Attempt retry: {this.retry - retry}");
+          {
+            logger?.LogDebug("Attempt retry: {}", this.retry - retry);
+          }
           result = await llm.ChatComplete(requestMessage);
           var data = JObject.Parse(result.Data)["code"]?.ToString()?.Replace("\\n", "\n");
           if (data == null)
             throw new Exception("Invalid JSON response");
           if (data.Contains("def main():"))
             throw new Exception("Function \"main\" not found");
-          Console.WriteLine($"Generated Code: \n {data}");
+          logger?.LogDebug("Generated Code: {}", data);
           var pythonResult = NativeHandler.EvalPythonCode($"{data}\nprint(main())", config.CodeInterpreter.EnableNetwork == true, config.CodeInterpreter.Env ?? new Dictionary<string, string>(), config.CodeInterpreter.CacheDir);
           if (string.IsNullOrWhiteSpace(pythonResult.StdErr))
             throw new Exception(data);
-          Console.WriteLine($"CodeInterpreter Output: {pythonResult.StdOut}");
+          logger?.LogDebug("Code Interpreter Output: {}", pythonResult.StdOut);
           return pythonResult.StdOut;
         }
         catch (Exception ex)
         {
-          Console.Error.WriteLine(ex.ToString());
+          logger?.LogError(ex.ToString());
           if (retry <= 0)
             throw new Exception($"Interrupted, function call failed. Please refer to the error message above.");
           retry -= 1;

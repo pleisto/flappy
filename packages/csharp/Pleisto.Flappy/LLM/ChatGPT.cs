@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OpenAI_API;
 using OpenAI_API.Chat;
 using Pleisto.Flappy.LLM.Interfaces;
@@ -43,20 +44,18 @@ namespace Pleisto.Flappy.LLM
     /// Max Tokens null by AutoDetect
     /// <see cref="https://platform.openai.com/docs/models/overview"/>
     /// </param>
-    public ChatGPT(OpenAIAPI client, string model, int? maxTokens)
+    /// <param name="logger">Logger of ChatGPT</param>
+    public ChatGPT(OpenAIAPI client, string model, int? maxTokens, ILogger<ChatGPT> logger = null)
     {
       this.client = client;
       this.model = model;
       this.MaxTokens = maxTokens ?? CalcDefaultMaxTokens(model);
+      this.logger = logger;
     }
 
     private readonly string model;
     private readonly OpenAIAPI client;
-
-    /// <summary>
-    /// Enable to show gpt debug info
-    /// </summary>
-    public bool DebugGPT { get; set; } = false;
+    private readonly ILogger<ChatGPT> logger;
 
     /// <summary>
     /// Run ChatGPT Complete
@@ -66,13 +65,10 @@ namespace Pleisto.Flappy.LLM
     /// <returns></returns>
     public virtual async Task<ChatMLResponse> ChatComplete(ChatMLMessage[] message, GenerateConfig config)
     {
-      if (DebugGPT)
-        foreach (var i in message)
-        {
-          Console.WriteLine($"=========== Role:{i.Role} ============");
-          Console.WriteLine(i.Content);
-          Console.WriteLine($"===============END====================");
-        }
+      foreach (var i in message)
+      {
+        logger.LogDebug("Role: {} Content: {}", i.Role, i.Content);
+      }
       var resp = await client.Chat.CreateChatCompletionAsync(new ChatRequest
       {
         Model = model,
@@ -87,8 +83,7 @@ namespace Pleisto.Flappy.LLM
         TopP = config?.Top_P,
       });
 
-      if (DebugGPT)
-        Console.WriteLine($"chatGpt:{resp.Choices[0].Message.Content}");
+      logger?.LogDebug("chatGpt: {}", resp.Choices[0].Message.Content);
       if (resp?.Choices?.Any() == true)
       {
         return new ChatMLResponse

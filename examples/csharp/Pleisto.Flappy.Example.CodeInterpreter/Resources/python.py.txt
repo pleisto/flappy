@@ -1,6 +1,17 @@
 #!/usr/bin/python3
 
-def main():
-  print('Hello World')
+ def main():
+    legs = 396
+    heads = 150
 
-main()
+    # calculate the number of rabbits
+    rabbits = (legs - (2 * heads)) / 2
+
+    # calculate the number of chickens
+    chickens = heads - rabbits
+
+    result = {
+        'chickens': chickens
+    }
+
+    return result

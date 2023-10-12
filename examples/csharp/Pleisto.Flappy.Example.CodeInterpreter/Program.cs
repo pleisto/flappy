@@ -2,7 +2,6 @@ using Newtonsoft.Json.Linq;
 using Pleisto.Flappy.CodeInterpreter;
 using Pleisto.Flappy.Example.CodeInterpreter.Properties;
 
-
 NativeHandler.AfterNativeCodeCall += RustCall_AfterNativeCodeCall;
 NativeHandler.OnNavtiveCodeCall += RustCall_OnNavtiveCodeCall;
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OpenAI_API;
 using Pleisto.Flappy.Interfaces;
@@ -10,7 +11,10 @@ namespace Pleisto.Flappy.Test.Law
     private static string OpenApiKey => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new Exception("no environment found: OPENAI_API_KEY");
 
     public static bool ConsoleRun { get; set; } = true;
-
+  static  readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
+    {
+      builder.AddConsole();
+    });
     public static async Task Main()
     {
       try
@@ -20,10 +24,7 @@ namespace Pleisto.Flappy.Test.Law
           Auth = new APIAuthentication(apiKey: OpenApiKey),
           ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
           ApiVersion = "v1",
-        }, "gpt-3.5-turbo", null)
-        {
-          DebugGPT = true
-        };
+        }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
 
         var lawAgent = new FlappyAgent(new FlappyAgentConfig
         {
@@ -56,7 +57,7 @@ namespace Pleisto.Flappy.Test.Law
                    }
                })
              },
-        }, null, null);
+        }, null, null, Logger.CreateLogger<FlappyAgent>());
         var data = (await lawAgent.CreateExecutePlan("找到原告为张三的最新案件并返回它的元数据"));
         Console.WriteLine($"====================== Final Result =========================");
         Console.WriteLine(data.ToString());

@@ -30,6 +30,7 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <param name="enableNetwork">Enable network for python</param>
     /// <param name="env">environment</param>
     /// <param name="cacheDir">cache directory</param>
+    /// <param name="logger">Logger</param>
     /// <returns></returns>
     public static RustStdOutputManaged EvalPythonCode(string code, bool enableNetwork, Dictionary<string, string> env, string cacheDir = null)
     {
@@ -44,7 +45,6 @@ namespace Pleisto.Flappy.CodeInterpreter
           Directory.CreateDirectory(cacheDir);
         try
         {
-          Console.WriteLine("Running Python Code");
           OnNavtiveCodeCall?.Invoke(null, code);
           using var result = EvalPythonCodeRust(Marshal.StringToHGlobalAnsi(code.Replace("\r\n", "\n")), enableNetwork, dictonaryTypes, (uint)env.Count, Marshal.StringToHGlobalAnsi(cacheDir));
 

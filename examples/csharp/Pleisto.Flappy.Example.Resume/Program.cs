@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OpenAI_API;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
@@ -9,7 +10,10 @@ namespace Pleisto.Flappy.Test.Resume
     private static string OpenApiKey => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new Exception("no environment found: OPENAI_API_KEY");
 
     public static bool ConsoleRun { get; set; } = true;
-
+    static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
+    {
+      builder.AddConsole();
+    });
     public static async Task Main()
     {
       try
@@ -19,10 +23,7 @@ namespace Pleisto.Flappy.Test.Resume
           Auth = new APIAuthentication(apiKey: OpenApiKey),
           ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
           ApiVersion = "v1",
-        }, "gpt-3.5-turbo", null)
-        {
-          DebugGPT = true
-        };
+        }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
 
         var lawAgent = new FlappyAgent(new FlappyAgentConfig
         {
@@ -51,7 +52,7 @@ namespace Pleisto.Flappy.Test.Resume
                   })
                })
              },
-        }, null, null);
+        }, null, null,new LoggerFactory().CreateLogger<FlappyAgent>());
         var data = (await lawAgent.CreateExecutePlan("找到前端工程师的简历并返回他的元数据"));
         Console.WriteLine($"====================== Final Result =========================");
         Console.WriteLine(data.ToString());
