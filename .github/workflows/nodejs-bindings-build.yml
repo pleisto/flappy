@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: macOS
+          - host: ubuntu-latest
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target x86_64-apple-darwin
