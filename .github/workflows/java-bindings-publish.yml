@@ -1,8 +1,10 @@
+
 name: Java Bindings Publish
 
 on:
   workflow_dispatch:
   push:
+    #### TODO
     # paths:
     #   - 'packages/rust-core/java/pom.xml'
 
