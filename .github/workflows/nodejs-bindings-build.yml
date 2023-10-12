@@ -32,8 +32,13 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-apple-darwin
             build: |
-              sudo apt-get install gcc-aarch64-linux-gnu
-              export CROSS_COMPILE=aarch64-linux-gnu-
+              sudo apt-get update
+              sudo apt-get install build-essential -y
+              sudo apt-get install perl -y
+              sudo apt-get install pkg-config libssl-dev -y
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5"
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               yarn build:nodejs-bindings --target x86_64-apple-darwin
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
