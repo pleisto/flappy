@@ -30,7 +30,6 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <param name="enableNetwork">Enable network for python</param>
     /// <param name="env">environment</param>
     /// <param name="cacheDir">cache directory</param>
-    /// <param name="logger">Logger</param>
     /// <returns></returns>
     public static RustStdOutputManaged EvalPythonCode(string code, bool enableNetwork, Dictionary<string, string> env, string cacheDir = null)
     {

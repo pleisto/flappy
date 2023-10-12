@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Pleisto.Flappy.CodeInterpreter;
+using Pleisto.Flappy.Exceptions;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.LLM.Interfaces;
@@ -127,12 +128,12 @@ Only the listed functions are allowed to be used."
       var result = await llmPlaner.ChatComplete(requestMessage, null);
       if (result.Success == false)
       {
-        throw new InvalidOperationException("LLM operation return not success");
+        throw new LLMNotSuccessException();
       }
       var plan = ParseComplete(result);
 
       if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
-        throw new InvalidDataException($"Json Schema is invalid");
+        throw new InvalidJsonWithSchemaValidationException(errorList);
 
       LanOutputSchema[] plans;
       if (enableCot)
@@ -173,7 +174,7 @@ Only the listed functions are allowed to be used."
         }
         catch (Exception ex)
         {
-          throw new InvalidProgramException($"unable to process step {Environment.NewLine}{JObject.FromObject(step)}", ex);
+          throw new StepPlainException(JObject.FromObject(step), ex);
         }
       return returnStore[plan.Count];
     }
@@ -183,7 +184,7 @@ Only the listed functions are allowed to be used."
       var startIdx = msg.Data?.IndexOf('[') ?? -1;
       var endIdx = msg.Data?.LastIndexOf(']') ?? -1;
       if (startIdx == -1 || endIdx == -1 || endIdx < startIdx)
-        throw new InvalidDataException($"Invalid JSON response startIdx={startIdx} endIdx={endIdx}");
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data);
       var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
       try
       {
@@ -192,8 +193,7 @@ Only the listed functions are allowed to be used."
       }
       catch (Exception ex)
       {
-        throw new InvalidDataException($"unable to parse json array startIdx={startIdx} endIdx={endIdx} raw={Environment.NewLine}{msg.Data}" +
-            $"{Environment.NewLine}SplitedData:{Environment.NewLine}{content}", ex);
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data, content, ex);
       }
     }
 
@@ -206,7 +206,7 @@ Only the listed functions are allowed to be used."
     public async Task<object> CallCodeInterpreter(string prompt)
     {
       if (config.CodeInterpreter == null)
-        throw new Exception($"Code interpreter is not enabled!");
+        throw new CodeInterpreterNotEnabledException();
       var originalRequestMessage = new ChatMLMessage[]
       {
         new ChatMLMessage
@@ -250,7 +250,7 @@ Only the listed functions are allowed to be used."
         {
           logger?.LogError(ex.ToString());
           if (retry <= 0)
-            throw new Exception($"Interrupted, function call failed. Please refer to the error message above.");
+            throw new CodeInterpreterRetryException(retry, ex);
           retry -= 1;
           if (result?.Success == true && result.Data != null)
           {
