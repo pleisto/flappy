@@ -28,16 +28,7 @@
     <artifactId>opendal-java</artifactId>
     <version>0.41.0</version>
 
-    <url>https://opendal.apache.org</url>
-    <mailingLists>
-        <mailingList>
-            <name>Develop List</name>
-            <subscribe>dev-subscribe@opendal.apache.org</subscribe>
-            <unsubscribe>dev-unsubscribe@opendal.apache.org</unsubscribe>
-            <post>dev@opendal.apache.org</post>
-            <archive>https://lists.apache.org/list.html?dev@opendal.apache.org</archive>
-        </mailingList>
-    </mailingLists>
+    <url>https://github.com/pleisto/flappy</url>
 
     <properties>
         <!-- This value is for Reproducible Builds. It will be updated by Maven Release Plugin during releases. -->

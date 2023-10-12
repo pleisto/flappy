@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '**/*.kt'
-      - '**/*.kts'
-      - '**/*.java'
+      - 'packages/kotlin/**'
+      - 'examples/kotlin/**'
+      - 'examples/java/**'
       - '.github/workflows/kotlin-test.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:

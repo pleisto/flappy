@@ -15,8 +15,12 @@ on:
     paths:
       - 'packages/kotlin/flappy/gradle.properties'
 
+defaults:
+  run:
+    working-directory: packages/kotlin
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -41,21 +45,18 @@ jobs:
 
       - name: Publish document
         run: ./gradlew dokkaHtml
-        working-directory: packages/kotlin
 
       - name: Publish to maven central
         run: ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.type == 'all' || github.event.inputs.type == 'maven-central-only' }}
-        working-directory: packages/kotlin
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY}}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD}}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD}}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME}}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD}}
 
       - name: Publish to github packages
         run: ./gradlew publishAllPublicationsToGitHubPackageRepository
-        working-directory: packages/kotlin
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.type == 'all' || github.event.inputs.type == 'github-package-only' }}
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY}}
