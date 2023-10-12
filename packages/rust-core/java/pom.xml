@@ -25,8 +25,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pleisto</groupId>
-    <artifactId>flappy-nodejs-bindings</artifactId>
-    <version>0.41.0</version>
+    <artifactId>flappy-java-bindings</artifactId>
+    <version>0.0.1</version>
 
     <url>https://github.com/pleisto/flappy</url>
 
@@ -51,6 +51,7 @@
 
         <!-- plugins dependencies -->
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
         <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
         <palantir-java-format.version>2.36.0</palantir-java-format.version>
@@ -180,6 +181,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <executions>
                     <!--  Generate the fallback JAR that does not contain the native library.  -->
                     <execution>

@@ -40,9 +40,6 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
           cache: 'maven'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
@@ -66,10 +63,10 @@ jobs:
             -DaltStagingDirectory=local-staging \
             -DskipRemoteStaging=true \
             -DserverId=ossrh \
+            -DserverUsername=${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }} \
+            -DserverPassword=${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }} \
             -DnexusUrl=https://s01.oss.sonatype.org
         env:
-          MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
 
       - name: Upload local staging directory
@@ -85,6 +82,8 @@ jobs:
     timeout-minutes: 60
     environment:
       name: Maven
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -132,14 +131,26 @@ jobs:
             ~/osx-x86_64-local-staging/staging \
             ~/osx-aarch_64-local-staging/staging
 
-      - name: Deploy local staged artifacts
+      - name: Deploy local staged artifacts (Maven Central)
         run: |
           ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged \
             -DaltStagingDirectory=$LOCAL_STAGING_DIR \
             -DskipStagingRepositoryClose=true \
             -DserverId=ossrh \
+            -DserverUsername=${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }} \
+            -DserverPassword=${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }} \
             -DnexusUrl=https://s01.oss.sonatype.org
         env:
-          MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+
+      - name: Deploy local staged artifacts (Github Package)
+        run: |
+          ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged \
+            -DaltStagingDirectory=$LOCAL_STAGING_DIR \
+            -DskipStagingRepositoryClose=true \
+            -DserverId=github \
+            -DserverUsername=${{ vars.ORG_GRADLE_PROJECT_GITHUBPACKAGESUSERNAME }} \
+            -DserverPassword=${{ secrets.ORG_GRADLE_PROJECT_GITHUBPACKAGESPASSWORD }} \
+            -DnexusUrl=https://maven.pkg.github.com/pleisto/flappy
+        env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
