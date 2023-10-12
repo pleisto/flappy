@@ -20,11 +20,16 @@
 package com.pleisto.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
+
 import com.pleisto.Operator;
 import com.pleisto.OperatorInfo;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import com.pleisto.SandboxResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -37,9 +42,31 @@ public class OperatorInfoTest {
         assertThat(true).isTrue();
     }
 
+  @Test
+  public void eval2() throws ExecutionException, InterruptedException {
+    final Map<String, String> conf = new HashMap<>();
+    conf.put("root", "/opendal/");
+    try (final Operator op = Operator.of("memory", conf)) {
+      final OperatorInfo info = op.info;
+      SandboxResult result = op.evalPythonCode("foobar").get();
+      assertThat(false).isTrue();
+    } catch (Exception e) {
+      assertThat(true).isTrue();
+    }
+  }
+
     @Test
-    public void eval() {
-//      Operator
+    public void eval() throws ExecutionException, InterruptedException {
+      final Map<String, String> conf = new HashMap<>();
+      conf.put("root", "/opendal/");
+      String code = "print('hello world')";
+      try (final Operator op = Operator.of("memory", conf)) {
+        final OperatorInfo info = op.info;
+        SandboxResult result = op.evalPythonCode(code).get();
+        assertThat(result).isNotNull();
+        System.out.println(result);
+        assertThat(result.stdout).isEqualTo("hello world\n");
+      }
     }
 
     @Test

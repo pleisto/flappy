@@ -129,6 +129,11 @@ public class Operator extends NativeObject {
 
   public static native long evalPythonCode(long nativeHandle, String code);
 
+  public CompletableFuture<SandboxResult> evalPythonCode(String code) {
+    final long requestId = evalPythonCode(nativeHandle, code);
+    return (CompletableFuture<SandboxResult>) AsyncRegistry.get(requestId);
+  }
+
   public CompletableFuture<Metadata> stat(String path) {
         final long requestId = stat(nativeHandle, path);
         final CompletableFuture<Long> f = AsyncRegistry.take(requestId);

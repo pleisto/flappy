@@ -626,61 +626,6 @@ pub unsafe extern "system" fn Java_com_pleisto_Operator_evalPythonCode(
   })
 }
 
-#[derive(Clone, Debug, Default)]
-pub struct SandboxStdResult {
-  stdout: String,
-  stderr: String,
-}
-
-impl SandboxStdResult {
-  pub fn stdout(&self) -> &str {
-    &self.stdout
-  }
-
-  pub fn set_stdout(&mut self, stdout: &str) -> &mut Self {
-    self.stdout = stdout.to_string();
-    self
-  }
-
-  pub fn stderr(&self) -> &str {
-    &self.stderr
-  }
-
-  pub fn set_stderr(&mut self, stderr: &str) -> &mut Self {
-    self.stderr = stderr.to_string();
-    self
-  }
-}
-
-#[derive(Clone, Debug, Default)]
-pub struct SandboxResult(SandboxStdResult);
-
-impl SandboxResult {
-  pub fn new(acc: SandboxStdResult) -> Self {
-    SandboxResult(acc)
-  }
-
-  pub fn stdout(&self) -> &str {
-    self.0.stdout()
-  }
-
-  pub fn stderr(&self) -> &str {
-    self.0.stderr()
-  }
-}
-
-fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<JObject<'a>> {
-  let stdout = env.new_string(info.stdout)?;
-  let stderr = env.new_string(info.stderr)?;
-
-  let result = env.new_object(
-    "com/pleisto/SandboxResult",
-    "(Ljava/lang/String;Ljava/lang/String;)V",
-    &[JValue::Object(&stdout), JValue::Object(&stderr)],
-  )?;
-  Ok(result)
-}
-
 fn intern_eval_python_code(env: &mut JNIEnv, op: *mut Operator, code: JString) -> Result<jlong> {
   let op = unsafe { &mut *op };
   let id = request_id(env)?;
@@ -701,4 +646,16 @@ fn intern_eval_python_code(env: &mut JNIEnv, op: *mut Operator, code: JString) -
   });
 
   Ok(id)
+}
+
+fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<JObject<'a>> {
+  let stdout = env.new_string(info.stdout)?;
+  let stderr = env.new_string(info.stderr)?;
+
+  let result = env.new_object(
+    "com/pleisto/SandboxResult",
+    "(Ljava/lang/String;Ljava/lang/String;)V",
+    &[JValue::Object(&stdout), JValue::Object(&stderr)],
+  )?;
+  Ok(result)
 }
