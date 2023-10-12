@@ -1,24 +1,24 @@
 package com.pleisto;
 
 /**
- * An OpenDALException encapsulates the error of an operation. This exception
+ * An FlappyException encapsulates the error of an operation. This exception
  * type is used to describe an internal error from the native opendal library.
  */
-public class OpenDALException extends RuntimeException {
+public class FlappyException extends RuntimeException {
     private final Code code;
 
     /**
-     * Construct an OpenDALException. This constructor is called from native code.
+     * Construct an FlappyException. This constructor is called from native code.
      *
      * @param code string representation of the error code
      * @param message error message
      */
     @SuppressWarnings("unused")
-    public OpenDALException(String code, String message) {
+    public FlappyException(String code, String message) {
         this(Code.valueOf(code), message);
     }
 
-    public OpenDALException(Code code, String message) {
+    public FlappyException(Code code, String message) {
         super(message);
         this.code = code;
     }

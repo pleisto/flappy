@@ -66,9 +66,6 @@ dependencies {
   implementation("com.aallam.openai:openai-client:3.5.0")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-
-  implementation("org.apache.opendal:opendal-java:0.40.0")
-  implementation("org.apache.opendal:opendal-java:0.40.0:${osdetector.classifier}")
 }
 
 mavenPublishing {
