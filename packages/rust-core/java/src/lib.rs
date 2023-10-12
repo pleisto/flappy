@@ -135,61 +135,6 @@ fn make_presigned_request<'a>(env: &mut JNIEnv<'a>, req: PresignedRequest) -> Re
   Ok(result)
 }
 
-#[derive(Clone, Debug, Default)]
-pub struct SandboxStdOutput {
-  stdout: String,
-  stderr: String,
-}
-
-impl SandboxStdOutput {
-  pub fn stdout(&self) -> &str {
-    &self.stdout
-  }
-
-  pub fn set_stdout(&mut self, stdout: &str) -> &mut Self {
-    self.stdout = stdout.to_string();
-    self
-  }
-
-  pub fn stderr(&self) -> &str {
-    &self.stderr
-  }
-
-  pub fn set_stderr(&mut self, stderr: &str) -> &mut Self {
-    self.stderr = stderr.to_string();
-    self
-  }
-}
-
-#[derive(Clone, Debug, Default)]
-pub struct SandboxOutput(SandboxStdOutput);
-
-impl SandboxOutput {
-  pub fn new(acc: SandboxStdOutput) -> Self {
-    SandboxOutput(acc)
-  }
-
-  pub fn stdout(&self) -> &str {
-    self.0.stdout()
-  }
-
-  pub fn stderr(&self) -> &str {
-    self.0.stderr()
-  }
-}
-
-fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<JObject<'a>> {
-  let stdout = env.new_string(info.stdout().to_string())?;
-  let stderr = env.new_string(info.stderr().to_string())?;
-
-  let result = env.new_object(
-    "com/pleisto/SandboxOutput",
-    "(Ljava/lang/String;Ljava/lang/String;)V",
-    &[JValue::Object(&stdout), JValue::Object(&stderr)],
-  )?;
-  Ok(result)
-}
-
 fn make_operator_info<'a>(env: &mut JNIEnv<'a>, info: OperatorInfo) -> Result<JObject<'a>> {
   let schema = env.new_string(info.scheme().to_string())?;
   let root = env.new_string(info.root().to_string())?;
