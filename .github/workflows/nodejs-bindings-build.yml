@@ -151,26 +151,26 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Download macOS x64 artifact
-        working-directory: ./packages/rust-core/nodejs
         uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-apple-darwin
           path: artifacts
+          working-directory: ./packages/rust-core/nodejs
       - name: Download macOS arm64 artifact
-        working-directory: ./packages/rust-core/nodejs
         uses: actions/download-artifact@v3
         with:
           name: bindings-aarch64-apple-darwin
           path: artifacts
+          working-directory: ./packages/rust-core/nodejs
       - name: Combine binaries
-        working-directory: ./packages/rust-core/nodejs
         run: yarn universal:nodejs-bindings
-      - name: Upload artifact
         working-directory: ./packages/rust-core/nodejs
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
           path: ${{ env.APP_NAME }}.*.node
+          working-directory: ./packages/rust-core/nodejs
           if-no-files-found: error
   publish:
     name: Publish
@@ -188,19 +188,18 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Download all artifacts
-        working-directory: ./packages/rust-core/nodejs
         uses: actions/download-artifact@v3
         with:
           path: artifacts
+          working-directory: ./packages/rust-core/nodejs
       - name: Move artifacts
-        working-directory: ./packages/rust-core/nodejs
         run: yarn artifacts
-      - name: List packages
         working-directory: ./packages/rust-core/nodejs
+      - name: List packages
         run: ls -R ./npm
+        working-directory: ./packages/rust-core/nodejs
         shell: bash
       - name: Publish
-        working-directory: ./packages/rust-core/nodejs
         run: |
           npm config set provenance true
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
@@ -214,6 +213,7 @@ jobs:
           else
             echo "Not a release, skipping publish"
           fi
+        working-directory: ./packages/rust-core/nodejs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
