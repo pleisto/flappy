@@ -20,7 +20,7 @@ Currently, all tests are written in Java.
 You can run the base tests with the following command:
 
 ```shell
-./mvnw clean verify
+./mvnw clean verify -Dgpg.skip
 ```
 
 ## Code style

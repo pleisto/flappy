@@ -8,6 +8,8 @@ on:
       - 'examples/kotlin/**'
       - 'examples/java/**'
       - '.github/workflows/kotlin-test.yml'
+    paths-ignore:
+      - '**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
