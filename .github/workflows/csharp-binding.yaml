@@ -42,6 +42,13 @@ jobs:
           python3 tools/build.py --classifier ${{ matrix.classifier }} --profile release
 
 
+      - name: Upload local staging directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.classifier }}-local-staging
+          path: packages/rust-core/csharp/local-staging
+          if-no-files-found: error
+
   publish-binding:
     runs-on: ubuntu-latest
     timeout-minutes: 60
