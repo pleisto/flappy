@@ -22,7 +22,7 @@ abstract class FlappyJniLoader {
         FlappyJniLoader.loadLibrary();
     }
 
-    public static void loadLibrary() {
+    protected static void loadLibrary() {
         if (libraryLoaded.get() == LibraryState.LOADED) {
             return;
         }

@@ -17,8 +17,8 @@ public class SandboxTest {
     public void evalFail() throws InterruptedException {
         final FlappyJniSandbox op = new FlappyJniSandbox();
         try {
-            FlappyJniSandboxResult result =
-                    op.evalPythonCode(new FlappyJniSandboxInput("foobar")).get();
+            FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput("foobar"))
+                    .get();
             assertThat(false).isTrue();
         } catch (ExecutionException e) {
             assertThat(true).isTrue();
@@ -29,8 +29,8 @@ public class SandboxTest {
     public void evalSuccess() throws ExecutionException, InterruptedException {
         final FlappyJniSandbox op = new FlappyJniSandbox();
         String code = "print('hello world')";
-        FlappyJniSandboxResult result =
-                op.evalPythonCode(new FlappyJniSandboxInput(code)).get();
+        FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
+                .get();
         assertThat(result).isNotNull();
         System.out.println(result);
         assertThat(result.stdout).isEqualTo("hello world\n");
