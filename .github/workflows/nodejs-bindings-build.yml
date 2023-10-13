@@ -35,12 +35,12 @@ jobs:
               yarn build:nodejs-bindings --target x86_64-apple-darwin
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
-            target: x86_64-pc-windows-msvc
+            target: x86_64-pc-windows-gnu
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               cargo install cargo-xwin
-              yarn build:nodejs-bindings --target x86_64-pc-windows-msvc
-              strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.win32-x64-msvc.node
+              yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
+              strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.win32-x64-gnu.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian

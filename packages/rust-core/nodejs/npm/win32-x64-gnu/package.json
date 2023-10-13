@@ -1,5 +1,5 @@
 {
-  "name": "@pleisto/flappy-nodejs-bindings-win32-x64-msvc",
+  "name": "@pleisto/flappy-nodejs-bindings-win32-x64-gnu",
   "version": "0.0.1-alpha",
   "os": [
     "win32"
@@ -7,9 +7,9 @@
   "cpu": [
     "x64"
   ],
-  "main": "flappy-nodejs-bindings.win32-x64-msvc.node",
+  "main": "flappy-nodejs-bindings.win32-x64-gnu.node",
   "files": [
-    "flappy-nodejs-bindings.win32-x64-msvc.node"
+    "flappy-nodejs-bindings.win32-x64-gnu.node"
   ],
   "license": "Apache-2.0",
   "engines": {
