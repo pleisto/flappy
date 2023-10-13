@@ -1,5 +1,7 @@
-using LawProgram = Pleisto.Flappy.Test.Law.Program;
-using ResumeProgram = Pleisto.Flappy.Test.Resume.Program;
+
+using Pleisto.Flappy.Examples;
+using Pleisto.Flappy.Examples.Law;
+using Pleisto.Flappy.Examples.Resume;
 
 namespace Pleisto.Flappy.Test
 {
@@ -13,18 +15,11 @@ namespace Pleisto.Flappy.Test
     /// </summary>
     static private bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
 
-    /// <summary>
-    /// Case test of Law
-    /// </summary>
-    /// <returns></returns>
-    [Test]
-    public async Task LawTestAsync()
+    async Task TestCaseBase<T>()
+      where T : ExampleBase, new()
     {
       if (NoGptTest == false)
-      {
-        LawProgram.ConsoleRun = false;
-        await LawProgram.Main();
-      }
+        await new T().OnExecuteAsync();
     }
 
     /// <summary>
@@ -32,13 +27,15 @@ namespace Pleisto.Flappy.Test
     /// </summary>
     /// <returns></returns>
     [Test]
+    public async Task LawTestAsync()
+=> await TestCaseBase<LawCase>();
+
+    /// <summary>
+    /// Case test of Law
+    /// </summary>
+    /// <returns></returns>
+    [Test]
     public async Task ResumeTestAsync()
-    {
-      if (NoGptTest == false)
-      {
-        ResumeProgram.ConsoleRun = false;
-        await ResumeProgram.Main();
-      }
-    }
+=> await TestCaseBase<ResumeCase>();
   }
 }

@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Example.Law\Pleisto.Flappy.Example.Law.csproj" />
-    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Example.Resume\Pleisto.Flappy.Example.Resume.csproj" />
+    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Examples\Pleisto.Flappy.Examples.csproj" />
     <ProjectReference Include="..\Pleisto.Flappy\Pleisto.Flappy.csproj" />
   </ItemGroup>
 
