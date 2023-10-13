@@ -1715,15 +1715,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "napi-test"
-version = "0.0.0"
-dependencies = [
- "napi",
- "napi-build",
- "napi-derive",
-]
-
-[[package]]
 name = "native-tls"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
