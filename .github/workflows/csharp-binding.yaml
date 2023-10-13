@@ -1,0 +1,61 @@
+name: CSharp Bindings Publish
+
+
+on:
+  workflow_dispatch:
+  push:
+    #### TODO
+    # paths:
+    #   - 'packages/rust-core/charp/**'
+
+defaults:
+  run:
+    working-directory: packages/rust-core/csharp
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  publish-binding:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes:  60
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            classifier: linux-x86_64
+          - os: windows-latest
+            classifier: windows-x86_64
+          - os: macos-latest
+            classifier: osx-x86_64
+          - os: macos-latest
+            classifier: osx-aarch_64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+
+      - run: |
+          python3 tools/build.py
+
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v4
+      - name: dotnet publish
+        run: |
+          cd packages/csharp
+          dotnet build -c Release
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
+          done
