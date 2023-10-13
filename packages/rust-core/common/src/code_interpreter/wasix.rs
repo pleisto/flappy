@@ -108,8 +108,6 @@ pub async fn python_sandbox(
   let stdout = String::from_utf8_lossy(stdout.lock().unwrap().get_buf()).to_string();
   let stderr = String::from_utf8_lossy(stderr.lock().unwrap().get_buf()).to_string();
 
-  print!("[debug] {} {}", stderr, stdout);
-
   Ok(SandboxOutput { stdout, stderr })
 }
 

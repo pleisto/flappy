@@ -4,12 +4,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "**/*.cs"
-      - "**/*.csproj"
-      - "**/*.sln"
       - "examples/csharp/**/*"
       - "packages/csharp/**/*"
-      - ".github/workflows/csharp-*"
+      - ".github/workflows/csharp-test.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
