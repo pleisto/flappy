@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '**/*.kt'
-      - '**/*.kts'
-      - '**/*.java'
+      - 'packages/kotlin/**'
+      - 'examples/kotlin/**'
+      - 'examples/java/**'
       - '.github/workflows/kotlin-test.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
           cache: gradle
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.9.0
         with:
           gradle-version: wrapper
 

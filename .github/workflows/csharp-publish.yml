@@ -5,12 +5,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "**/*.cs"
-      - "**/*.csproj"
-      - "**/*.sln"
       - "examples/csharp/**/*"
       - "packages/csharp/**/*"
-      - ".github/workflows/csharp-*"
+      - ".github/workflows/csharp-publish.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

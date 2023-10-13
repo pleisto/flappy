@@ -20,6 +20,8 @@ plugins {
 
   id("com.vanniktech.maven.publish") version "0.25.3"
 
+  id("com.google.osdetector") version "1.7.3"
+
   signing
 }
 
@@ -62,8 +64,11 @@ dependencies {
   implementation("io.ktor:ktor-client-core:2.3.5")
   implementation("io.ktor:ktor-client-okhttp:2.3.5")
   implementation("com.aallam.openai:openai-client:3.5.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+//  implementation("com.pleisto:flappy-java-bindings:0.0.2")
+//  implementation("com.pleisto:flappy-java-bindings:0.0.2:${osdetector.classifier}")
 }
 
 mavenPublishing {
@@ -89,11 +94,14 @@ mavenPublishing {
         id.set("clszzyh")
         name.set("Yuhang Shi")
         url.set("https://github.com/clszzyh")
+        organization.set("pleisto")
+        organizationUrl.set("https://github.com/pleisto")
       }
     }
 
     scm {
       url.set("https://github.com/pleisto/flappy")
+      connection.set("scm:git:https://git@github.com/pleisto/flappy.git")
     }
   }
 }

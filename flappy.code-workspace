@@ -11,12 +11,20 @@
       "path": "docs"
     },
     {
-      "name": "@pleisto/node-flappy",
-      "path": "packages/nodejs"
-    },
-    {
       "name": "@pleisto/flappy-core",
       "path": "packages/rust-core"
+    },
+    {
+      "name": "@flappy/flappy-nodejs-bindings",
+      "path": "packages/rust-core/nodejs"
+    },
+    {
+      "name": "@flappy/flappy-java-bindings",
+      "path": "packages/rust-core/java"
+    },
+    {
+      "name": "@pleisto/node-flappy",
+      "path": "packages/nodejs"
     },
     {
       "name": "@pleisto/kotlin-flappy",
@@ -25,10 +33,6 @@
     {
       "name": "@pleisto/csharp-flappy",
       "path": "packages/csharp"
-    },
-    {
-      "name": "@flappy/flappy-nodejs-bindings",
-      "path": "packages/rust-core/nodejs"
     },
     {
       "name": "@pleisto/flappy-devkit",

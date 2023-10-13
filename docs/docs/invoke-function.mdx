@@ -75,7 +75,75 @@ createInvokeFunction({
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+  public static FlappyFunctionBase<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
+    "getLatestLawsuitsByPlaintiff",
+    "Get the latest lawsuits by plaintiff.",
+    GetLatestLawsuitsArguments.class,
+    String.class,
+    (a, agent, $completion) -> MOCK_LAWSUIT_DATA
+  );
+
+  static class GetLatestLawsuitsArguments {
+    @FlappyField
+    String plaintiff;
+
+    @FlappyField(description = "For demo purpose. set to False")
+    Boolean arg1;
+
+    @FlappyField(description = "ignore it", optional = true)
+    List<String> arg2 = null;
+
+    public String getPlaintiff() {
+      return plaintiff;
+    }
+
+    public void setPlaintiff(String plaintiff) {
+      this.plaintiff = plaintiff;
+    }
+
+    public Boolean getArg1() {
+      return arg1;
+    }
+
+    public void setArg1(Boolean arg1) {
+      this.arg1 = arg1;
+    }
+
+    public List<String> getArg2() {
+      return arg2;
+    }
+
+    public void setArg2(List<String> arg2) {
+      this.arg2 = arg2;
+    }
+  }
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
+  name = "getLatestLawsuitsByPlaintiff",
+  description = "Get the latest lawsuits by plaintiff.",
+  args = GetLatestLawsuitsArguments::class.java,
+  returnType = String::class.java,
+  invoker = { _, _ -> MOCK_LAWSUIT_DATA }
+)
+class GetLatestLawsuitsArguments(
+  @FlappyField
+  val plaintiff: String,
+
+  @FlappyField(description = "For demo purpose. set to False")
+  val arg1: Boolean,
+
+  @FlappyField(description = "ignore it", optional = true)
+  val arg2: List<String>?
+)
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon

@@ -27,7 +27,30 @@ npm install @plesito/node-flappy
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+Maven
+
+```xml
+<dependency>
+    <groupId>com.pleisto</groupId>
+    <artifactId>flappy</artifactId>
+    <version>0.0.6</version>
+</dependency>
+```
+
+Gradle
+
+```sh
+implementation 'com.pleisto:flappy:0.0.6'
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+implementation("com.pleisto:flappy:0.0.6")
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
@@ -59,7 +82,25 @@ const chatGpt = new ChatGPT(
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+    Dotenv dotenv = Dotenv.load();
+    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+
+```kotlin
+  val dotenv = dotenv()
+
+  val chatGPT = ChatGPT(
+    model = "gpt-3.5-turbo",
+    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  )
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
@@ -149,6 +190,9 @@ const agent = createFlappyAgent({
   <TabItem value="java" label="Java" default>
     Coming soon
   </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+    Coming soon
+  </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
   </TabItem>
@@ -171,7 +215,20 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+  Future<LawMetaReturn> future = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+  lawAgent.use {
+    it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+  }
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
@@ -193,6 +250,9 @@ agent.callFunction('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
 
   </TabItem>
   <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
     Coming soon
   </TabItem>
   <TabItem value="csharp" label="C#" default>
@@ -217,6 +277,9 @@ agent.callCodeInterpreter(
 
   </TabItem>
   <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
     Coming soon
   </TabItem>
   <TabItem value="csharp" label="C#" default>
