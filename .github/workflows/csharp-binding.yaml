@@ -89,7 +89,7 @@ jobs:
 
       - name: generate nupkg
         run: |
-          dotnet build Pleisto.Flappy.Native.csproj -o app/
+          dotnet build tools/Pleisto.Flappy.Native.csproj -o app/
 
 
       - name: dotnet publish

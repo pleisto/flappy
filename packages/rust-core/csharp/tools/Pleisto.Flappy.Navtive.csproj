@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Authors>Pleisto</Authors>
+		<ProductName>Pleisto.Flappy</ProductName>
+		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net472;net48</TargetFrameworks>
+		<ImplicitUsings>disabled</ImplicitUsings>
+		<LangVersion>11.0</LangVersion>
+    <DebugType>embedded</DebugType>
+		<Nullable>disable</Nullable>
+    <!--Nuget Package Info-->
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.0.3-alpha</Version>
+    <PackageTags>wasi;native;python</PackageTags>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../../../LICENSE" PackagePath="" Pack="True" Visible="True" />
+    <None Include="../../../../README.md" PackagePath="" Pack="True" Visible="True" />
+  </ItemGroup>
+
+  <!--Mapper of Cargo build-->
+  <ItemGroup>
+    <!--MacOS-->
+    <None Include="~/osx-aarch_64-local-staging/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-arm64/native/libflappy_csharp_bindings.dylib" Visible="True">
+      
+    </None>
+    <None Include="~/osx-x64-local-staging/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-x64/native/libflappy_csharp_bindings.dylib" Visible="True">
+
+    </None>
+    
+    <!--Windows-->
+    <None Include="~/windows-x86_64-local-staging/flappy_csharp_bindings.dll" PackagePath="runtimes/win-x64/native/flappy_csharp_bindings.dll" Visible="True">
+
+    </None>
+
+    <!--Linux-->
+    <None Include="~/linux-x86_64-local-staging/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-x64/native/libflappy_csharp_bindings.so" Visible="True">
+
+    </None>
+  </ItemGroup>
+</Project>
