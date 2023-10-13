@@ -45,7 +45,7 @@ So far, `node-flappy` defines fields through [Zod](https://github.com/colinhacks
 With the help of `Zod`, we can define types for fields and provide descriptions (which will assist the LLM in understanding the meaning of the fields).
 
 ```ts
-import { createFlappyAgent, createSynthesizedFunction, ZodType as z } from '@pleisto/node-agent'
+import { createFlappyAgent, createSynthesizedFunction, z } from '@pleisto/node-agent'
 
 //  ...
 
@@ -74,7 +74,7 @@ const exampleAgent = createFlappyAgent({
 In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `invokeFunction`.
 
 ```ts
-import { createFlappyAgent, createInvokeFunction, ZodType as z } from '@pleisto/flappy-agent'
+import { createFlappyAgent, createInvokeFunction, z } from '@pleisto/flappy-agent'
 
 // ...
 

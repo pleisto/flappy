@@ -2,7 +2,7 @@ import {
   createFlappyAgent,
   createInvokeFunction,
   createSynthesizedFunction,
-  ZodType as z,
+  z,
   ChatGPT,
   Baichuan
 } from '@pleisto/node-flappy'
