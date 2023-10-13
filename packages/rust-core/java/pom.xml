@@ -76,6 +76,7 @@
     <!-- plugins dependencies -->
     <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+    <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
     <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <palantir-java-format.version>2.36.0</palantir-java-format.version>
@@ -195,6 +196,20 @@
             <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${maven-gpg-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
             </goals>
           </execution>
         </executions>
