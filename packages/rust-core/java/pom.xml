@@ -70,7 +70,7 @@
     <assertj.version>3.23.1</assertj.version>
     <dotenv.version>3.0.0</dotenv.version>
     <lombok.version>1.18.30</lombok.version>
-    <junit.version>5.9.2</junit.version>
+    <junit.version>5.10.0</junit.version>
     <slf4j.version>2.0.9</slf4j.version>
 
     <!-- plugins dependencies -->
