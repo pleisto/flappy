@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/flappy-nodejs-bindings-darwin-x64",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha",
   "os": [
     "darwin"
   ],
