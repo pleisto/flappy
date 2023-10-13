@@ -96,8 +96,8 @@ jobs:
 
       - name: generate nupkg
         run: |
-          dotnet build tools/Pleisto.Flappy.Native.csproj -o app/
-
+          cd packages/rust-core/csharp/tools/ && \
+          dotnet build Pleisto.Flappy.Native.csproj -o app/
 
       - name: dotnet publish
         run: |
