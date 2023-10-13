@@ -197,6 +197,7 @@ jobs:
         shell: bash
       - name: Publish
         run: |
+          cd ./packages/rust-core/nodejs
           npm config set provenance true
           if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
           then
@@ -209,7 +210,6 @@ jobs:
           else
             echo "Not a release, skipping publish"
           fi
-        working-directory: packages/rust-core/nodejs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
