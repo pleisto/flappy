@@ -91,11 +91,14 @@ mavenPublishing {
         id.set("clszzyh")
         name.set("Yuhang Shi")
         url.set("https://github.com/clszzyh")
+        organization.set("pleisto")
+        organizationUrl.set("https://github.com/pleisto")
       }
     }
 
     scm {
       url.set("https://github.com/pleisto/flappy")
+      connection.set("scm:git:https://git@github.com/pleisto/flappy.git")
     }
   }
 }
