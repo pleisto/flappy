@@ -155,22 +155,22 @@ jobs:
         with:
           name: bindings-x86_64-apple-darwin
           path: artifacts
-          working-directory: ./packages/rust-core/nodejs
+          working-directory: packages/rust-core/nodejs
       - name: Download macOS arm64 artifact
         uses: actions/download-artifact@v3
         with:
           name: bindings-aarch64-apple-darwin
           path: artifacts
-          working-directory: ./packages/rust-core/nodejs
+          working-directory: packages/rust-core/nodejs
       - name: Combine binaries
         run: yarn universal
-        working-directory: ./packages/rust-core/nodejs
+        working-directory: packages/rust-core/nodejs
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
           path: ${{ env.APP_NAME }}.*.node
-          working-directory: ./packages/rust-core/nodejs
+          working-directory: packages/rust-core/nodejs
           if-no-files-found: error
   publish:
     name: Publish
@@ -191,13 +191,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
-          working-directory: ./packages/rust-core/nodejs
+          working-directory: packages/rust-core/nodejs
       - name: Move artifacts
         run: yarn artifacts
-        working-directory: ./packages/rust-core/nodejs
+        working-directory: packages/rust-core/nodejs
       - name: List packages
         run: ls -R ./npm
-        working-directory: ./packages/rust-core/nodejs
+        working-directory: packages/rust-core/nodejs
         shell: bash
       - name: Publish
         run: |
@@ -213,7 +213,7 @@ jobs:
           else
             echo "Not a release, skipping publish"
           fi
-        working-directory: ./packages/rust-core/nodejs
+        working-directory: packages/rust-core/nodejs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
