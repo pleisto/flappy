@@ -46,20 +46,10 @@ enum Environment {
         INSTANCE.classifier = classifier.toString();
     }
 
-    /**
-     * Returns the classifier of the compiled environment.
-     *
-     * @return The classifier of the compiled environment.
-     */
     public static String getClassifier() {
         return INSTANCE.classifier;
     }
 
-    /**
-     * Returns the version of the code as String.
-     *
-     * @return The project version string.
-     */
     public static String getVersion() {
         return INSTANCE.projectVersion;
     }
