@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publish-binding:
+  compile-binding:
     runs-on: ${{ matrix.os }}
     timeout-minutes:  60
     strategy:
@@ -41,14 +41,59 @@ jobs:
       - run: |
           python3 tools/build.py --classifier ${{ matrix.classifier }} --profile release
 
+
+  publish-binding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [ "compile-binding" ]
+    steps:
+      - uses: actions/checkout@v4
+
+
+      # Download artifacts
+      - name: Prepare environment variables
+        run: echo "LOCAL_STAGING_DIR=$HOME/local-staging" >> $GITHUB_ENV
+
+      - name: Download windows staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: windows-x86_64-local-staging
+          path: ~/windows-x86_64-local-staging
+      - name: Download linux staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-x86_64-local-staging
+          path: ~/linux-x86_64-local-staging
+      - name: Download darwin staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: osx-x86_64-local-staging
+          path: ~/osx-x86_64-local-staging
+      - name: Download darwin (aarch64) staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: osx-aarch_64-local-staging
+          path: ~/osx-aarch_64-local-staging
+
+      # Generate nupkg
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            3.1
+            6.0
+            7.0
+
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - name: generate nupkg
+        run: |
+          dotnet build Pleisto.Flappy.Native.csproj -o app/
+
+
       - name: dotnet publish
         run: |
-          cd packages/csharp
           dotnet build -c Release
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"

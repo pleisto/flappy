@@ -22,13 +22,13 @@ def classifier_to_target(classifier: str) -> str:
 
 def get_cargo_artifact_name(classifier: str) -> str:
     if classifier == "osx-aarch_64":
-        return "libflappy_java_bindings.dylib"
+        return "libflappy_csharp_bindings.dylib"
     if classifier == "osx-x86_64":
-        return "libflappy_java_bindings.dylib"
+        return "libflappy_csharp_bindings.dylib"
     if classifier == "linux-x86_64":
-        return "libflappy_java_bindings.so"
+        return "libflappy_csharp_bindings.so"
     if classifier == "windows-x86_64":
-        return "flappy_java_bindings.dll"
+        return "flappy_csharp_bindings.dll"
     raise Exception(f"Unsupported classifier: {classifier}")
 
 
