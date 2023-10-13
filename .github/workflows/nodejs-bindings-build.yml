@@ -163,7 +163,7 @@ jobs:
           path: artifacts
           working-directory: ./packages/rust-core/nodejs
       - name: Combine binaries
-        run: yarn universal:nodejs-bindings
+        run: yarn universal
         working-directory: ./packages/rust-core/nodejs
       - name: Upload artifact
         uses: actions/upload-artifact@v3
