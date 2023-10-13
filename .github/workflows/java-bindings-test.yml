@@ -8,8 +8,6 @@ on:
       - 'packages/rust-core/java/**'
       - 'packages/rust-core/Cargo.toml'
       - '.github/workflows/java-bindings-test.yml'
-    paths-ignore:
-      - '**/*.md'
 
 defaults:
   run:

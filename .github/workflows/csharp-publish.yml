@@ -8,8 +8,6 @@ on:
       - "examples/csharp/**/*"
       - "packages/csharp/**/*"
       - ".github/workflows/csharp-publish.yml"
-    paths-ignore:
-      - '**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

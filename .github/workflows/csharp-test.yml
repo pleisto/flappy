@@ -7,8 +7,6 @@ on:
       - "examples/csharp/**/*"
       - "packages/csharp/**/*"
       - ".github/workflows/csharp-test.yml"
-    paths-ignore:
-      - '**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
