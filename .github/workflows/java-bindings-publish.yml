@@ -35,7 +35,7 @@ jobs:
         id: compare_version
         run: |
           new_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
-          versions=$(curl https://repo1.maven.org/maven2/com/pleisto/flappy/maven-metadata.xml | awk -F'[><]' '/<version>/{print $3}')
+          versions=$(curl https://repo1.maven.org/maven2/com/pleisto/flappy-java-bindings/maven-metadata.xml | awk -F'[><]' '/<version>/{print $3}')
           echo "current version: $new_version"
           echo $versions
           if [ -z "${versions[@]}" ]; then
