@@ -41,7 +41,9 @@ jobs:
 
 
       - run: |
-          python3 tools/build.py
+          python3 tools/build.py \
+            --classifier ${{ matrix.classifier }} \
+            --profile release
 
       - uses: nuget/setup-nuget@v1
         with:
