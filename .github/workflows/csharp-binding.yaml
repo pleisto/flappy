@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.classifier }}-local-staging
-          path: packages/rust-core/csharp/local-staging
+          path: packages/rust-core/csharp/target/bindings
           if-no-files-found: error
 
   publish-binding:
