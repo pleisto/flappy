@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/flappy-nodejs-bindings",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-alpha.0",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
@@ -35,6 +35,7 @@
     "prepublishOnly": "napi prepublish -t npm",
     "test": "ava",
     "universal": "napi universal",
-    "version": "napi version"
-  }
+    "version:napi": "napi version"
+  },
+  "stableVersion": "0.0.1-alpha"
 }

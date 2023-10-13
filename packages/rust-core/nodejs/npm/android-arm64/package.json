@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/flappy-nodejs-bindings-android-arm64",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-alpha.0",
   "os": [
     "android"
   ],
