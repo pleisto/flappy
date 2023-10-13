@@ -1,6 +1,9 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::ffi::c_void;
 
+use jni::objects::JMap;
+use jni::objects::JObject;
 use jni::objects::JString;
 use jni::sys::jint;
 use jni::sys::JNI_VERSION_1_8;
@@ -83,4 +86,18 @@ unsafe fn get_global_runtime<'local>() -> &'local Runtime {
 fn jstring_to_string(env: &mut JNIEnv, s: &JString) -> Result<String> {
   let res = unsafe { env.get_string_unchecked(s)? };
   Ok(res.into())
+}
+
+fn jmap_to_hashmap(env: &mut JNIEnv, params: &JObject) -> Result<HashMap<String, String>> {
+  let map = JMap::from_env(env, params)?;
+  let mut iter = map.iter(env)?;
+
+  let mut result: HashMap<String, String> = HashMap::new();
+  while let Some(e) = iter.next(env)? {
+    let k = JString::from(e.0);
+    let v = JString::from(e.1);
+    result.insert(env.get_string(&k)?.into(), env.get_string(&v)?.into());
+  }
+
+  Ok(result)
 }

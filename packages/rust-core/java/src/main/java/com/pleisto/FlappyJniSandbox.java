@@ -38,12 +38,13 @@ public class FlappyJniSandbox extends FlappyJniLoader {
         }
     }
 
-    private static native long nativeEvalPythonCode(String code);
+    private static native long nativeEvalPythonCode(
+            String code, boolean network, Map<String, String> envs, String cache_path);
 
     public static native String ping();
 
-    public CompletableFuture<FlappySandboxResult> evalPythonCode(String code) {
-        final long requestId = nativeEvalPythonCode(code);
-        return (CompletableFuture<FlappySandboxResult>) AsyncRegistry.get(requestId);
+    public CompletableFuture<FlappyJniSandboxResult> evalPythonCode(FlappyJniSandboxInput input) {
+        final long requestId = nativeEvalPythonCode(input.code, input.network, input.envs, input.cachePath);
+        return (CompletableFuture<FlappyJniSandboxResult>) AsyncRegistry.get(requestId);
     }
 }

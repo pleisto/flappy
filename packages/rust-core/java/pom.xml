@@ -26,7 +26,7 @@
 
   <groupId>com.pleisto</groupId>
   <artifactId>flappy-java-bindings</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <name>flappy-java-bindings</name>
   <description>Java bindings of flappy</description>
   <inceptionYear>2023</inceptionYear>
@@ -67,10 +67,10 @@
     <jni.classifier>${os.detected.classifier}</jni.classifier>
 
     <!-- library dependencies -->
-    <assertj.version>3.23.1</assertj.version>
+    <assertj.version>3.24.2</assertj.version>
     <dotenv.version>3.0.0</dotenv.version>
     <lombok.version>1.18.30</lombok.version>
-    <junit.version>5.9.2</junit.version>
+    <junit.version>5.10.0</junit.version>
     <slf4j.version>2.0.9</slf4j.version>
 
     <!-- plugins dependencies -->
