@@ -35,12 +35,12 @@ jobs:
               yarn build:nodejs-bindings --target x86_64-apple-darwin
               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
           - host: ubuntu-latest
-            target: x86_64-pc-windows-gnu
+            target: x86_64-pc-windows-msvc
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               cargo install cargo-xwin
-              yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
-              strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.win32-x64-gnu.node
+              yarn build:nodejs-bindings --target x86_64-pc-windows-msvc
+              strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.win32-x64-msvc.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
@@ -168,7 +168,6 @@ jobs:
         with:
           name: bindings-universal-apple-darwin
           path: ${{ env.APP_NAME }}.*.node
-          working-directory: packages/rust-core/nodejs
           if-no-files-found: error
   publish:
     name: Publish

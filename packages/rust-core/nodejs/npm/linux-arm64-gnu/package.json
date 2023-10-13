@@ -11,7 +11,7 @@
   "files": [
     "flappy-nodejs-bindings.linux-arm64-gnu.node"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">= 10"
   },
