@@ -66,6 +66,9 @@ dependencies {
   implementation("com.aallam.openai:openai-client:3.5.0")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+//  implementation("com.pleisto:flappy-java-bindings:0.0.2")
+//  implementation("com.pleisto:flappy-java-bindings:0.0.2:${osdetector.classifier}")
 }
 
 mavenPublishing {

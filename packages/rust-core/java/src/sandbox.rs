@@ -66,7 +66,7 @@ fn request_id(env: &mut JNIEnv) -> Result<jlong> {
   Ok(
     env
       .call_static_method(
-        "com/pleisto/JniSandbox$AsyncRegistry",
+        "com/pleisto/FlappyJniSandbox$AsyncRegistry",
         "requestId",
         "()J",
         &[],
@@ -79,7 +79,7 @@ fn get_future<'local>(env: &mut JNIEnv<'local>, id: jlong) -> Result<JObject<'lo
   Ok(
     env
       .call_static_method(
-        "com/pleisto/JniSandbox$AsyncRegistry",
+        "com/pleisto/FlappyJniSandbox$AsyncRegistry",
         "get",
         "(J)Ljava/util/concurrent/CompletableFuture;",
         &[JValue::Long(id)],
@@ -89,7 +89,7 @@ fn get_future<'local>(env: &mut JNIEnv<'local>, id: jlong) -> Result<JObject<'lo
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_pleisto_JniSandbox_ping<'local>(
+pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_ping<'local>(
   env: JNIEnv<'local>,
   _: JClass<'local>,
 ) -> jstring {
@@ -100,7 +100,7 @@ pub extern "system" fn Java_com_pleisto_JniSandbox_ping<'local>(
 }
 
 #[no_mangle]
-pub unsafe extern "system" fn Java_com_pleisto_JniSandbox_nativeEvalPythonCode(
+pub unsafe extern "system" fn Java_com_pleisto_FlappyJniSandbox_nativeEvalPythonCode(
   mut env: JNIEnv,
   _: JClass,
   code: JString,
@@ -137,7 +137,7 @@ fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<
   let stderr = env.new_string(info.stderr)?;
 
   let result = env.new_object(
-    "com/pleisto/SandboxResult",
+    "com/pleisto/FlappySandboxResult",
     "(Ljava/lang/String;Ljava/lang/String;)V",
     &[JValue::Object(&stdout), JValue::Object(&stderr)],
   )?;

@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JniSandbox extends JniLoader {
+public class FlappyJniSandbox extends FlappyJniLoader {
 
     private enum AsyncRegistry {
         INSTANCE;
@@ -42,8 +42,8 @@ public class JniSandbox extends JniLoader {
 
     public static native String ping();
 
-    public CompletableFuture<SandboxResult> evalPythonCode(String code) {
+    public CompletableFuture<FlappySandboxResult> evalPythonCode(String code) {
         final long requestId = nativeEvalPythonCode(code);
-        return (CompletableFuture<SandboxResult>) AsyncRegistry.get(requestId);
+        return (CompletableFuture<FlappySandboxResult>) AsyncRegistry.get(requestId);
     }
 }

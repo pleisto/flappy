@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class JniLoader {
+abstract class FlappyJniLoader {
 
     private enum LibraryState {
         NOT_LOADED,
@@ -19,7 +19,7 @@ public abstract class JniLoader {
     private static final AtomicReference<LibraryState> libraryLoaded = new AtomicReference<>(LibraryState.NOT_LOADED);
 
     static {
-        JniLoader.loadLibrary();
+        FlappyJniLoader.loadLibrary();
     }
 
     public static void loadLibrary() {
@@ -32,7 +32,7 @@ public abstract class JniLoader {
                 doLoadLibrary();
             } catch (IOException e) {
                 libraryLoaded.set(LibraryState.NOT_LOADED);
-                throw new UncheckedIOException("Unable to load the OpenDAL shared library", e);
+                throw new UncheckedIOException("Unable to load the shared library", e);
             }
             libraryLoaded.set(LibraryState.LOADED);
             return;
@@ -60,7 +60,7 @@ public abstract class JniLoader {
 
     private static void doLoadBundledLibrary() throws IOException {
         final String libraryPath = bundledLibraryPath();
-        try (final InputStream is = JniLoader.class.getResourceAsStream(libraryPath)) {
+        try (final InputStream is = FlappyJniLoader.class.getResourceAsStream(libraryPath)) {
             if (is == null) {
                 throw new IOException("cannot find " + libraryPath);
             }

@@ -10,7 +10,7 @@ import java.util.Properties;
  *
  * forked from https://github.com/apache/incubator-opendal/blob/main/bindings/java/src/main/java/org/apache/opendal/Environment.java
  */
-public enum Environment {
+enum Environment {
     INSTANCE;
 
     public static final String UNKNOWN = "<unknown>";

@@ -1,14 +1,14 @@
 package com.pleisto;
 
-public class FlappyException extends RuntimeException {
+public class FlappyJniException extends RuntimeException {
     private final Code code;
 
     @SuppressWarnings("unused")
-    public FlappyException(String code, String message) {
+    public FlappyJniException(String code, String message) {
         this(Code.valueOf(code), message);
     }
 
-    public FlappyException(Code code, String message) {
+    public FlappyJniException(Code code, String message) {
         super(message);
         this.code = code;
     }

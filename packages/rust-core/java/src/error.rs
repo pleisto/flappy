@@ -193,7 +193,7 @@ impl Error {
     &self,
     env: &mut JNIEnv<'local>,
   ) -> jni::errors::Result<JThrowable<'local>> {
-    let class = env.find_class("com/pleisto/FlappyException")?;
+    let class = env.find_class("com/pleisto/FlappyJniException")?;
     let code = env.new_string(match self.inner.kind() {
       ErrorKind::Unexpected => "Unexpected",
       ErrorKind::Unsupported => "Unsupported",
