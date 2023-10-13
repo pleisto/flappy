@@ -13,6 +13,7 @@ use jni::JNIEnv;
 
 use crate::get_current_env;
 use crate::get_global_runtime;
+use crate::jmap_to_hashmap;
 use crate::jstring_to_string;
 use crate::Result;
 
@@ -102,11 +103,12 @@ pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_ping<'local>(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_echo<'local>(
+pub extern "system" fn Java_com_pleisto_FlappyJniDummy_echo<'local>(
   mut env: JNIEnv<'local>,
   _: JClass<'local>,
   code: JString,
   network: jboolean,
+  envs: JObject,
   cache_path: JString,
 ) -> jstring {
   let code = jstring_to_string(&mut env, &code).expect("bang!");
@@ -117,12 +119,16 @@ pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_echo<'local>(
     Some(cache_path)
   };
 
+  let envs: Vec<(String, String)> = jmap_to_hashmap(&mut env, &envs)
+    .expect("bang!")
+    .into_iter()
+    .collect();
   let network = network == JNI_TRUE;
 
   let output = env
     .new_string(format!(
-      "code: {}, network: {}, cache_path: {:?}",
-      code, network, option_cache_path
+      "code: {}, network: {}, envs: {:?}, cache_path: {:?}",
+      code, network, envs, option_cache_path
     ))
     .expect("Couldn't create java string!");
   output.into_raw()
@@ -134,9 +140,10 @@ pub unsafe extern "system" fn Java_com_pleisto_FlappyJniSandbox_nativeEvalPython
   _: JClass,
   code: JString,
   network: jboolean,
+  envs: JObject,
   cache_path: JString,
 ) -> jlong {
-  intern_eval_python_code(&mut env, code, network, cache_path).unwrap_or_else(|e| {
+  intern_eval_python_code(&mut env, code, network, envs, cache_path).unwrap_or_else(|e| {
     e.throw(&mut env);
     0
   })
@@ -146,21 +153,21 @@ fn intern_eval_python_code(
   env: &mut JNIEnv,
   code: JString,
   network: jboolean,
+  envs: JObject,
   cache_path: JString,
 ) -> Result<jlong> {
   let id = request_id(env)?;
 
   let code = jstring_to_string(env, &code)?;
-  let cache_path = jstring_to_string(env, &cache_path)?;
+  let cache_path: String = jstring_to_string(env, &cache_path)?;
   let option_cache_path: Option<String> = if cache_path.is_empty() {
     Default::default()
   } else {
     Some(cache_path)
   };
 
+  let envs: Vec<(String, String)> = jmap_to_hashmap(env, &envs)?.into_iter().collect();
   let network = network == JNI_TRUE;
-
-  let envs: Vec<(String, String)> = vec![];
 
   unsafe { get_global_runtime() }.spawn(async move {
     let sandbox_result: Result<SandboxOutput> =
