@@ -55,7 +55,7 @@ jobs:
       - name: Local staging
         shell: bash
         run: |
-          ./mvnw package verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
+          ./mvnw verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
             -DskipTests=true \
             -Djni.classifier=${{ matrix.classifier }} \
             -Dcargo-build.profile=release \
