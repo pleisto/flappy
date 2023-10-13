@@ -5,8 +5,10 @@ use jni::objects::JObject;
 use jni::objects::JString;
 use jni::objects::JValue;
 use jni::objects::JValueOwned;
+use jni::sys::jboolean;
 use jni::sys::jlong;
 use jni::sys::jstring;
+use jni::sys::JNI_TRUE;
 use jni::JNIEnv;
 
 use crate::get_current_env;
@@ -100,30 +102,71 @@ pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_ping<'local>(
 }
 
 #[no_mangle]
+pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_echo<'local>(
+  mut env: JNIEnv<'local>,
+  _: JClass<'local>,
+  code: JString,
+  network: jboolean,
+  cache_path: JString,
+) -> jstring {
+  let code = jstring_to_string(&mut env, &code).expect("bang!");
+  let cache_path = jstring_to_string(&mut env, &cache_path).expect("bang!");
+  let option_cache_path: Option<String> = if cache_path.is_empty() {
+    Default::default()
+  } else {
+    Some(cache_path)
+  };
+
+  let network = network == JNI_TRUE;
+
+  let output = env
+    .new_string(format!(
+      "code: {}, network: {}, cache_path: {:?}",
+      code, network, option_cache_path
+    ))
+    .expect("Couldn't create java string!");
+  output.into_raw()
+}
+
+#[no_mangle]
 pub unsafe extern "system" fn Java_com_pleisto_FlappyJniSandbox_nativeEvalPythonCode(
   mut env: JNIEnv,
   _: JClass,
   code: JString,
+  network: jboolean,
+  cache_path: JString,
 ) -> jlong {
-  intern_eval_python_code(&mut env, code).unwrap_or_else(|e| {
+  intern_eval_python_code(&mut env, code, network, cache_path).unwrap_or_else(|e| {
     e.throw(&mut env);
     0
   })
 }
 
-fn intern_eval_python_code(env: &mut JNIEnv, code: JString) -> Result<jlong> {
+fn intern_eval_python_code(
+  env: &mut JNIEnv,
+  code: JString,
+  network: jboolean,
+  cache_path: JString,
+) -> Result<jlong> {
   let id = request_id(env)?;
 
   let code = jstring_to_string(env, &code)?;
+  let cache_path = jstring_to_string(env, &cache_path)?;
+  let option_cache_path: Option<String> = if cache_path.is_empty() {
+    Default::default()
+  } else {
+    Some(cache_path)
+  };
 
-  let network: bool = false;
+  let network = network == JNI_TRUE;
+
   let envs: Vec<(String, String)> = vec![];
-  let cache_path: Option<String> = Default::default();
 
   unsafe { get_global_runtime() }.spawn(async move {
-    let sandbox_result: Result<SandboxOutput> = python_sandbox(code, network, envs, cache_path)
-      .await
-      .map_err(|err| err.into());
+    let sandbox_result: Result<SandboxOutput> =
+      python_sandbox(code, network, envs, option_cache_path)
+        .await
+        .map_err(|err| err.into());
     let mut env = unsafe { get_current_env() };
     let result = sandbox_result.and_then(|req| make_sandbox_output(&mut env, req));
     complete_future(id, result.map(JValueOwned::Object))
@@ -137,7 +180,7 @@ fn make_sandbox_output<'a>(env: &mut JNIEnv<'a>, info: SandboxOutput) -> Result<
   let stderr = env.new_string(info.stderr)?;
 
   let result = env.new_object(
-    "com/pleisto/FlappySandboxResult",
+    "com/pleisto/FlappyJniSandboxResult",
     "(Ljava/lang/String;Ljava/lang/String;)V",
     &[JValue::Object(&stdout), JValue::Object(&stderr)],
   )?;

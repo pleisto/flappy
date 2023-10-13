@@ -3,7 +3,8 @@ package com.pleisto.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.pleisto.FlappyJniSandbox;
-import com.pleisto.FlappySandboxResult;
+import com.pleisto.FlappyJniSandboxInput;
+import com.pleisto.FlappyJniSandboxResult;
 
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class SandboxTest {
     public void evalFail() throws InterruptedException {
         final FlappyJniSandbox op = new FlappyJniSandbox();
         try {
-            FlappySandboxResult result = op.evalPythonCode("foobar").get();
+            FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandboxInput("foobar")).get();
             assertThat(false).isTrue();
         } catch (ExecutionException e) {
             assertThat(true).isTrue();
@@ -30,9 +31,15 @@ public class SandboxTest {
     public void evalSuccess() throws ExecutionException, InterruptedException {
         final FlappyJniSandbox op = new FlappyJniSandbox();
         String code = "print('hello world')";
-        FlappySandboxResult result = op.evalPythonCode(code).get();
+        FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandboxInput(code)).get();
         assertThat(result).isNotNull();
         System.out.println(result);
         assertThat(result.stdout).isEqualTo("hello world\n");
     }
+
+  @Test
+  public void echo() {
+    assertThat(FlappyJniSandbox.echo("foo", true, "bar")).isEqualTo("code: foo, network: true, cache_path: Some(\"bar\")");
+    assertThat(FlappyJniSandbox.echo("foo", false, "")).isEqualTo("code: foo, network: false, cache_path: None");
+  }
 }
