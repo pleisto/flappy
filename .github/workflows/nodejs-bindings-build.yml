@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: [self-hosted, macOS, x64]
+          - host: [self-hosted, macOS, ARM64]
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target x86_64-apple-darwin
@@ -161,7 +161,7 @@ jobs:
           name: bindings-aarch64-apple-darwin
           path: artifacts
       - name: Combine binaries
-        run: yarn universal:node-bindings
+        run: yarn universal:nodejs-bindings
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
