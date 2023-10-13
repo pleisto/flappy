@@ -102,7 +102,6 @@ jobs:
         run: |
           dotnet build -c Release
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-            echo "Pulish: $line"
             nuget push $line \
               -Source https://api.nuget.org/v3/index.json \
               -ApiKey ${{ secrets.NUGET_TOKEN }} \
