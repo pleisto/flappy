@@ -32,7 +32,6 @@ implementation("com.pleisto:flappy:0.0.6")
 
 In other build system, please refer to [here](https://central.sonatype.com/artifact/com.pleisto/flappy)
 
-
 ## Usage
 
 ### Create a Synthesized Function
@@ -95,12 +94,12 @@ class LawMetaReturn {
   List<String> judgeOptions;
 }
 
-FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
-  "getMeta",
-  "Extract meta data from a lawsuit full text.",
-  LawMetaArguments.class,
-  LawMetaReturn.class
-);
+  FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
+    "getMeta",
+    "Extract meta data from a lawsuit full text.",
+    LawMetaArguments.class,
+    LawMetaReturn.class
+  );
 ```
 
 </details>
@@ -165,13 +164,13 @@ static class GetLatestLawsuitsReturn {
   }
 }
 
-FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
-  "getLatestLawsuitsByPlaintiff",
-  "Get the latest lawsuits by plaintiff.",
-  GetLatestLawsuitsArguments.class,
-  GetLatestLawsuitsReturn.class,
-  (a, agent, $completion) -> new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)
-);
+  FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
+    "getLatestLawsuitsByPlaintiff",
+    "Get the latest lawsuits by plaintiff.",
+    GetLatestLawsuitsArguments.class,
+    GetLatestLawsuitsReturn.class,
+    (a, agent, $completion) -> new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)
+  );
 ```
 
 </details>
@@ -202,10 +201,10 @@ val lawAgent = FlappyBaseAgent(
   <summary>Java</summary>
 
 ```java
-ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
-FlappyBaseAgent lawAgent = new FlappyBaseAgent(
-  llm, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
-);
+ChatGPT llm=new ChatGPT("gpt-3.5-turbo",new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"),dotenv.get("OPENAI_API_BASE")));
+  FlappyBaseAgent lawAgent=new FlappyBaseAgent(
+  llm,Arrays.asList(lawGetMeta,lawGetLatestLawsuitsByPlaintiff)
+  );
 ```
 
 </details>
