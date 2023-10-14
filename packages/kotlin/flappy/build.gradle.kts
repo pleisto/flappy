@@ -146,7 +146,7 @@ tasks.withType<DokkaTask>().configureEach {
       suppressGeneratedFiles.set(true)
       includeNonPublic.set(false)
 
-      jdkVersion.set(19)
+      jdkVersion.set(8)
       includes.from(project.files(), "../README.md")
       sourceRoots.from(file("src/main"))
 

@@ -167,7 +167,7 @@ jobs:
 
       - name: Deploy local staged artifacts
         run: |
-          ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy-staged \
+          ./mvnw org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
             -DaltStagingDirectory=$LOCAL_STAGING_DIR \
             -DserverId=ossrh \
             -DnexusUrl=https://s01.oss.sonatype.org

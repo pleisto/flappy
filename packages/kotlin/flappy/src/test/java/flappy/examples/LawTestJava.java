@@ -5,7 +5,7 @@ import flappy.LLMResponse;
 import flappy.llms.Dummy;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -57,7 +57,7 @@ public class LawTestJava {
     }));
 
     FlappyBaseAgent lawAgent = new FlappyBaseAgent(
-      dummy, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
+      dummy, Arrays.asList(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
     );
 
     Future<LawMetaReturn> returnFuture = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);

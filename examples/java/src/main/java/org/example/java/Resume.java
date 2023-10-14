@@ -9,6 +9,7 @@ import flappy.functions.FlappySynthesizedFunction;
 import flappy.llms.ChatGPT;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -69,7 +70,7 @@ public class Resume {
     ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
-      llm, List.of(resumeGetMeta, getFrontendEngineerResumes)
+      llm, Arrays.asList(resumeGetMeta, getFrontendEngineerResumes)
     );
 
 

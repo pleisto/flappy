@@ -5,7 +5,7 @@ import flappy.LLMResponse;
 import flappy.llms.Dummy;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -135,7 +135,7 @@ public class ResumeTestJava {
     }));
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
-      dummy, List.of(resumeGetMeta, getFrontendEngineerResumes)
+      dummy, Arrays.asList(resumeGetMeta, getFrontendEngineerResumes)
     );
 
     Future<ResumeMetaReturn> returnFuture = resumeAgent.executePlanAsync(RESUME_EXECUTE_PLAN_PROMPT);
