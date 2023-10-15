@@ -1,12 +1,15 @@
 {
   "name": "@pleisto/flappy-nodejs-bindings",
-  "version": "0.0.1-alpha.0",
+  "version": "0.0.1-alpha.1",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
     "name": "flappy-nodejs-bindings",
     "triples": {
+      "defaults": false,
       "additional": [
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
         "aarch64-apple-darwin",
         "aarch64-linux-android",
         "aarch64-unknown-linux-gnu",
@@ -16,6 +19,10 @@
         "x86_64-pc-windows-gnu"
       ]
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleisto/flappy.git"
   },
   "license": "Apache-2.0",
   "devDependencies": {

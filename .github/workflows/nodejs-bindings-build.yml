@@ -1,4 +1,4 @@
-name: Nodejs Bindings Building & Publish
+name: Nodejs Bindings Build & Publish
 
 concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: [macos-latest-xl]
+          - host: [self-hosted, macOS, ARM64]
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target x86_64-apple-darwin
@@ -97,7 +97,7 @@ jobs:
         uses: actions/setup-node@v3
         if: ${{ !matrix.settings.docker }}
         with:
-          node-version: 18
+          node-version: 19
           check-latest: true
           cache: yarn
       - name: Install
@@ -145,7 +145,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 19
           check-latest: true
           cache: yarn
       - name: Install dependencies
@@ -175,11 +175,11 @@ jobs:
     needs:
       - universal-macOS
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 19
           check-latest: true
           cache: yarn
       - name: Install dependencies
@@ -197,19 +197,18 @@ jobs:
         shell: bash
       - name: Publish
         run: |
-          cd ./packages/rust-core/nodejs
-          npm config set provenance true
-          if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+          if git log -1 --pretty=%B | grep "^node bindings [0-9]\+\.[0-9]\+\.[0-9]\+$";
           then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
             npm publish --access public
-          elif git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+";
+          elif git log -1 --pretty=%B | grep "^node bindings [0-9]\+\.[0-9]\+\.[0-9]\+";
           then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
             npm publish --tag next --access public
           else
             echo "Not a release, skipping publish"
           fi
+        working-directory: packages/rust-core/nodejs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
