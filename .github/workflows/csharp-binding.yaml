@@ -1,6 +1,5 @@
 name: CSharp Bindings Publish
 
-
 on:
   workflow_dispatch:
   push:
@@ -17,119 +16,82 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  compile-binding:
-    runs-on: ${{ matrix.os }}
-    timeout-minutes:  60
+  compile:
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            classifier: linux-x86_64
-            arch: x86_64
+        settings:
+          - host: [self-hosted, macOS]
+            target: x86_64-apple-darwin
+            build: |
+              cargo build --target x86_64-apple-darwin
 
-          - os: ubuntu-latest
-            classifier: linux-aarch64
-            arch: x86_64
+          - host: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            build: |
+              sudo apt-get install -y gcc-mingw-w64-x86-64-win32
+              cargo install cargo-xwin
+              cargo build --target x86_64-pc-windows-gnu
 
-          - os: windows-latest
-            classifier: windows-x86_64
-            arch: x86_64
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
+            build: |-
+              set -e && \
+              sudo apt-get update
+              sudo apt-get install build-essential perl pkg-config libssl-dev -y
+              cargo build --target x86_64-unknown-linux-gnu
 
-          - os: macos-latest
-            classifier: osx-x86_64
-            arch: x86_64
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            build: |
+              apk add pkgconfig openssl-dev gcc g++ make perl && \
+              set -e && \
+              cargo build --target x86_64-unknown-linux-musl
 
-          - os: macos-latest
-            classifier: osx-aarch_64
-            arch: x86_64
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build: |
+              cargo build --target aarch64-apple-darwin
+              
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+            build: |-
+              set -e &&
+              sudo apt-get update &&
+              sudo apt-get install build-essential -y &&
+              sudo apt-get install perl -y &&
+              sudo apt-get install pkg-config libssl-dev -y &&
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
+              cargo build --target aarch64-unknown-linux-gnu
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+          - host: ubuntu-latest
+            target: aarch64-linux-android
+            build: |
+              cargo build --target aarch64-linux-android
+              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
 
-      - uses: uraimo/run-on-arch-action@v2
-        with:
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.os }}
-          run: |
-            python3 tools/build.py --classifier ${{ matrix.classifier }} --profile release
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            build: |-
+              set -e &&
+              apk add pkgconfig openssl-dev gcc g++ make perl &&
+              rustup target add aarch64-unknown-linux-musl &&
+              cargo build: --target aarch64-unknown-linux-musl
 
-      - name: Upload local staging directory
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.classifier }}-local-staging
-          path: |
-            packages/rust-core/csharp/target/bindings/*.so
-            packages/rust-core/csharp/target/bindings/*.dll
-            packages/rust-core/csharp/target/bindings/*.pdb
-            packages/rust-core/csharp/target/bindings/*.dylib
-          if-no-files-found: error
 
-  publish-binding:
-    runs-on: self-hosted
-    timeout-minutes: 120
-    needs: [ "compile-binding" ]
-    steps:
-      - uses: actions/checkout@v4
-
-      # Download artifacts
-      - name: Prepare environment variables
-        run: echo "LOCAL_STAGING_DIR=$HOME/local-staging" >> $GITHUB_ENV
-
-      - name: Download windows staging directory
-        uses: actions/download-artifact@v3
-        with:
-          name: windows-x86_64-local-staging
-          path: ~/windows-x86_64-local-staging
-
-      - name: Download linux staging directory
-        uses: actions/download-artifact@v3
-        with:
-          name: linux-x86_64-local-staging
-          path: ~/linux-x86_64-local-staging
-
-      - name: Download darwin staging directory
-        uses: actions/download-artifact@v3
-        with:
-          name: osx-x86_64-local-staging
-          path: ~/osx-x86_64-local-staging
-
-      - name: Download linux-aarch64 staging directory
-        uses: actions/download-artifact@v3
-        with:
-          name: linux-aarch64-local-staging
-          path: ~/linux-aarch64-local-staging
-
-      - name: Download darwin (aarch64) staging directory
-        uses: actions/download-artifact@v3
-        with:
-          name: osx-aarch_64-local-staging
-          path: ~/osx-aarch_64-local-staging
-
-      # Generate nupkg
-      - uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            3.1
-            6.0
-            7.0
-
-      - uses: nuget/setup-nuget@v1
-        with:
-          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: generate nupkg
-        run: |
-          dotnet build Pleisto.Flappy.Native.csproj -o app/
-
-      - name: dotnet publish
-        run: |
-          dotnet build -c Release
-          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-            nuget push $line \
-              -Source https://api.nuget.org/v3/index.json \
-              -ApiKey ${{ secrets.NUGET_TOKEN }} \
-              -SkipDuplicate
-          done
+    name: upload local staging
+    uses: actions/upload-artifact@v3
+    with:
+      name: ${{ matrix.classifier }}-local-staging
+      path: |
+        packages/rust-core/csharp/target/bindings/*.so
+        packages/rust-core/csharp/target/bindings/*.dll
+        packages/rust-core/csharp/target/bindings/*.pdb
+        packages/rust-core/csharp/target/bindings/*.dylib
+      if-no-files-found: error
