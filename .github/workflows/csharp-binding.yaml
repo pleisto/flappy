@@ -26,6 +26,8 @@ jobs:
         include:
           - os: ubuntu-latest
             classifier: linux-x86_64
+          - os: ubuntu-latest
+            classifier: linux-aarch64
           - os: windows-latest
             classifier: windows-x86_64
           - os: macos-latest
@@ -47,7 +49,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.classifier }}-local-staging
-          path: packages/rust-core/csharp/target/bindings
+          path: |
+            packages/rust-core/csharp/target/bindings/*.so
+            packages/rust-core/csharp/target/bindings/*.dll
+            packages/rust-core/csharp/target/bindings/*.pdb
+            packages/rust-core/csharp/target/bindings/*.dylib
           if-no-files-found: error
 
   publish-binding:
@@ -78,6 +84,12 @@ jobs:
         with:
           name: osx-x86_64-local-staging
           path: ~/osx-x86_64-local-staging
+
+      - name: Download linux-aarch64 staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-aarch64-local-staging
+          path: ~/linux-aarch64-local-staging
 
       - name: Download darwin (aarch64) staging directory
         uses: actions/download-artifact@v3

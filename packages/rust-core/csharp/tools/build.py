@@ -17,6 +17,8 @@ def classifier_to_target(classifier: str) -> str:
         return "x86_64-unknown-linux-gnu"
     if classifier == "windows-x86_64":
         return "x86_64-pc-windows-msvc"
+    if classifier == "linux-aarch64":
+        return "aarch64-unknow-linux-gnu"
     raise Exception(f"Unsupported classifier: {classifier}")
 
 
@@ -25,7 +27,7 @@ def get_cargo_artifact_name(classifier: str) -> str:
         return "libflappy_csharp_bindings.dylib"
     if classifier == "osx-x86_64":
         return "libflappy_csharp_bindings.dylib"
-    if classifier == "linux-x86_64":
+    if classifier == "linux-x86_64" or classifier == "linux-aarch64":
         return "libflappy_csharp_bindings.so"
     if classifier == "windows-x86_64":
         return "flappy_csharp_bindings.dll"

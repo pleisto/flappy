@@ -39,7 +39,8 @@
 
     <!--Linux-->
     <None Include="~/linux-x86_64-local-staging/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-x64/native/libflappy_csharp_bindings.so" Visible="True">
-
+    </None>
+    <None Include="~/linux-aarch64-local-staging/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-arm64/native/libflappy_csharp_bindings.so" Visible="True">
     </None>
   </ItemGroup>
 </Project>
