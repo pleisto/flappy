@@ -18,7 +18,8 @@ concurrency:
 
 jobs:
   compile-binding:
-    runs-on: self-hosted #${{ matrix.os }}
+    #runs-on: self-hosted #${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes:  60
     strategy:
       matrix:
@@ -66,16 +67,19 @@ jobs:
         with:
           name: windows-x86_64-local-staging
           path: ~/windows-x86_64-local-staging
+          
       - name: Download linux staging directory
         uses: actions/download-artifact@v3
         with:
           name: linux-x86_64-local-staging
           path: ~/linux-x86_64-local-staging
+
       - name: Download darwin staging directory
         uses: actions/download-artifact@v3
         with:
           name: osx-x86_64-local-staging
           path: ~/osx-x86_64-local-staging
+
       - name: Download darwin (aarch64) staging directory
         uses: actions/download-artifact@v3
         with:
