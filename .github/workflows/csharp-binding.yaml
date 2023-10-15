@@ -52,11 +52,10 @@ jobs:
 
   publish-binding:
     runs-on: self-hosted
-    timeout-minutes: 60
+    timeout-minutes: 120
     needs: [ "compile-binding" ]
     steps:
       - uses: actions/checkout@v4
-
 
       # Download artifacts
       - name: Prepare environment variables
@@ -67,7 +66,7 @@ jobs:
         with:
           name: windows-x86_64-local-staging
           path: ~/windows-x86_64-local-staging
-          
+
       - name: Download linux staging directory
         uses: actions/download-artifact@v3
         with:
