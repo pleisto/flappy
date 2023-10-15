@@ -86,12 +86,41 @@ jobs:
 
 
     name: upload local staging
-    uses: actions/upload-artifact@v3
-    with:
-      name: ${{ matrix.classifier }}-local-staging
-      path: |
-        packages/rust-core/csharp/target/bindings/*.so
-        packages/rust-core/csharp/target/bindings/*.dll
-        packages/rust-core/csharp/target/bindings/*.pdb
-        packages/rust-core/csharp/target/bindings/*.dylib
-      if-no-files-found: error
+    runs-on: ${{ matrix.settings.target }} - csharp
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        if: ${{ !matrix.settings.docker }}
+        with:
+          toolchain: stable
+          targets: ${{ matrix.settings.target }}
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
+
+      - name: Build in docker
+        uses: addnab/docker-run-action@v3
+        if: ${{ matrix.settings.docker }}
+        with:
+          image: ${{ matrix.settings.docker }}
+          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+          run: ${{ matrix.settings.build }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: |
+            packages/rust-core/target/${{ matrix.settings.target }}/*.dll
+            packages/rust-core/target/${{ matrix.settings.target }}/*.pdb
+            packages/rust-core/target/${{ matrix.settings.target }}/*.so
+            packages/rust-core/target/${{ matrix.settings.target }}/*.dylib
+          if-no-files-found: error
