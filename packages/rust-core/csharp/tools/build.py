@@ -18,7 +18,7 @@ def classifier_to_target(classifier: str) -> str:
     if classifier == "windows-x86_64":
         return "x86_64-pc-windows-msvc"
     if classifier == "linux-aarch64":
-        return "aarch64-unknow-linux-gnu"
+        return "aarch64-unknown-linux-gnu"
     raise Exception(f"Unsupported classifier: {classifier}")
 
 

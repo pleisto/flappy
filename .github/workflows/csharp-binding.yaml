@@ -44,7 +44,6 @@ jobs:
       - run: |
           python3 tools/build.py --classifier ${{ matrix.classifier }} --profile release
 
-
       - name: Upload local staging directory
         uses: actions/upload-artifact@v3
         with:
