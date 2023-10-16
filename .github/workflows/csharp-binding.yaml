@@ -84,15 +84,15 @@ jobs:
           #    cargo build --target aarch64-linux-android
           #    ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
 
-          - host: ubuntu-latest
+          - host: [ ubuntu-latest, arm64 ]
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            artifact: target/x86_64-apple-darwin/*.so
+            artifact: libflappy_csharp_bindings.so
             build: |-
-              set -e
-              apk add pkgconfig openssl-dev gcc g++ make perl
-              rustup target add aarch64-unknown-linux-musl
-              cargo build -r --target aarch64-unknown-linux-musl
+              set -e && \
+              apk add pkgconfig openssl-dev gcc g++ make perl && \
+              rustup target add aarch64-unknown-linux-musl && \
+              cargo build -r --target aarch64-unknow-linux-musl
 
     name: build and upload rust code - csharp
     runs-on: ${{ matrix.settings.host }}
