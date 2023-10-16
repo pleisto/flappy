@@ -129,6 +129,11 @@ jobs:
         shell: bash
         working-directory: packages/rust-core/csharp
 
+      - name: ShowTargets
+        run: |
+          packages/rust-core/target
+          find -maxdepth 3 -type f 
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
