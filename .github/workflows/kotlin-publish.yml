@@ -24,10 +24,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_if_need_release:
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.compare_version.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare version
+        id: compare_version
+        run: |
+          new_version=$(echo -n $(awk -F'=' '/version/ {print $2}' packages/kotlin/flappy/gradle.properties))
+          versions=$(curl https://repo1.maven.org/maven2/com/pleisto/flappy/maven-metadata.xml | awk -F'[><]' '/<version>/{print $3}')
+          echo "current version: $new_version"
+          echo $versions
+          if [ -z "${versions[@]}" ]; then
+            echo "version is empty"
+            exit 1
+          fi
+
+          if [[ "${versions[@]}" =~ "${new_version}" ]]; then
+            echo "Version is exist."
+            echo "release=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version is not exist."
+            echo "release=yes" >> "$GITHUB_OUTPUT"
+          fi
+
   publish:
     runs-on: ubuntu-latest
     name: Publish Maven
     timeout-minutes: 30
+    needs: [check_if_need_release]
+    if: needs.check_if_need_release.outputs.release == 'yes'
     environment:
       name: Maven
     permissions:
