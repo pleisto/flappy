@@ -25,24 +25,24 @@
   <!--Mapper of Cargo build-->
   <ItemGroup>
     <!--MacOS-->
-    <None Include="~/artifacts/aarch64-apple-darwin/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-arm64/native/libflappy_csharp_bindings.dylib" Visible="True">
+    <None Include="~/artifacts/aarch64-apple-darwin/**/release/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-arm64/native/libflappy_csharp_bindings.dylib" Visible="True">
       
     </None>
-    <None Include="~/artifacts/x86_64-apple-darwin/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-x64/native/libflappy_csharp_bindings.dylib" Visible="True">
+    <None Include="~/artifacts/x86_64-apple-darwin/**/release/libflappy_csharp_bindings.dylib" PackagePath="runtimes/osx-x64/native/libflappy_csharp_bindings.dylib" Visible="True">
 
     </None>
     
     <!--Windows-->
-    <None Include="~/artifacts/x86_64-pc-windows-gnu/flappy_csharp_bindings.dll" PackagePath="runtimes/win-x64/native/flappy_csharp_bindings.dll" Visible="True">
+    <None Include="~/artifacts/x86_64-pc-windows-gnu/**/release/flappy_csharp_bindings.dll" PackagePath="runtimes/win-x64/native/flappy_csharp_bindings.dll" Visible="True">
 
     </None>
 
     <!--Linux-->
-    <None Include="~/artifacts/x86_64-unknown-linux-gnu/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-x64/native/libflappy_csharp_bindings.so" Visible="True">
+    <None Include="~/artifacts/x86_64-unknown-linux-gnu/**/release/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-x64/native/libflappy_csharp_bindings.so" Visible="True">
     </None>
-    <None Include="~/artifacts/aarch64-unknown-linux-gnu/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-arm64/native/libflappy_csharp_bindings.so" Visible="True">
+    <None Include="~/artifacts/aarch64-unknown-linux-gnu/**/release/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-arm64/native/libflappy_csharp_bindings.so" Visible="True">
     </None>
-    <None Include="~/artifacts/x86_64-unknown-linux-musl/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-musl-x64/native/libflappy_csharp_bindings.so" Visible="True">
+    <None Include="~/artifacts/x86_64-unknown-linux-musl/**/release/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-musl-x64/native/libflappy_csharp_bindings.so" Visible="True">
     </None>
   </ItemGroup>
 </Project>

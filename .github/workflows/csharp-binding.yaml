@@ -189,19 +189,25 @@ jobs:
           path: ~/artifacts/bindings-x86_64-pc-windows-gnu
 
 
-
       - name: build nuget pkg
         run: |
           cd packages/rust-core/csharp/tools
           dotnet build -c Release Pleisto.Flappy.Native.csproj
 
-      - name: publish nuget pkg
-        run: |
-          cd packages/rust-core/csharp/tools
-          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-            echo "Pulish: $line"
-            nuget push $line \
-              -Source https://api.nuget.org/v3/index.json \
-              -ApiKey ${{ secrets.NUGET_TOKEN }} \
-              -SkipDuplicate
-          done
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: "**/*.nupkg"
+          if-no-files-found: error
+
+      #- name: publish nuget pkg
+      #  run: |
+      #    cd packages/rust-core/csharp/tools
+      #    find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+      #      echo "Pulish: $line"
+      #      nuget push $line \
+      #        -Source https://api.nuget.org/v3/index.json \
+      #        -ApiKey ${{ secrets.NUGET_TOKEN }} \
+      #        -SkipDuplicate
+      #    done
