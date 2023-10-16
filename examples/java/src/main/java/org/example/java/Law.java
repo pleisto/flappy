@@ -31,10 +31,10 @@ public class Law {
     LawMetaArguments.class,
     LawMetaReturn.class
   );
-  
+
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
-    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+    ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
 
     FlappyBaseAgent lawAgent = new FlappyBaseAgent(

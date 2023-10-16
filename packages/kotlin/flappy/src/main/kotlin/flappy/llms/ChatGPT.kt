@@ -1,49 +1,59 @@
 package flappy.llms
 
-import com.aallam.openai.api.chat.ChatCompletion
-import com.aallam.openai.api.chat.ChatCompletionRequest
-import com.aallam.openai.api.chat.ChatMessage
-import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.logging.LogLevel
-import com.aallam.openai.api.model.ModelId
-import com.aallam.openai.client.LoggingConfig
-import com.aallam.openai.client.OpenAI
-import com.aallam.openai.client.OpenAIHost
+import com.theokanning.openai.client.OpenAiApi
+import com.theokanning.openai.completion.chat.ChatCompletionRequest
+import com.theokanning.openai.completion.chat.ChatMessage
+import com.theokanning.openai.completion.chat.ChatMessageRole
+import com.theokanning.openai.service.OpenAiService
+import com.theokanning.openai.service.OpenAiService.*
 import flappy.*
+import okhttp3.OkHttpClient
+import java.time.Duration
 
 
-class ChatGPT @JvmOverloads constructor(
-  private val model: String,
-  private val chatGPTConfig: ChatGPTConfig? = null,
-  private val openai: OpenAI? = null,
+class ChatGPT(
+  private val chatGPTConfig: ChatGPTConfig,
 ) :
   FlappyLLMBase() {
+  override val defaultMaxTokens = -1
 
-  override fun close() {}
+  //  https://platform.openai.com/docs/models/overview
+  enum class OpenaiModel(val value: String) {
+    GPT3("gpt-3.5-turbo"),
+    GPT4("gpt-4"),
+    GPT4_32K("gpt-4-32k"),
+    GPT3_16K("gpt-3.5-turbo-16k")
+  }
 
-  class ChatGPTConfig @JvmOverloads constructor(val token: String, val host: String? = null)
+  private val connectDuration = Duration.ZERO
 
-  private val openaiClient =
-    openai ?: chatGPTConfig?.let {
-      OpenAI(
-        token = it.token,
-        logging = LoggingConfig(logLevel = LogLevel.All),
-        host = OpenAIHost(it.host ?: OpenAIHost.OpenAI.baseUrl)
-      )
-    }
-    ?: throw FlappyException.CompileException("openai client missing")
+  private val client: OkHttpClient = defaultClient(chatGPTConfig.token, connectDuration)
 
-  override val defaultMaxTokens: Int
-    get() {
-      // https://platform.openai.com/docs/models/overview
-      return when (model) {
-        "16k" -> 16385
-        "32k" -> 32768
-        "gpt-4" -> 8192
-        else -> 4096
-      }
+  private fun buildOpenAiService(config: ChatGPTConfig): OpenAiService {
+    val mapper = defaultObjectMapper()
+    val retrofit = if (config.host == null) {
+      defaultRetrofit(client, mapper)
+    } else {
+      defaultRetrofit(client, mapper).newBuilder().baseUrl(config.host).build()
     }
 
+    val api: OpenAiApi = retrofit.create(OpenAiApi::class.java)
+    return OpenAiService(api)
+  }
+
+  private val service: OpenAiService = buildOpenAiService(chatGPTConfig)
+
+  override fun close() {
+    client.dispatcher.executorService.shutdown()
+  }
+
+  class ChatGPTConfig @JvmOverloads constructor(
+    model: OpenaiModel? = null,
+    val token: String,
+    val host: String? = null
+  ) {
+    val chatGPTModel = model ?: OpenaiModel.GPT3
+  }
 
   override suspend fun chatComplete(
     messages: List<FlappyChatMessage>,
@@ -52,30 +62,30 @@ class ChatGPT @JvmOverloads constructor(
   ): LLMResponse {
     logger.info("openai input $messages")
 
-    val chatCompletionRequest = ChatCompletionRequest(
-      model = ModelId(model),
-      messages = messages.map {
-        ChatMessage(
-          role = (when (it.role) {
-            FlappyRole.ASSISTANT -> ChatRole.Assistant
-            FlappyRole.SYSTEM -> ChatRole.System
-            FlappyRole.USER -> ChatRole.User
-          }),
-          content = it.content
-        )
-      },
-      // maxTokens = config?.maxTokens ?: defaultMaxTokens,
-      temperature = config?.temperature,
-      topP = config?.topP
-    )
+    val chatMessages = messages.map {
+      ChatMessage(
+        (when (it.role) {
+          FlappyRole.ASSISTANT -> ChatMessageRole.ASSISTANT.value()
+          FlappyRole.SYSTEM -> ChatMessageRole.SYSTEM.value()
+          FlappyRole.USER -> ChatMessageRole.USER.value()
+        }),
+        it.content
+      )
+    }
 
-    val completion: ChatCompletion = openaiClient.chatCompletion(chatCompletionRequest)
+    val chatCompletionRequest =
+      ChatCompletionRequest.builder().model(chatGPTConfig.chatGPTModel.value).messages(chatMessages).n(1)
+        .topP(config?.topP)
+        .temperature(config?.temperature).build()
 
-    logger.info("openai output $completion")
-    val choice = completion.choices.firstOrNull()
+    val result = service.createChatCompletion(chatCompletionRequest)
+
+    logger.info("openai output $result")
+
+    val choice = result.choices.firstOrNull()
 
     return if (choice === null)
       LLMResponse.Fail("failed") else
-      LLMResponse.Success(choice.message.content!!)
+      LLMResponse.Success(choice.message.content)
   }
 }

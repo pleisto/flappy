@@ -63,7 +63,7 @@ dependencies {
   implementation("io.ktor:ktor-client-java-jvm:2.3.5")
   implementation("io.ktor:ktor-client-core:2.3.5")
   implementation("io.ktor:ktor-client-okhttp:2.3.5")
-  implementation("com.aallam.openai:openai-client:3.5.0")
+  implementation("com.theokanning.openai-gpt3-java:service:0.16.0")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
   implementation("com.pleisto:flappy-java-bindings:0.0.5")
@@ -108,7 +108,7 @@ mavenPublishing {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
+    languageVersion.set(JavaLanguageVersion.of(8))
   }
 }
 
@@ -153,7 +153,7 @@ tasks.withType<DokkaTask>().configureEach {
       suppressGeneratedFiles.set(true)
       includeNonPublic.set(false)
 
-      jdkVersion.set(11)
+      jdkVersion.set(8)
       includes.from(project.files(), "../README.md")
       sourceRoots.from(file("src/main"))
 

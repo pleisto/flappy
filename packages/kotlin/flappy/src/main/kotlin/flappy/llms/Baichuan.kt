@@ -22,7 +22,6 @@ internal fun calculateMd5(input: String): String {
 }
 
 class Baichuan @JvmOverloads constructor(
-  private val model: String? = null,
   private val baichuanConfig: BaichuanConfig,
 ) :
   FlappyLLMBase() {
@@ -32,9 +31,12 @@ class Baichuan @JvmOverloads constructor(
     client.close()
   }
 
-  private val baichuanModel = model ?: "Baichuan2-53B"
-
-  class BaichuanConfig(val baichuan_api_key: String, val baichuan_secret_key: String)
+  class BaichuanConfig(
+    model: String? = null,
+    val apiKey: String, val secretKey: String
+  ) {
+    val baichuanModel = model ?: "Baichuan2-53B"
+  }
 
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   data class BaichuanParameters(
@@ -89,7 +91,7 @@ class Baichuan @JvmOverloads constructor(
     val timestamp = Instant.now().epochSecond.toString()
 
     val body = BaichuanRequestBody(
-      model = baichuanModel,
+      model = baichuanConfig.baichuanModel,
       messages = messages.map {
         BaichuanRequestChatMessage(
           role = (when (it.role) {
@@ -105,7 +107,7 @@ class Baichuan @JvmOverloads constructor(
 
     val jsonBody = body.asString()
 
-    val signature = calculateMd5("${baichuanConfig.baichuan_secret_key}$jsonBody$timestamp")
+    val signature = calculateMd5("${baichuanConfig.secretKey}$jsonBody$timestamp")
 
     logger.info("baichuan input $messages -> $jsonBody, $timestamp")
 
@@ -116,7 +118,7 @@ class Baichuan @JvmOverloads constructor(
         contentType(ContentType.Application.Json)
         headers {
           append(HttpHeaders.ContentType, "application/json")
-          append(HttpHeaders.Authorization, "Bearer ${baichuanConfig.baichuan_api_key}")
+          append(HttpHeaders.Authorization, "Bearer ${baichuanConfig.apiKey}")
           append(HttpHeaders.AcceptLanguage, "*")
           append(HttpHeaders.AcceptEncoding, "gzip, deflate")
           append("X-BC-Request-Id", requestId)

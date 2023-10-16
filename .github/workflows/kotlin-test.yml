@@ -17,6 +17,9 @@ defaults:
   run:
     working-directory: packages/kotlin
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        java-version: [11, 17, 21]
+        java-version: [11, 21]
         kotlin-version: [1.9.10]
         kotlin-ir-enabled: [true]
         kotlin-test-mode: ['REFLECT']

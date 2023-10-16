@@ -71,19 +71,18 @@ suspend fun main(args: Array<String>) {
   val dotenv = dotenv()
 
   val chatGPT = ChatGPT(
-    model = "gpt-3.5-turbo",
-    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+    ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
   )
   val baichuan = Baichuan(
     baichuanConfig = Baichuan.BaichuanConfig(
-      baichuan_api_key = dotenv["BAICHUAN_API_KEY"],
-      baichuan_secret_key = dotenv["BAICHUAN_SECRET_KEY"]
+      apiKey = dotenv["BAICHUAN_API_KEY"],
+      secretKey = dotenv["BAICHUAN_SECRET_KEY"]
     )
   )
 
   val lawAgent = FlappyBaseAgent(
     maxRetry = 2,
-    inferenceLLM = baichuan,
+    inferenceLLM = chatGPT,
     functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
   )
 
