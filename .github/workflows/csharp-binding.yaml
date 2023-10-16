@@ -25,7 +25,7 @@ jobs:
             target: x86_64-apple-darwin
             artifact: libflappy_csharp_bindings.dylib
             build: |
-              cargo build --target x86_64-apple-darwin
+              cargo build -r --target x86_64-apple-darwin
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
@@ -33,7 +33,7 @@ jobs:
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               cargo install cargo-xwin
-              cargo build --target x86_64-pc-windows-gnu
+              cargo build -r --target x86_64-pc-windows-gnu
 
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -43,7 +43,7 @@ jobs:
               set -e && \
               sudo apt-get update
               sudo apt-get install build-essential perl pkg-config libssl-dev -y
-              cargo build --target x86_64-unknown-linux-gnu
+              cargo build -r --target x86_64-unknown-linux-gnu
 
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
@@ -52,13 +52,13 @@ jobs:
             build: |
               apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
-              cargo build --target x86_64-unknown-linux-musl
+              cargo build -r --target x86_64-unknown-linux-musl
 
           - host: macos-latest
             target: aarch64-apple-darwin
             artifact: libflappy_csharp_bindings.dylib
             build: |
-              cargo build --target aarch64-apple-darwin
+              cargo build -r --target aarch64-apple-darwin
               
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
@@ -73,7 +73,7 @@ jobs:
               export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" && \
               export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
-              cargo build --target aarch64-unknown-linux-gnu
+              cargo build -r --target aarch64-unknown-linux-gnu
 
           #- host: ubuntu-latest
           #  target: aarch64-linux-android
@@ -90,7 +90,7 @@ jobs:
           #    set -e
           #    apk add pkgconfig openssl-dev gcc g++ make perl
           #    rustup target add aarch64-unknown-linux-musl
-          #    cargo build --target aarch64-unknown-linux-musl
+          #    cargo build -r --target aarch64-unknown-linux-musl
 
     name: build and upload rust code - csharp
     runs-on: ${{ matrix.settings.host }}
@@ -133,5 +133,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: packages/rust-core/target/release/${{ matrix.settings.artifact }}
+          path: packages/rust-core/target/release/${{ matrix.settings.target}}/${{ matrix.settings.artifact }}
           if-no-files-found: error
