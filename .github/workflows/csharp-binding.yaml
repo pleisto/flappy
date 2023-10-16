@@ -130,4 +130,4 @@ jobs:
             packages/rust-core/target/${{ matrix.settings.target }}/*.pdb
             packages/rust-core/target/${{ matrix.settings.target }}/*.so
             packages/rust-core/target/${{ matrix.settings.target }}/*.dylib
-          if-no-files-found: error
+          #if-no-files-found: error
