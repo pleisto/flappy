@@ -20,7 +20,7 @@ defaults:
     working-directory: packages/rust-core/csharp
 
 jobs:
-  compile:
+  build:
     strategy:
       fail-fast: false
       matrix:
