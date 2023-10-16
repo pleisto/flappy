@@ -135,3 +135,45 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: "**/${{ matrix.settings.artifact }}"
           if-no-files-found: error
+
+
+  package-nuget:
+    needs: build
+    name: package and upload nuget package - csharp
+    strategy:
+      matrix:
+        target:
+          - x86_64-apple-darwin
+          - aarch64-unknown-linux-gnu
+          - aarch64-apple-darwin
+          - x86_64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-pc-windows-gnu
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-${{ matrix.target }}
+          path: ~/bindings-${{ matrix.target }}
+
+      - name: build nuget pkg
+        run: |
+          cd packages/rust-code/csharp/tools
+          dotnet build -c Release Pleisto.Flappy.Native.csproj
+
+      - name: publish nuget pkg
+        run: |
+          cd packages/rust-code/csharp/tools
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
+          done
