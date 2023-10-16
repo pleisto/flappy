@@ -17,6 +17,6 @@
     "openai": "^4.11.1"
   },
   "devDependencies": {
-    "openai": "^4.11.1"
+    "openai": "4.12.1"
   }
 }

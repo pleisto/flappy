@@ -2681,7 +2681,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pleisto/eslint-plugin@npm:^1.4.84":
+"@pleisto/eslint-plugin@npm:1.4.84":
   version: 1.4.84
   resolution: "@pleisto/eslint-plugin@npm:1.4.84"
   dependencies:
@@ -2717,9 +2717,9 @@ __metadata:
     "@angular-devkit/schematics": ^16.2.5
     "@angular-devkit/schematics-cli": ^16.2.5
     "@swc/core": 1.3.82
-    "@swc/helpers": ^0.5.3
-    "@types/node": ^20.8.4
-    "@types/yargs": ^17.0.28
+    "@swc/helpers": 0.5.3
+    "@types/node": 20.8.4
+    "@types/yargs": 17.0.28
     chalk: ^4.1.2
     jsonc: ^2.0.0
     ts-node: ^10.9.1
@@ -2737,12 +2737,12 @@ __metadata:
     "@docusaurus/module-type-aliases": 2.4.3
     "@docusaurus/preset-classic": 2.4.3
     "@mdx-js/react": ^1.6.22
-    "@tsconfig/docusaurus": ^1.0.7
+    "@tsconfig/docusaurus": 1.0.7
     clsx: ^2.0.0
     prism-react-renderer: ^1.3.5
     react: ^18.2.0
     react-dom: ^18.2.0
-    typescript: ^5.2.2
+    typescript: 5.2.2
   languageName: unknown
   linkType: soft
 
@@ -2761,7 +2761,7 @@ __metadata:
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:
     "@flappy/flappy-nodejs-bindings": "workspace:*"
-    openai: ^4.11.1
+    openai: 4.12.1
     radash: ^11.0.0
     zod: ^3.22.4
     zod-to-json-schema: ^3.21.4
@@ -3097,7 +3097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.5.3":
+"@swc/helpers@npm:0.5.3":
   version: 0.5.3
   resolution: "@swc/helpers@npm:0.5.3"
   dependencies:
@@ -3136,7 +3136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/docusaurus@npm:^1.0.7":
+"@tsconfig/docusaurus@npm:1.0.7":
   version: 1.0.7
   resolution: "@tsconfig/docusaurus@npm:1.0.7"
   checksum: 8f5b14005d90b2008f10daf03a5edec86d2a7603e5641c579ea936a5c2d165a8c3007a72254fc4c2adb0554d73062f52bb97b30ff818f01c9215957822f3c4db
@@ -3380,7 +3380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.8.4":
+"@types/node@npm:*, @types/node@npm:20.8.4":
   version: 20.8.4
   resolution: "@types/node@npm:20.8.4"
   dependencies:
@@ -3589,7 +3589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:^17.0.28, @types/yargs@npm:^17.0.8":
+"@types/yargs@npm:17.0.28, @types/yargs@npm:^17.0.8":
   version: 17.0.28
   resolution: "@types/yargs@npm:17.0.28"
   dependencies:
@@ -5220,7 +5220,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commitizen@npm:^4.0.3, commitizen@npm:^4.3.0":
+"commitizen@npm:4.3.0, commitizen@npm:^4.0.3":
   version: 4.3.0
   resolution: "commitizen@npm:4.3.0"
   dependencies:
@@ -5727,7 +5727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cz-conventional-changelog@npm:3.3.0, cz-conventional-changelog@npm:^3.3.0":
+"cz-conventional-changelog@npm:3.3.0":
   version: 3.3.0
   resolution: "cz-conventional-changelog@npm:3.3.0"
   dependencies:
@@ -6667,7 +6667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.51.0":
+"eslint@npm:8.51.0":
   version: 8.51.0
   resolution: "eslint@npm:8.51.0"
   dependencies:
@@ -7184,15 +7184,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "flappy-monorepo-root@workspace:."
   dependencies:
-    "@pleisto/eslint-plugin": ^1.4.84
-    "@types/node": ^20.8.4
-    commitizen: ^4.3.0
-    cz-conventional-changelog: ^3.3.0
-    eslint: ^8.51.0
-    husky: ^8.0.3
-    lint-staged: ^14.0.1
-    prettier: ^3.0.3
-    typescript: ^5.2.2
+    "@pleisto/eslint-plugin": 1.4.84
+    "@types/node": 20.8.4
+    commitizen: 4.3.0
+    cz-conventional-changelog: 3.3.0
+    eslint: 8.51.0
+    husky: 8.0.3
+    lint-staged: 14.0.1
+    prettier: 3.0.3
+    typescript: 5.2.2
   languageName: unknown
   linkType: soft
 
@@ -8169,7 +8169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^8.0.3":
+"husky@npm:8.0.3":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
   bin:
@@ -9278,7 +9278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^14.0.1":
+"lint-staged@npm:14.0.1":
   version: 14.0.1
   resolution: "lint-staged@npm:14.0.1"
   dependencies:
@@ -10362,7 +10362,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.11.1":
+"openai@npm:4.12.1, openai@npm:^4.11.1":
   version: 4.12.1
   resolution: "openai@npm:4.12.1"
   dependencies:
@@ -11218,7 +11218,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.0.3":
+"prettier@npm:3.0.3":
   version: 3.0.3
   resolution: "prettier@npm:3.0.3"
   bin:
@@ -13322,7 +13322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4 || ^5.0.0, typescript@npm:^5.2.2":
+"typescript@npm:5.2.2, typescript@npm:^4.6.4 || ^5.0.0, typescript@npm:^5.2.2":
   version: 5.2.2
   resolution: "typescript@npm:5.2.2"
   bin:
@@ -13332,7 +13332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.4 || ^5.0.0#~builtin<compat/typescript>, typescript@patch:typescript@^5.2.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4 || ^5.0.0#~builtin<compat/typescript>, typescript@patch:typescript@^5.2.2#~builtin<compat/typescript>":
   version: 5.2.2
   resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=f3b441"
   bin:
