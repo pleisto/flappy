@@ -27,6 +27,13 @@ jobs:
             build: |
               cargo build -r --target x86_64-apple-darwin
 
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            artifact: libflappy_csharp_bindings.dylib
+            build: |
+              cargo build -r --target aarch64-apple-darwin
+              
+
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
             artifact: flappy_csharp_bindings.dll
@@ -54,12 +61,7 @@ jobs:
               set -e
               cargo build -r --target x86_64-unknown-linux-musl
 
-          - host: macos-latest
-            target: aarch64-apple-darwin
-            artifact: libflappy_csharp_bindings.dylib
-            build: |
-              cargo build -r --target aarch64-apple-darwin
-              
+
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
@@ -82,15 +84,15 @@ jobs:
           #    cargo build --target aarch64-linux-android
           #    ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
 
-          #- host: ubuntu-latest
-          #  target: aarch64-unknown-linux-musl
-          #  docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-          #  artifact: target/x86_64-apple-darwin/*.so
-          #  build: |-
-          #    set -e
-          #    apk add pkgconfig openssl-dev gcc g++ make perl
-          #    rustup target add aarch64-unknown-linux-musl
-          #    cargo build -r --target aarch64-unknown-linux-musl
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            artifact: target/x86_64-apple-darwin/*.so
+            build: |-
+              set -e
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              rustup target add aarch64-unknown-linux-musl
+              cargo build -r --target aarch64-unknown-linux-musl
 
     name: build and upload rust code - csharp
     runs-on: ${{ matrix.settings.host }}
@@ -136,20 +138,10 @@ jobs:
           path: "**/${{ matrix.settings.artifact }}"
           if-no-files-found: error
 
-
   package-nuget:
     needs: build
     runs-on: ubuntu-latest
     name: package and upload nuget package - csharp
-    strategy:
-      matrix:
-        target:
-          - x86_64-apple-darwin
-          - aarch64-unknown-linux-gnu
-          - aarch64-apple-darwin
-          - x86_64-unknown-linux-musl
-          - x86_64-unknown-linux-gnu
-          - x86_64-pc-windows-gnu
 
     steps:
       - uses: actions/checkout@v3
@@ -157,11 +149,46 @@ jobs:
         with:
           nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
 
+
+
+
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: bindings-${{ matrix.target }}
-          path: ~/bindings-${{ matrix.target }}
+          name: bindings-x86_64-apple-darwin
+          path: ~/artifacts/bindings-x86_64-apple-darwin
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-aarch64-unknown-linux-gnu
+          path: ~/artifacts/bindings-aarch64-unknown-linux-gnu
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-aarch64-apple-darwin
+          path: ~/artifacts/bindings-aarch64-apple-darwin
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-unknown-linux-musl
+          path: ~/artifacts/bindings-x86_64-unknown-linux-musl
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-unknown-linux-gnu
+          path: ~/artifacts/bindings-x86_64-unknown-linux-gnu
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-pc-windows-gnu
+          path: ~/artifacts/bindings-x86_64-pc-windows-gnu
+
+
 
       - name: build nuget pkg
         run: |
