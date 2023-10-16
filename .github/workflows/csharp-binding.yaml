@@ -23,13 +23,13 @@ jobs:
         settings:
           - host: [self-hosted, macOS, ARM64]
             target: x86_64-apple-darwin
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.dylib
+            artifact: target/x86_64-apple-darwin/*.dylib
             build: |
               cargo build --target x86_64-apple-darwin
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.dll
+            artifact: target/x86_64-apple-darwin/*.dll
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               cargo install cargo-xwin
@@ -38,7 +38,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.so
+            artifact: target/x86_64-apple-darwin/*.so
             build: |-
               set -e && \
               sudo apt-get update
@@ -48,7 +48,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.so
+            artifact: target/x86_64-apple-darwin/*.so
             build: |
               apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
@@ -56,14 +56,14 @@ jobs:
 
           - host: macos-latest
             target: aarch64-apple-darwin
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.dylib
+            artifact: target/x86_64-apple-darwin/*.dylib
             build: |
               cargo build --target aarch64-apple-darwin
               
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
-            artifact: packages/rust-core/target/x86_64-apple-darwin/*.so
+            artifact: target/x86_64-apple-darwin/*.so
             build: |-
               set -e && \
               sudo apt-get update && \
@@ -77,7 +77,7 @@ jobs:
 
           #- host: ubuntu-latest
           #  target: aarch64-linux-android
-          #  artifact: packages/rust-core/target/x86_64-apple-darwin/*.so
+          #  artifact: target/x86_64-apple-darwin/*.so
           #  build: |
           #    cargo build --target aarch64-linux-android
           #    ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
@@ -85,7 +85,7 @@ jobs:
           #- host: ubuntu-latest
           #  target: aarch64-unknown-linux-musl
           #  docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-          #  artifact: packages/rust-core/target/x86_64-apple-darwin/*.so
+          #  artifact: target/x86_64-apple-darwin/*.so
           #  build: |-
           #    set -e
           #    apk add pkgconfig openssl-dev gcc g++ make perl
@@ -134,4 +134,4 @@ jobs:
         with:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ matrix.settings.artifact }}
-          #if-no-files-found: error
+          if-no-files-found: error
