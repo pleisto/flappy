@@ -138,7 +138,7 @@ suspend fun main(args: Array<String>) {
   )
 
   val resumeAgent = FlappyBaseAgent(
-    inferenceLLM = baichuan,
+    inferenceLLM = chatGPT,
     functions = listOf(resumeGetMeta, getFrontendEngineerResumes),
     maxRetry = 2
   )

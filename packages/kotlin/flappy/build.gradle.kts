@@ -108,7 +108,7 @@ mavenPublishing {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
+    languageVersion.set(JavaLanguageVersion.of(8))
   }
 }
 
@@ -153,7 +153,7 @@ tasks.withType<DokkaTask>().configureEach {
       suppressGeneratedFiles.set(true)
       includeNonPublic.set(false)
 
-      jdkVersion.set(11)
+      jdkVersion.set(8)
       includes.from(project.files(), "../README.md")
       sourceRoots.from(file("src/main"))
 
