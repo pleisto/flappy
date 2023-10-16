@@ -82,7 +82,7 @@ jobs:
               set -e &&
               apk add pkgconfig openssl-dev gcc g++ make perl &&
               rustup target add aarch64-unknown-linux-musl &&
-              cargo build: --target aarch64-unknown-linux-musl
+              cargo build --target aarch64-unknown-linux-musl
 
     name: build and upload rust code - csharp
     runs-on: ${{ matrix.settings.host }}
