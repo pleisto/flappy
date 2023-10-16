@@ -44,7 +44,5 @@
     </None>
     <None Include="~/artifacts/x86_64-unknown-linux-musl/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-musl-x64/native/libflappy_csharp_bindings.so" Visible="True">
     </None>
-    <None Include="~/artifacts/aarch64-unknown-linux-musl/libflappy_csharp_bindings.so" PackagePath="runtimes/linux-musl-arm64/native/libflappy_csharp_bindings.so" Visible="True">
-    </None>
   </ItemGroup>
 </Project>
