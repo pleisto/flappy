@@ -131,8 +131,8 @@ jobs:
 
       - name: ShowTargets
         run: |
-          cd packages/rust-core/target
-          find -maxdepth 3 -type f 
+          cd packages/rust-core/target/release
+          ls
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
