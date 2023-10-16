@@ -1,5 +1,12 @@
 name: CSharp Bindings Publish
 
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
@@ -10,10 +17,6 @@ on:
 defaults:
   run:
     working-directory: packages/rust-core/csharp
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
-  cancel-in-progress: true
 
 jobs:
   compile:
