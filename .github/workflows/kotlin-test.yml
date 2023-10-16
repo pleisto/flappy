@@ -13,6 +13,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: packages/kotlin
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -24,15 +28,24 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        java-version: [ 19 ]
-        kotlin-version: [ 1.9.10 ]
-        kotlin-ir-enabled: [ true ]
-        kotlin-test-mode: [ 'REFLECT' ]
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        java-version: [11, 17, 21]
+        kotlin-version: [1.9.10]
+        kotlin-ir-enabled: [true]
+        kotlin-test-mode: ['REFLECT']
+        include:
+          - os: ubuntu-latest
+            excludeJniTests: false
+          - os: macos-latest
+            excludeJniTests: true
+          - os: windows-latest
+            excludeJniTests: true
         # kotlin-test-mode: [ 'REFLECT', 'KSP', 'KAPT' ]
-    name: "[java=${{ matrix.java-version }}, kotlin=${{ matrix.kotlin-version }}, IR=${{ matrix.kotlin-ir-enabled }}]"
+    name: '<${{ matrix.os }}> [java=${{ matrix.java-version }}, kotlin=${{ matrix.kotlin-version }}, IR=${{ matrix.kotlin-ir-enabled }}]'
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -51,9 +64,10 @@ jobs:
 
       - name: Run tests with Gradle
         run: >
-          cd packages/kotlin && ./gradlew build check
+          ./gradlew build check
           --stacktrace
-          -Pkotlin.version=${{ matrix.kotlin-version }}
-          -Pkotlin.ir.enabled=${{ matrix.kotlin-ir-enabled }}
-          -PjavaToolchainTestVersion=${{ matrix.java-version }}
-          -PkotlinTestMode=${{ matrix.kotlin-test-mode }}
+          -P"excludeJniTests=${{ matrix.excludeJniTests }}"
+          -P"kotlin.version=${{ matrix.kotlin-version }}"
+          -P"kotlin.ir.enabled=${{ matrix.kotlin-ir-enabled }}"
+          -P"javaToolchainTestVersion=${{ matrix.java-version }}"
+          -P"kotlinTestMode=${{ matrix.kotlin-test-mode }}"

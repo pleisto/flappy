@@ -87,6 +87,11 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Rust cache
+        uses: ./.github/workflows/rust-cache
+        with:
+          cache_key: ${{matrix.os}}
+
       - name: Local staging
         shell: bash
         run: |
