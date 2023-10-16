@@ -17,6 +17,9 @@ defaults:
   run:
     working-directory: packages/kotlin
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+
 jobs:
   validate:
     runs-on: ubuntu-latest

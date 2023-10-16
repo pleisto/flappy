@@ -16,7 +16,6 @@ repositories {
 dependencies {
   implementation(project(mapOf("path" to ":flappy")))
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-  implementation("com.aallam.openai:openai-client:3.4.1")
   testImplementation(platform("org.junit:junit-bom:5.9.1"))
   testImplementation("org.junit.jupiter:junit-jupiter")
 }
