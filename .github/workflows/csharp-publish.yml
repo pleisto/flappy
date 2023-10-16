@@ -21,14 +21,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3
         with:
           dotnet-version: |
             3.1
             6.0
             7.0
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3
         with:
           path: ~/.nuget/packages
           # Look to see if there is a cache hit for the corresponding requirements file
@@ -36,11 +36,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - uses: nuget/setup-nuget@v1
+      - uses: nuget/setup-nuget@296fd3ccf8528660c91106efefe2364482f86d6f # v1
         with:
           nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
       - name: dotnet publish
         run: |
           dotnet build -c Release
