@@ -32,8 +32,19 @@ public class SandboxTest {
         FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
                 .get();
         assertThat(result).isNotNull();
-        System.out.println(result);
         assertThat(result.stdout).isEqualTo("hello world\n");
+        assertThat(result.stderr).isEqualTo("");
+    }
+
+    @Test
+    public void evalDumb() throws ExecutionException, InterruptedException {
+        final FlappyJniSandbox op = new FlappyJniSandbox();
+        String code = "1+1";
+        FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
+                .get();
+        assertThat(result).isNotNull();
+        assertThat(result.stdout).isEqualTo("");
+        assertThat(result.stderr).isEqualTo("");
     }
 
     @Test
