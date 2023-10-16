@@ -133,5 +133,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: packages/rust-core/target/release/*${{ matrix.settings.artifact }}
+          path: packages/rust-core/target/release/${{ matrix.settings.artifact }}
           if-no-files-found: error
