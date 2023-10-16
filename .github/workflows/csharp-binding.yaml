@@ -192,12 +192,12 @@ jobs:
 
       - name: build nuget pkg
         run: |
-          cd packages/rust-code/csharp/tools
+          cd packages/rust-core/csharp/tools
           dotnet build -c Release Pleisto.Flappy.Native.csproj
 
       - name: publish nuget pkg
         run: |
-          cd packages/rust-code/csharp/tools
+          cd packages/rust-core/csharp/tools
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"
             nuget push $line \
