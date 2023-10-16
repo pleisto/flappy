@@ -15,10 +15,6 @@ on:
     # paths:
     #   - 'packages/rust-core/charp/**'
 
-defaults:
-  run:
-    working-directory: packages/rust-core/csharp
-
 jobs:
   build:
     strategy:
@@ -115,12 +111,15 @@ jobs:
         with:
           image: ${{ matrix.settings.docker }}
           options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-          run: ${{ matrix.settings.build }}
+          run: |
+            cd packages/rust-core
+            ${{ matrix.settings.build }}
 
       - name: Build
         run: ${{ matrix.settings.build }}
         if: ${{ !matrix.settings.docker }}
         shell: bash
+        working-directory: packages/rust-core
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
