@@ -131,8 +131,7 @@ jobs:
 
       - name: ShowTargets
         run: |
-          cd packages/rust-core/target/release
-          ls
+          find
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
