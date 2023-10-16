@@ -23,13 +23,13 @@ jobs:
         settings:
           - host: [self-hosted, macOS, ARM64]
             target: x86_64-apple-darwin
-            artifact: .dylib
+            artifact: libflappy_csharp_bindings.dylib
             build: |
               cargo build --target x86_64-apple-darwin
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
-            artifact: .dll
+            artifact: flappy_csharp_bindings.dll
             build: |
               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
               cargo install cargo-xwin
@@ -38,7 +38,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
-            artifact: .so
+            artifact: libflappy_csharp_bindings.so
             build: |-
               set -e && \
               sudo apt-get update
@@ -48,7 +48,7 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            artifact: .so
+            artifact: libflappy_csharp_bindings.so
             build: |
               apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
@@ -56,14 +56,14 @@ jobs:
 
           - host: macos-latest
             target: aarch64-apple-darwin
-            artifact: target/x86_64-apple-darwin/*.dylib
+            artifact: libflappy_csharp_bindings.dylib
             build: |
               cargo build --target aarch64-apple-darwin
               
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
-            artifact: .so
+            artifact: libflappy_csharp_bindings.so
             build: |-
               set -e && \
               sudo apt-get update && \
