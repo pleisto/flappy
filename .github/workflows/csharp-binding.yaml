@@ -179,13 +179,6 @@ jobs:
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: bindings-aarch64-unknown-linux-musl
-          path: ~/artifacts/bindings-aarch64-unknown-linux-musl
-
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
           name: bindings-x86_64-unknown-linux-gnu
           path: ~/artifacts/bindings-x86_64-unknown-linux-gnu
 
