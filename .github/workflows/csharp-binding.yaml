@@ -139,6 +139,7 @@ jobs:
 
   package-nuget:
     needs: build
+    runs-on: ubuntu-latest
     name: package and upload nuget package - csharp
     strategy:
       matrix:
