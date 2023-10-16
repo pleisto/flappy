@@ -46,8 +46,8 @@ jobs:
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |
-              apk add pkgconfig openssl-dev gcc g++ make perl && \
-              set -e && \
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              set -e
               cargo build --target x86_64-unknown-linux-musl
 
           - host: macos-latest
@@ -59,14 +59,14 @@ jobs:
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             build: |-
-              set -e &&
-              sudo apt-get update &&
-              sudo apt-get install build-essential -y &&
-              sudo apt-get install perl -y &&
-              sudo apt-get install pkg-config libssl-dev -y &&
-              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
-              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
-              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
+              set -e
+              sudo apt-get update
+              sudo apt-get install build-essential -y
+              sudo apt-get install perl -y
+              sudo apt-get install pkg-config libssl-dev -y
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5"
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               cargo build --target aarch64-unknown-linux-gnu
 
           - host: ubuntu-latest
@@ -79,9 +79,9 @@ jobs:
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |-
-              set -e &&
-              apk add pkgconfig openssl-dev gcc g++ make perl &&
-              rustup target add aarch64-unknown-linux-musl &&
+              set -e
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              rustup target add aarch64-unknown-linux-musl
               cargo build --target aarch64-unknown-linux-musl
 
     name: build and upload rust code - csharp
