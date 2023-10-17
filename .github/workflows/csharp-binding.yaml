@@ -156,49 +156,70 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: bindings-x86_64-apple-darwin
-          path: ~/artifacts/bindings-x86_64-apple-darwin
+          path: ~/artifacts/
 
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
           name: bindings-aarch64-unknown-linux-gnu
-          path: ~/artifacts/bindings-aarch64-unknown-linux-gnu
+          path: ~/artifacts/
 
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
           name: bindings-aarch64-apple-darwin
-          path: ~/artifacts/bindings-aarch64-apple-darwin
+          path: ~/artifacts/
 
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
           name: bindings-x86_64-unknown-linux-musl
-          path: ~/artifacts/bindings-x86_64-unknown-linux-musl
+          path: ~/artifacts/
 
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
           name: bindings-x86_64-unknown-linux-gnu
-          path: ~/artifacts/bindings-x86_64-unknown-linux-gnu
+          path: ~/artifacts/
 
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
           name: bindings-x86_64-pc-windows-gnu
-          path: ~/artifacts/bindings-x86_64-pc-windows-gnu
+          path: ~/artifacts/
+
+      - name: make runtimes dir
+        run:
+          dcp() {
+            local target=$2
+            local src=$1
+            mkdir -p $target
+            cp -v $src $target
+          }
+
+          mkdir -p ~/nuget
+          dcp ~/artifacts/packages/rust-core/target/x86_64-pc-windows-gnu/release/flappy_csharp_bindings.dll ~/runtimes/win-x64/
+
+          dcp ~/artifacts/packages/rust-core/target/aarch64-apple-darwin/release/libflappy_csharp_bindings.dylib ~/nuget/runtimes/osx-arm64/
+          dcp ~/artifacts/packages/rust-core/target/x86_64-apple-darwin/release/libflappy_csharp_bindings.dylib ~/nuget/runtimes/osx-x64/
+
+          dcp ~/artifacts/packages/rust-core/target/x86_64-unknown-linux-gnu/release/libflappy_csharp_bindings.so ~/nuget/runtimes/linux-x64/
+          dcp ~/artifacts/packages/rust-core/target/aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so ~/nuget/runtimes/linux-arm64/
+          dcp ~/artifacts/packages/rust-core/target/aarch64-unknown-linux-musl/release/libflappy_csharp_bindings.so ~/nuget/runtimes/linux-musl-x64/
 
 
-      - name: build nuget pkg
-        run: |
-          cd packages/rust-core/csharp/tools
-          dotnet build -c Release Pleisto.Flappy.Native.csproj
+          cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
+
+          tar cvf ~/nuget.tar ~/nuget 
+          gzip -9 ~/nuget.tar
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: "**/*.nupkg"
+          path: |
+            **/*.nupkg
+            ~/nuget.tar.gz
           if-no-files-found: error
 
       #- name: publish nuget pkg
