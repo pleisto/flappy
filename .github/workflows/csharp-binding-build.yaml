@@ -215,7 +215,7 @@ jobs:
         run: |
           cp LICENSE ~/nuget/
           cp README.md ~/nuget/
-          
+
           cd ~/nuget
           dotnet build -c Release Pleisto.Flappy.Native.csproj
 
@@ -227,6 +227,7 @@ jobs:
             ~/nuget/**/*.nupkg
             ~/nuget.tar.gz
           if-no-files-found: error
+
 
       #- name: publish nuget pkg
       #  run: |
