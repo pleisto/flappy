@@ -21,12 +21,12 @@ Flappy 还提供了类似于 OpenAI 的代码解释器的功能。它在**生产
 要开始使用 Flappy，请从下面的列表中选择你所需要的语言实现：
 
 - [Node.js](./packages/nodejs/README.md)
-- [Kotlin](./packages/kotlin/README.md)
-- [Python](./packages/python/README.md)
+- [Kotlin&Java](./packages/kotlin/README.md)
+- Ruby（即将推出）
 - PHP（即将推出）
-- Java（即将推出）
 - [C#](./packages/csharp/README.md)
 - Go（即将推出）
+- Python(即将推出)
 
 ## 贡献
 

@@ -1,0 +1,54 @@
+name: Rust Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'packages/rust-core/**'
+      - '.github/workflows/rust-test.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+  RUST_LOG: debug
+  # Disable full debug symbol generation to speed up CI build and keep memory down
+  # "1" means line tables only, which is useful for panic tracebacks.
+  RUSTFLAGS: -C debuginfo=1
+
+defaults:
+  run:
+    working-directory: packages/rust-core
+
+jobs:
+  tests:
+    name: Rust test ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          # - windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust cache
+        uses: ./.github/workflows/rust-cache
+        with:
+          cache_key: ${{matrix.os}}
+
+      - name: DEBUG
+        run: rustup toolchain list -v
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Test
+        run: cargo test --verbose
+

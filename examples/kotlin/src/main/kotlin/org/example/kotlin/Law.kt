@@ -4,6 +4,7 @@ import flappy.FlappyBaseAgent
 import flappy.annotations.FlappyField
 import flappy.functions.FlappyInvokeFunction
 import flappy.functions.FlappySynthesizedFunction
+import flappy.llms.Baichuan
 import flappy.llms.ChatGPT
 import io.github.cdimascio.dotenv.dotenv
 
@@ -69,16 +70,25 @@ const val LAW_EXECUTE_PLAN_PROMPT =
 suspend fun main(args: Array<String>) {
   val dotenv = dotenv()
 
-  val llm = ChatGPT(
-    model = "gpt-3.5-turbo",
-    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  val chatGPT = ChatGPT(
+    ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
   )
+  val baichuan = Baichuan(
+    baichuanConfig = Baichuan.BaichuanConfig(
+      apiKey = dotenv["BAICHUAN_API_KEY"],
+      secretKey = dotenv["BAICHUAN_SECRET_KEY"]
+    )
+  )
+
   val lawAgent = FlappyBaseAgent(
     maxRetry = 2,
-    inferenceLLM = llm,
+    inferenceLLM = chatGPT,
     functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
   )
 
-  lawAgent.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+  lawAgent.use {
+    it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+  }
+
 //    lawAgent.callFunction("getMeta", MetaArguments(MOCK_LAWSUIT_DATA))
 }

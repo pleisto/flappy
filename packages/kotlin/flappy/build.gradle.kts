@@ -20,6 +20,8 @@ plugins {
 
   id("com.vanniktech.maven.publish") version "0.25.3"
 
+  id("com.google.osdetector") version "1.7.3"
+
   signing
 }
 
@@ -59,9 +61,13 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
 
   implementation("io.ktor:ktor-client-java-jvm:2.3.5")
-  implementation("com.aallam.openai:openai-client:3.5.0")
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+  implementation("io.ktor:ktor-client-core:2.3.5")
+  implementation("io.ktor:ktor-client-okhttp:2.3.5")
+  implementation("com.theokanning.openai-gpt3-java:service:0.16.0")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+  implementation("com.pleisto:flappy-java-bindings:0.0.5")
+  implementation("com.pleisto:flappy-java-bindings:0.0.5:${osdetector.classifier}")
 }
 
 mavenPublishing {
@@ -87,11 +93,14 @@ mavenPublishing {
         id.set("clszzyh")
         name.set("Yuhang Shi")
         url.set("https://github.com/clszzyh")
+        organization.set("pleisto")
+        organizationUrl.set("https://github.com/pleisto")
       }
     }
 
     scm {
       url.set("https://github.com/pleisto/flappy")
+      connection.set("scm:git:https://git@github.com/pleisto/flappy.git")
     }
   }
 }
@@ -99,7 +108,7 @@ mavenPublishing {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(19))
+    languageVersion.set(JavaLanguageVersion.of(8))
   }
 }
 
@@ -112,6 +121,13 @@ tasks.test {
 
   testLogging {
     events("passed")
+  }
+
+  failFast = true
+
+  if (project.hasProperty("excludeJniTests") && (project.property("excludeJniTests") as String).toBooleanStrict()) {
+    exclude("**/*JniTest*")
+//    exclude(project.property("excludeTests") as String)
   }
 
 }
@@ -137,7 +153,7 @@ tasks.withType<DokkaTask>().configureEach {
       suppressGeneratedFiles.set(true)
       includeNonPublic.set(false)
 
-      jdkVersion.set(19)
+      jdkVersion.set(8)
       includes.from(project.files(), "../README.md")
       sourceRoots.from(file("src/main"))
 

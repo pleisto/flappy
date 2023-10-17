@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/gradle.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/gradle.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/kotlin-test.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/kotlin-test.yml)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue)](https://central.sonatype.com/artifact/com.pleisto/flappy)
 [![Documentation](https://javadoc.io/badge/com.pleisto/flappy.svg)](https://javadoc.io/doc/com.pleisto/flappy)
 
@@ -27,11 +27,10 @@ This package is the Kotlin version of the flappy implementation.
 In Gradle(Kotlin), add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
-implementation("com.pleisto:flappy:0.0.5")
+implementation("com.pleisto:flappy:0.0.6")
 ```
 
 In other build system, please refer to [here](https://central.sonatype.com/artifact/com.pleisto/flappy)
-
 
 ## Usage
 
@@ -95,12 +94,12 @@ class LawMetaReturn {
   List<String> judgeOptions;
 }
 
-FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
-  "getMeta",
-  "Extract meta data from a lawsuit full text.",
-  LawMetaArguments.class,
-  LawMetaReturn.class
-);
+  FlappyFunction<?, ?> lawGetMeta = new FlappySynthesizedFunction(
+    "getMeta",
+    "Extract meta data from a lawsuit full text.",
+    LawMetaArguments.class,
+    LawMetaReturn.class
+  );
 ```
 
 </details>
@@ -165,13 +164,13 @@ static class GetLatestLawsuitsReturn {
   }
 }
 
-FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
-  "getLatestLawsuitsByPlaintiff",
-  "Get the latest lawsuits by plaintiff.",
-  GetLatestLawsuitsArguments.class,
-  GetLatestLawsuitsReturn.class,
-  (a, agent, $completion) -> new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)
-);
+  FlappyFunction<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
+    "getLatestLawsuitsByPlaintiff",
+    "Get the latest lawsuits by plaintiff.",
+    GetLatestLawsuitsArguments.class,
+    GetLatestLawsuitsReturn.class,
+    (a, agent, $completion) -> new GetLatestLawsuitsReturn(MOCK_LAWSUIT_DATA)
+  );
 ```
 
 </details>
@@ -202,10 +201,10 @@ val lawAgent = FlappyBaseAgent(
   <summary>Java</summary>
 
 ```java
-ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
-FlappyBaseAgent lawAgent = new FlappyBaseAgent(
-  llm, List.of(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
-);
+ChatGPT llm=new ChatGPT("gpt-3.5-turbo",new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"),dotenv.get("OPENAI_API_BASE")));
+  FlappyBaseAgent lawAgent=new FlappyBaseAgent(
+  llm,Arrays.asList(lawGetMeta,lawGetLatestLawsuitsByPlaintiff)
+  );
 ```
 
 </details>
@@ -224,5 +223,5 @@ FlappyBaseAgent lawAgent = new FlappyBaseAgent(
 
 ## What's next
 
-- Template engine
-- Sandbox
+- Template Engine
+- Code Interpreter

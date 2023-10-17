@@ -9,45 +9,44 @@ import flappy.functions.FlappySynthesizedFunction;
 import flappy.llms.ChatGPT;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class Resume {
-  public static final String RESUME_EXECUTE_PLAN_PROMPT = "找到前端工程师的简历并返回他的元数据";
-  static final String MOCK_RESUME_DATA = """
-    我是一名资深的软件工程师，拥有超过七年的前端开发经验。我热衷于构建出色的用户界面，熟练运用HTML、CSS和JavaScript，并精通React、Vue以及Angular等前端框架。我曾参与过多个大型项目，负责设计和实现前端架构，确保网站的高性能和用户友好性。此外，我还具备项目管理的经验，能够带领团队按时交付高质量的成果。
-
-    ### 项目经历
-
-    #### 1. 电商网站重构 (ABC 公司)
-    - 负责参与了ABC公司旗下电商网站的重构项目，担任前端技术负责人。
-    - 使用React框架重建网站前端，实现了页面响应式设计和动态加载功能，提升了用户体验。
-    - 优化前端性能，减少了页面加载时间，提高了网站整体性能。
-    - 设计并实施了用户行为跟踪和分析系统，为市场营销团队提供了关键的数据支持。
-
-    #### 2. 社交媒体应用开发 (XYZ 创业公司)
-    - 领导一个四人的前端开发团队，从零开始开发了一款社交媒体应用。
-    - 采用了Vue.js框架和Vuex进行状态管理，实现了实时聊天、帖子发布和用户互动功能。
-    - 集成了第三方登录和分享功能，提升了用户注册和活跃度。
-    - 成功将应用推向市场，用户数量从零增长到五万以上。
-
-    #### 3. 内部管理系统升级 (DEF 企业)
-    - 负责升级公司内部管理系统，从传统的后端渲染转变为现代化的前后端分离架构。
-    - 使用Angular框架开发新的前端界面，实现了快速的数据加载和交互功能。
-    - 利用GraphQL优化了与后端的数据通信，减少了不必要的请求次数，提高了系统效率。
-    - 通过培训和文档编写，帮助团队成员顺利过渡到新的技术栈。
-
-    ### 技能和专业知识
-
-    - 前端技术: HTML, CSS, JavaScript, React, Vue, Angular, Redux, GraphQL
-    - 前端工具: Webpack, Babel, ESLint
-    - 项目管理: Agile, Scrum, Jira
-
-    ### 教育背景
-
-    - 学士学位，计算机科学，北京大学，2012年
-    """;
+  public static final String RESUME_EXECUTE_PLAN_PROMPT = "Find the resume of a frontend engineer and return their metadata.";
+  static final String MOCK_RESUME_DATA = "I am a seasoned software engineer with over seven years of experience in front-end development. I am passionate about building excellent user interfaces, proficient in HTML, CSS, and JavaScript, and have a deep understanding of front-end frameworks such as React, Vue, and Angular. I have participated in several large-scale projects, responsible for designing and implementing front-end architecture, ensuring high performance and user-friendliness of websites. In addition, I also have project management experience, capable of leading teams to deliver high-quality outputs on time.\n" +
+                                         "\n" +
+                                         "### Project Experience\n" +
+                                         "\n" +
+                                         "#### 1. E-commerce Website Refactoring (ABC Company)\n" +
+                                         "- Participated in the refactoring project of an e-commerce website under ABC Company, serving as the front-end technical lead.\n" +
+                                         "- Rebuilt the website frontend using the React framework, implemented responsive design and dynamic loading features, improving the user experience.\n" +
+                                         "- Optimized front-end performance, reducing page loading time, and improving the overall website performance.\n" +
+                                         "- Designed and implemented a system for user behavior tracking and analysis, providing crucial data support for the marketing team.\n" +
+                                         "\n" +
+                                         "#### 2. Social Media Application Development (XYZ Startup)\n" +
+                                         "- Led a four-person front-end development team, developed a social media application from scratch.\n" +
+                                         "- Adopted the Vue.js framework and Vuex for state management, implemented real-time chat, post publishing, and user interaction features.\n" +
+                                         "- Integrated third-party login and sharing features, enhancing user registration and activity.\n" +
+                                         "- Successfully launched the application to the market, with the user count growing from zero to over 50,000.\n" +
+                                         "\n" +
+                                         "#### 3. Internal Management System Upgrade (DEF Enterprise)\n" +
+                                         "- Responsible for upgrading the company's internal management system, transitioning from traditional back-end rendering to a modern front-end and back-end separate architecture.\n" +
+                                         "- Developed a new front-end interface using the Angular framework, realized fast data loading and interactive features.\n" +
+                                         "- Optimized data communication with the back-end using GraphQL, reducing unnecessary request times, and improving system efficiency.\n" +
+                                         "- Facilitated the transition of team members to the new technology stack through training and documentation.\n" +
+                                         "\n" +
+                                         "### Skills and Expertise\n" +
+                                         "\n" +
+                                         "- Front-end technologies: HTML, CSS, JavaScript, React, Vue, Angular, Redux, GraphQL\n" +
+                                         "- Front-end tools: Webpack, Babel, ESLint\n" +
+                                         "- Project management: Agile, Scrum, Jira\n" +
+                                         "\n" +
+                                         "### Education\n" +
+                                         "\n" +
+                                         "- Bachelor's Degree, Computer Science, Peking University, 2012\n";
 
   public static FlappyFunctionBase<?, ?> resumeGetMeta = new FlappySynthesizedFunction(
     "getMeta",
@@ -66,10 +65,10 @@ public class Resume {
 
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
-    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+    ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
     FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
-      llm, List.of(resumeGetMeta, getFrontendEngineerResumes)
+      llm, Arrays.asList(resumeGetMeta, getFrontendEngineerResumes)
     );
 
 

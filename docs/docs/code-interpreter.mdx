@@ -1,0 +1,60 @@
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+# Code Interpreter
+
+The Code Interpreter in Flappy serves as an equivalent replacement for [ChatGPT Code Interpreter](https://openai.com/blog/chatgpt-plugins#code-interpreter), enabling the language model to fulfill complex user requirements through Python code. What sets Flappy's Code Interpreter apart from other open-source implementations in the market is its sandboxed safety feature. This ensures that it meets the stringent security needs necessary for deployment in a production environment.
+
+## How it works
+
+Flappy's Code Interpreter is built with Rust, featuring a WebAssembly runtime environment that complies with the [WASIX specifications](https://wasix.org/docs/api-reference). Unlike standard WebAssembly runtimes, this environment hosts a Python interpreter and supports nearly all POSIX interfaces, including socket, net, and filesystem IO operations. This means that even though the Python interpreter operates within a wasm sandbox, all functionalities remain fully intact.
+
+The current version of the Python interpreter used in this environment is `Python 3.12`. All standard libraries (stdlib) work as expected. We are also in the process of adding support for the pip package manager, which will allow for further extension of capabilities.
+
+## Security-First Design
+
+Our core design principle is "safety first". By default, access to the external network is off to ensure a secure environment. Similarly, environment variables are sandbox-isolated. However, if required, these settings can be overridden using custom configurations.
+
+## Usage
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
+
+```ts
+import { env } from 'node:process'
+import { createFlappyAgent, ChatGPT } from '@pleisto/node-flappy'
+import OpenAI from 'openai'
+
+const gpt35 = new ChatGPT(
+  new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+    baseURL: process.env.OPENAI_API_BASE!
+  }),
+  'gpt-3.5-turbo'
+)
+
+const agent = createFlappyAgent({
+  llm: gpt35,
+  functions: [],
+  codeInterpreter: {
+    enableNetwork: true,
+    env: env as Record<string, string>
+  }
+})
+
+void agent.callCodeInterpreter(
+  'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
+)
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>

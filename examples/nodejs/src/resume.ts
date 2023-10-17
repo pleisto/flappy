@@ -2,8 +2,9 @@ import {
   createFlappyAgent,
   createInvokeFunction,
   createSynthesizedFunction,
-  ZodType as z,
-  ChatGPT
+  z,
+  ChatGPT,
+  Baichuan
 } from '@pleisto/node-flappy'
 import OpenAI from 'openai'
 
@@ -14,6 +15,8 @@ const gpt35 = new ChatGPT(
   }),
   'gpt-3.5-turbo'
 )
+
+const baichuan = new Baichuan()
 
 const MOCK_RESUME_DATA = `
 I am a seasoned software engineer with over seven years of experience in front-end development. I am passionate about building excellent user interfaces, proficient in HTML, CSS, and JavaScript, and have a deep understanding of front-end frameworks such as React, Vue, and Angular. I have participated in several large-scale projects, responsible for designing and implementing front-end architecture, ensuring high performance and user-friendliness of websites. In addition, I also have project management experience, capable of leading teams to deliver high-quality outputs on time.
@@ -50,7 +53,7 @@ I am a seasoned software engineer with over seven years of experience in front-e
 `
 
 const resumeAgent = createFlappyAgent({
-  llm: gpt35,
+  llm: baichuan,
   functions: [
     createSynthesizedFunction({
       name: 'getMeta',

@@ -1,10 +1,4 @@
-import {
-  createFlappyAgent,
-  createInvokeFunction,
-  createSynthesizedFunction,
-  ZodType as z,
-  ChatGPT
-} from '@pleisto/node-flappy'
+import { createFlappyAgent, createInvokeFunction, createSynthesizedFunction, z, ChatGPT } from '@pleisto/node-flappy'
 import OpenAI from 'openai'
 
 const gpt35 = new ChatGPT(

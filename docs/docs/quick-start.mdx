@@ -1,0 +1,288 @@
+---
+sidebar_position: 2
+---
+
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+# Quick Start
+
+:::caution
+
+⚠️ This project is still under development. We're working hard to release the first version of Flappy as soon as possible. Stay tuned! Documentation and code examples will be available soon.
+:::
+
+
+Flappy is a programming language agnostic sdk for building LLM based agents/applications. Please specify the language you are using to get started.
+
+## Installation
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
+
+```bash
+npm install @plesito/node-flappy
+# or yarn add @pleisto/node-flappy
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+
+Maven
+
+```xml
+<dependency>
+    <groupId>com.pleisto</groupId>
+    <artifactId>flappy</artifactId>
+    <version>0.0.6</version>
+</dependency>
+```
+
+Gradle
+
+```sh
+implementation 'com.pleisto:flappy:0.0.6'
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+implementation("com.pleisto:flappy:0.0.6")
+```
+
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+## Create LLM Adapter
+
+Flappy supports multiple LLM implementations, such as OpenAI ChatGPT and hugingface transformers. You can also create your own LLM adapter by implementing the `LLMBase` interface.
+
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+
+```ts
+// you need to manually install `openai` package.
+import { env } from 'node:process'
+import OpenAI from 'openai'
+import { ChatGPT } from '@pleisto/node-flappy'
+
+const chatGpt = new ChatGPT(
+  new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+    baseURL: process.env.OPENAI_API_BASE!
+  }),
+  'gpt-3.5-turbo'
+)
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+
+```java
+    Dotenv dotenv = Dotenv.load();
+    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+
+```kotlin
+  val dotenv = dotenv()
+
+  val chatGPT = ChatGPT(
+    model = "gpt-3.5-turbo",
+    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  )
+```
+
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+## Define your agent
+
+In artificial intelligence, an agent is a computer program or system that is designed to perceive its environment, make decisions and take actions to achieve a specific goal or set of goals. The agent operates autonomously, meaning it is not directly controlled by a human operator.
+
+In Flappy's ecosystem, the agent operates as a versatile conduit for the LLM. It's designed to juggle a variety of tasks - structuring data, invoking external APIs, or sandboxing LLM-generated Python code - in any combination as needed. It's a flexible tool, not a rigid cog, adapting to your needs for a more efficient and secure LLM interaction.
+
+### Key Concepts
+
+#### Functions
+
+Functions act as the foundation for your agent in the Flappy framework. In this documentation, we will introduce `InvokeFunction` and `SythesizedFunction`, two essential function types you can define and utilize.
+
+
+- `InvokeFunction` enables agents to interact with the environment, similar to Tools in Langchain's Agents. It's defined by input and output parameters, whose structures must be clear for the Language Learning Model (LLM) to interact efficiently. Understanding these parameters and the function's role in interacting with user requests and the world is essential. For cost-effective task planning.
+- `SythesizedFunction` is a type of function played by the LLM. You only need to define its description and the structure of its inputs and outputs. The LLM will then attempt to process inputs in the defined format and produce outputs in the expected format. This feature makes SythesizedFunction particularly useful in scenarios where structured data extraction tasks are performed by the LLM or when the LLM is expected to output structured data.
+
+#### Code Interpreter
+
+The Code Interpreter in Flappy serves as an equivalent replacement for ChatGPT Code Interpreter, enabling the language model to fulfill complex user requirements through Python code. What sets Flappy's Code Interpreter apart from other open-source implementations in the market is its sandboxed safety feature. This ensures that it meets the stringent security needs necessary for deployment in a production environment.
+
+
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+
+```ts
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction,  z } from '@pleisto/node-flappy'
+
+enum Verdict {
+  Innocent = 'Innocent',
+  Guilty = 'Guilty',
+  Unknown = 'Unknown'
+}
+
+const MOCK_LAWSUIT_DATA =
+  "As Alex Jones continues telling his Infowars audience about his money problems and pleads for them to buy his products, his own documents show life is not all that bad — his net worth is around $14 million and his personal spending topped $93,000 in July alone, including thousands of dollars on meals and entertainment. The conspiracy theorist and his lawyers file monthly financial reports in his personal bankruptcy case, and the latest one has struck a nerve with the families of victims of Sandy Hook Elementary School shooting. They're still seeking the $1.5 billion they won last year in lawsuits against Jones and his media company for repeatedly calling the 2012 massacre a hoax on his shows. “It is disturbing that Alex Jones continues to spend money on excessive household expenditures and his extravagant lifestyle when that money rightfully belongs to the families he spent years tormenting,” said Christopher Mattei, a Connecticut lawyer for the families. “The families are increasingly concerned and will continue to contest these matters in court.” In an Aug. 29 court filing, lawyers for the families said that if Jones doesn’t reduce his personal expenses to a “reasonable” level, they will ask the bankruptcy judge to bar him from “further waste of estate assets,” appoint a trustee to oversee his spending, or dismiss the bankruptcy case. On his Infowars show Tuesday, Jones said he’s not doing anything wrong."
+
+const agent = createFlappyAgent({
+  llm: chatGpt,
+  // Define your agent's functions.
+  functions: [
+    createSynthesizedFunction({
+      name: 'getMeta',
+      description: 'Extract meta data from a lawsuit full text.',
+      args: z.object({
+        lawsuit: z.string().describe('Lawsuit full text.')
+      }),
+      returnType: z.object({
+        verdict: z.nativeEnum(Verdict),
+        plaintiff: z.string(),
+        defendant: z.string(),
+        judgeOptions: z.array(z.string())
+      })
+    }),
+    createInvokeFunction({
+      name: 'getLatestLawsuitsByPlaintiff',
+      description: 'Get the latest lawsuits by plaintiff.',
+      args: z.object({
+        plaintiff: z.string(),
+        arg1: z.boolean().describe('For demo purpose. set to False'),
+        arg2: z.array(z.string()).describe('ignore it').optional()
+      }),
+      returnType: z.string(),
+      resolve: async args => {
+        // Do something
+        // e.g. query SQL database
+        console.debug('getLatestLawsuitsByPlaintiff called', args)
+        return MOCK_LAWSUIT_DATA
+      }
+    })
+  ],
+  // Settings for the code interpreter sandbox
+  codeInterpreter: {
+    enableNetwork: true,
+    env: env as Record<string, string>
+  }
+})
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+## Call your agent
+
+### Create and execute a action plan
+
+Augmented Language Models (ALMs) blend the reasoning capabilities of Large Language Models (LLMs) with tools that allow for knowledge retrieval and action execution. Existing ALM systems trigger LLM thought processes while pulling observations from these tools in an interleaved fashion. Specifically, an LLM reasons to call an external tool, gets halted to fetch the tool's response, and then decides the next action based on all preceding response tokens. Such a paradigm, though straightforward and easy to implement, often leads to huge computation complexity from redundant prompts and repeated execution.
+
+Flappy uses [ReWOO](https://arxiv.org/abs/2305.18323) instead of [ReAct](https://arxiv.org/abs/2210.03629) to minimize LLM token output, thereby reducing costs. Building on this, the agent is equipped to autonomously devise a plan based on the user's prompt. This involves determining the sequence of functions that need to be invoked to fulfill the given prompt. The execution then proceeds according to this formulated plan, further optimizing the efficiency of our system.
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+
+```ts
+agent.executePlan('Find the latest case with the plaintiff being families of victims and return its metadata.')
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+
+```java
+  Future<LawMetaReturn> future = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+```
+
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+
+```kotlin
+  lawAgent.use {
+    it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+  }
+```
+
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+
+### Call sythesized function directly
+
+You can also call sythesized function directly without executing a action plan.
+
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+
+```ts
+agent.callFunction('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>
+
+
+
+### Call Code Interpreter
+
+Code Interpreter currently needs to be called directly. We are working on a better way to integrate it with the agent.
+
+<Tabs>
+  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+
+```ts
+agent.callCodeInterpreter(
+  'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
+)
+```
+
+  </TabItem>
+  <TabItem value="java" label="Java" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="kotlin" label="Kotlin" default>
+    Coming soon
+  </TabItem>
+  <TabItem value="csharp" label="C#" default>
+    Coming soon
+  </TabItem>
+</Tabs>

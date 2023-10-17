@@ -11,6 +11,7 @@ concurrency:
 on:
   workflow_dispatch:
   push:
+    branches: [ main ]
     paths:
       - packages/rust-core/charp/**/*
       - .github/workflows/csharp-binding-build.yaml

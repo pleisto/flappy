@@ -5,10 +5,11 @@
   "workspaces": [
     "packages/*",
     "tools/*",
-    "examples/*"
+    "examples/*",
+    "docs"
   ],
   "volta": {
-    "node": "20.6.1"
+    "node": "20.8.1"
   },
   "config": {
     "commitizen": {
@@ -37,7 +38,7 @@
   "packageManager": "yarn@3.6.4",
   "devDependencies": {
     "@pleisto/eslint-plugin": "^1.4.84",
-    "@types/node": "^20.8.3",
+    "@types/node": "^20.8.4",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.51.0",

@@ -9,7 +9,7 @@ import { InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
-import { ZodType as z } from './flappy-type'
+import { z } from './flappy-type'
 import { zodToCleanJsonSchema } from './utils'
 import { evalPythonCode } from '@flappy/flappy-nodejs-bindings'
 

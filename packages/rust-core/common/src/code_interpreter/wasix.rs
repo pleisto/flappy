@@ -43,6 +43,7 @@ use webc::Container;
 
 const PYTHON_INTERPRETER_WASM_PKG: &str = "wasmer/python";
 
+#[derive(Debug)]
 pub struct SandboxOutput {
   pub stdout: String,
   pub stderr: String,
@@ -153,4 +154,25 @@ mod tests {
     assert_eq!(output.stdout, "hello world\n");
     assert_eq!(output.stderr, "");
   }
+
+  // #[tokio::test]
+  // async fn test_dumb_sandbox() {
+  //   let code = "1+1";
+  //   let output = python_sandbox(code.to_string(), true, vec![], None)
+  //     .await
+  //     .unwrap();
+  //   //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
+  //   assert_eq!(output.stdout, "");
+  //   assert_eq!(output.stderr, "");
+  // }
+
+  // #[tokio::test]
+  // async fn test_failed_sandbox() {
+  //   let code = "foo";
+  //   let output = python_sandbox(code.to_string(), true, vec![], None)
+  //     .await
+  //     .unwrap_err();
+  //   //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
+  //   assert_eq!(output.to_string(), "WASI error");
+  // }
 }
