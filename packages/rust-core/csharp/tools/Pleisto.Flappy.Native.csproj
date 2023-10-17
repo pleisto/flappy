@@ -18,8 +18,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../../../LICENSE" PackagePath="" Pack="True" Visible="True" />
-    <None Include="../../../../README.md" PackagePath="" Pack="True" Visible="True" />
+    <None Include="LICENSE" PackagePath="" Pack="True" Visible="True" />
+    <None Include="README.md" PackagePath="" Pack="True" Visible="True" />
   </ItemGroup>
 
   <!--Mapper of Cargo build-->
