@@ -1,4 +1,4 @@
-name: CSharp Bindings Publish
+name: CSharp Bindings Build
 
 permissions:
   contents: write
@@ -11,9 +11,9 @@ concurrency:
 on:
   workflow_dispatch:
   push:
-    #### TODO
-    # paths:
-    #   - 'packages/rust-core/charp/**'
+    paths:
+      - packages/rust-core/charp/**
+      - .github/workflows/csharp-binding.yaml
 
 jobs:
   build:
@@ -137,100 +137,3 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: "**/${{ matrix.settings.artifact }}"
           if-no-files-found: error
-
-  package-nuget:
-    needs: build
-    runs-on: ubuntu-latest
-    name: package and upload nuget package - csharp
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: nuget/setup-nuget@v1
-        with:
-          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-x86_64-apple-darwin
-          path: ~/artifacts/
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-aarch64-unknown-linux-gnu
-          path: ~/artifacts/
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-aarch64-apple-darwin
-          path: ~/artifacts/
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-x86_64-unknown-linux-musl
-          path: ~/artifacts/
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-x86_64-unknown-linux-gnu
-          path: ~/artifacts/
-
-      - name: download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: bindings-x86_64-pc-windows-gnu
-          path: ~/artifacts/
-
-      - name: make runtimes dir
-        run: |
-          dcp() {
-            local target=$2
-            local src=$1
-            mkdir -p ~/nuget/runtimes/$target
-            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target
-          }
-
-          mkdir -p ~/nuget
-          dcp x86_64-pc-windows-gnu/release/flappy_csharp_bindings.dll win-x64
-
-          dcp aarch64-apple-darwin/release/libflappy_csharp_bindings.dylib osx-arm64
-          dcp x86_64-apple-darwin/release/libflappy_csharp_bindings.dylib osx-x64
-
-          dcp x86_64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-x64
-          dcp aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-arm64
-          dcp aarch64-unknown-linux-musl/release/libflappy_csharp_bindings.so linux-musl-x64
-
-
-          cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
-
-          tar cvf ~/nuget.tar ~/nuget 
-          gzip -9 ~/nuget.tar
-
-      - name: build nupkg
-        run: |
-          cd ~/nuget
-          dotnet build -c Release Pleisto.Flappy.Native.csproj
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-${{ matrix.settings.target }}
-          path: |
-            ~/nuget/**/*.nupkg
-            ~/nuget.tar.gz
-          if-no-files-found: error
-
-      #- name: publish nuget pkg
-      #  run: |
-      #    cd ~/nuget
-      #    find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-      #      echo "Pulish: $line"
-      #      nuget push $line \
-      #        -Source https://api.nuget.org/v3/index.json \
-      #        -ApiKey ${{ secrets.NUGET_TOKEN }} \
-      #        -SkipDuplicate
-      #    done
