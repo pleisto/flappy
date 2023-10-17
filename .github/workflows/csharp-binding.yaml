@@ -211,7 +211,7 @@ jobs:
           gzip -9 ~/nuget.tar
 
       - name: build nupkg
-        run:
+        run: |
           cd ~/nuget
           dotnet build -c Release Pleisto.Flappy.Native.csproj
 
