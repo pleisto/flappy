@@ -229,13 +229,13 @@ jobs:
           if-no-files-found: error
 
 
-      #- name: publish nuget pkg
-      #  run: |
-      #    cd ~/nuget
-      #    find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
-      #      echo "Pulish: $line"
-      #      nuget push $line \
-      #        -Source https://api.nuget.org/v3/index.json \
-      #        -ApiKey ${{ secrets.NUGET_TOKEN }} \
-      #        -SkipDuplicate
-      #    done
+      - name: publish nuget pkg
+        run: |
+          cd ~/nuget
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
+          done
