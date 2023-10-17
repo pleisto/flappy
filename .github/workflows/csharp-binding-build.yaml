@@ -213,6 +213,9 @@ jobs:
 
       - name: build nupkg
         run: |
+          cp LICENSE ~/nuget/
+          cp README.md ~/nuget/
+          
           cd ~/nuget
           dotnet build -c Release Pleisto.Flappy.Native.csproj
 
