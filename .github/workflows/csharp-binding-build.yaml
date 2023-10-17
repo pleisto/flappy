@@ -204,7 +204,6 @@ jobs:
 
           dcp x86_64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-x64
           dcp aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-arm64
-          dcp aarch64-unknown-linux-musl/release/libflappy_csharp_bindings.so linux-musl-x64
 
 
           cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
