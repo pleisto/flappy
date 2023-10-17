@@ -204,7 +204,7 @@ jobs:
 
           dcp x86_64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-x64
           dcp aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-arm64
-
+          dcp x86_64-unknown-linux-musl/release/libflappy_csharp_bindings.so linux-musl-x64
 
           cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
 
@@ -222,7 +222,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: bindings-${{ matrix.settings.target }}
+          name: bindings
           path: |
             ~/nuget/**/*.nupkg
             ~/nuget.tar.gz
