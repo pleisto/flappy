@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - packages/rust-core/charp/**
+      - packages/rust-core/charp/**/*
       - .github/workflows/csharp-binding-build.yaml
 
 jobs:
