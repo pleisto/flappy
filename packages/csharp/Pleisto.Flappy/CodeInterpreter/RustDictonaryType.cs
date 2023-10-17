@@ -28,10 +28,8 @@ namespace Pleisto.Flappy.CodeInterpreter
 
     public void Dispose()
     {
-      if (Key != IntPtr.Zero)
-        Marshal.FreeHGlobal(Key);
-      if (Value != IntPtr.Zero)
-        Marshal.FreeHGlobal(Value);
+      NativeHandler.Free(Key);
+      NativeHandler.Free(Value);
       GC.SuppressFinalize(this);
     }
   }

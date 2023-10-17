@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Pleisto.Flappy.Test.Law
 {

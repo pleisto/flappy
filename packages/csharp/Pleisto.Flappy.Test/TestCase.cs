@@ -1,9 +1,10 @@
-
+using NUnit.Framework;
 using Pleisto.Flappy.Examples;
+using Pleisto.Flappy.Examples.CodeInterpreter;
 using Pleisto.Flappy.Examples.Law;
 using Pleisto.Flappy.Examples.Resume;
 
-namespace Pleisto.Flappy.Test
+namespace Pleisto.Flappy.Tests
 {
   /// <summary>
   /// ChatGPT Test Case
@@ -13,9 +14,9 @@ namespace Pleisto.Flappy.Test
     /// <summary>
     /// Disable GPT Test Case on environment set
     /// </summary>
-    static private bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
+    private static bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
 
-    async Task TestCaseBase<T>()
+    private async Task TestCaseBase<T>()
       where T : ExampleBase, new()
     {
       if (NoGptTest == false)
@@ -28,7 +29,7 @@ namespace Pleisto.Flappy.Test
     /// <returns></returns>
     [Test]
     public async Task LawTestAsync()
-=> await TestCaseBase<LawCase>();
+      => await TestCaseBase<LawCase>();
 
     /// <summary>
     /// Case test of Law
@@ -36,6 +37,14 @@ namespace Pleisto.Flappy.Test
     /// <returns></returns>
     [Test]
     public async Task ResumeTestAsync()
-=> await TestCaseBase<ResumeCase>();
+      => await TestCaseBase<ResumeCase>();
+
+    /// <summary>
+    /// Case test of Code Interpreter
+    /// </summary>
+    /// <returns></returns>
+    [Test]
+    public async Task CodeInterpreterTaskAsync()
+      => await TestCaseBase<CodeInterpreterCase>();
   }
 }

@@ -6,6 +6,8 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>Pleisto.Flappy.Tests</RootNamespace>
+
     
   </PropertyGroup>
 

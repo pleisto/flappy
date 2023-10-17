@@ -39,6 +39,14 @@ fn ptr2str(c_char_ptr: *const std::os::raw::c_char) -> String {
   }
 }
 
+
+
+/// Just of Native Call Test
+#[no_mangle]
+pub extern "C" fn eval_native_call() -> bool {
+  true
+}
+
 /// Execute a python code snippet in a wasm sandbox.
 /// @param code - The python code snippet to execute.
 /// @param network - Whether to allow network access.

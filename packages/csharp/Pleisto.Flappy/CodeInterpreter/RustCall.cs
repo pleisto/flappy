@@ -11,6 +11,8 @@ namespace Pleisto.Flappy.CodeInterpreter
     {
     }
 
+    #region Import of native
+
     /// <summary>
     /// P/Invoke for Rust Code Call
     /// </summary>
@@ -24,6 +26,30 @@ namespace Pleisto.Flappy.CodeInterpreter
     private static extern RustStdOutput EvalPythonCodeRust(IntPtr code, bool enableNetwork, IntPtr env, uint envSize, IntPtr cacheDir);
 
     /// <summary>
+    /// Eval Natvive Call Test
+    /// </summary>
+    /// <returns></returns>
+    [DllImport("flappy_csharp_bindings", EntryPoint = "eval_native_call")]
+    private static extern bool EvalNativeCall();
+
+    #endregion Import of native
+
+    /// <summary>
+    /// Native call test
+    /// </summary>
+    /// <returns></returns>
+    public static bool NativeCall()
+    {
+      return EvalNativeCall();
+    }
+
+    internal static void Free(IntPtr code)
+    {
+      if (code != IntPtr.Zero)
+        Marshal.FreeHGlobal(code);
+    }
+
+    /// <summary>
     /// Call python sandbox execute
     /// </summary>
     /// <param name="code">Python code</param>
@@ -33,30 +59,27 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <returns></returns>
     public static RustStdOutputManaged EvalPythonCode(string code, bool enableNetwork, Dictionary<string, string> env, string cacheDir = null)
     {
-      unsafe
+      var directoryTypesArray = (from b in env ?? new Dictionary<string, string>()
+                                 select new RustDictonaryType(b)).ToArray();
+
+      var dictonaryTypes = Marshal.UnsafeAddrOfPinnedArrayElement(directoryTypesArray, 0);
+      cacheDir ??= "code-interpreter";
+      if (!Directory.Exists(cacheDir))
+        Directory.CreateDirectory(cacheDir);
+      try
       {
-        var directoryTypesArray = (from b in env ?? new Dictionary<string, string>()
-                                   select new RustDictonaryType(b)).ToArray();
+        OnNavtiveCodeCall?.Invoke(null, code);
+        using var result = EvalPythonCodeRust(Marshal.StringToHGlobalAnsi(code.Replace("\r\n", "\n")), enableNetwork, dictonaryTypes, (uint)env.Count, Marshal.StringToHGlobalAnsi(cacheDir));
 
-        var dictonaryTypes = Marshal.UnsafeAddrOfPinnedArrayElement(directoryTypesArray, 0);
-        cacheDir ??= "code-interpreter";
-        if (!Directory.Exists(cacheDir))
-          Directory.CreateDirectory(cacheDir);
-        try
-        {
-          OnNavtiveCodeCall?.Invoke(null, code);
-          using var result = EvalPythonCodeRust(Marshal.StringToHGlobalAnsi(code.Replace("\r\n", "\n")), enableNetwork, dictonaryTypes, (uint)env.Count, Marshal.StringToHGlobalAnsi(cacheDir));
-
-          var ret = new RustStdOutputManaged(result);
-          AfterNativeCodeCall?.Invoke(null, ret);
-          return ret;
-        }
-        finally
-        {
-          foreach (var b in directoryTypesArray)
-            b.Dispose();
-          Marshal.FreeHGlobal(dictonaryTypes);
-        }
+        var ret = new RustStdOutputManaged(result);
+        AfterNativeCodeCall?.Invoke(null, ret);
+        return ret;
+      }
+      finally
+      {
+        foreach (var b in directoryTypesArray)
+          b.Dispose();
+        Free(dictonaryTypes);
       }
     }
 
