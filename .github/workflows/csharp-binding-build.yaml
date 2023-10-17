@@ -187,8 +187,8 @@ jobs:
 
       - name: make runtimes dir
         run: |
-          find ~/artfacts
-          
+          find ~/artifacts
+
           dcp() {
             local target=$2
             local src=$1
