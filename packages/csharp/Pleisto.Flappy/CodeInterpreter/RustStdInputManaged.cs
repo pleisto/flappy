@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Pleisto.Flappy.CodeInterpreter
 {
@@ -28,7 +28,7 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// Cache of WASI
     /// </summary>
-    [JsonProperty("cachePath")]
+    [JsonProperty("cache_path")]
     public string CachePath { get; set; }
   }
 }

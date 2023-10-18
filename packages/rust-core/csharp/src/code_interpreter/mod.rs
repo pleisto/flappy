@@ -41,14 +41,14 @@ struct InputStruct {
   code: String,
   network: bool,
   envs: HashMap<String,String>,
-  cachePath: String
+  cache_path: String
 }
 
 #[derive(Debug,Serialize,Deserialize)]
 struct OutputStruct {
-  stdOut: String,
-  stdErr: String,
-  exceptionString: String
+  std_out: String,
+  std_err: String,
+  exception_string: String
 }
 
 /// Call python code by json in json out
@@ -59,16 +59,16 @@ pub extern "C" fn eval_python_code_by_json(input_str: *const c_char ) -> *const 
 
   let rt = Builder::new_multi_thread().enable_all().build().unwrap();
   let output = rt.block_on(async {
-    match python_sandbox(input.code, input.network, input.envs.into_iter().collect(), Some(input.cachePath)).await {
+    match python_sandbox(input.code, input.network, input.envs.into_iter().collect(), Some(input.cache_path)).await {
       Err(err) => OutputStruct {
-        exceptionString: err.to_string(),
-        stdErr: String::new(),
-        stdOut: String::new(),
+        exception_string: err.to_string(),
+        std_err: String::new(),
+        std_out: String::new(),
       },
       Ok(output) => OutputStruct {
-        stdErr: output.stderr,
-        stdOut: output.stdout,
-        exceptionString: String::new(),
+        std_err: output.stderr,
+        std_out: output.stdout,
+        exception_string: String::new(),
       },
     }
   });

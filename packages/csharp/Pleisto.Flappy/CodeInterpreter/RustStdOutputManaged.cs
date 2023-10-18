@@ -10,20 +10,20 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// Std Error
     /// </summary>
-    [JsonProperty("stdErr", Required = Required.AllowNull)]
+    [JsonProperty("std_err", Required = Required.AllowNull)]
     public string StdErr { get; private set; }
 
     /// <summary>
     /// Std Out
     /// </summary>
 
-    [JsonProperty("stdOut", Required = Required.AllowNull)]
+    [JsonProperty("std_out", Required = Required.AllowNull)]
     public string StdOut { get; private set; }
 
     /// <summary>
     /// Exception Message
     /// </summary>
-    [JsonProperty("exceptionString", Required = Required.AllowNull)]
+    [JsonProperty("exception_string", Required = Required.AllowNull)]
     public string ExceptionString { get; private set; }
   }
 }
