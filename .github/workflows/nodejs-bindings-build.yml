@@ -157,7 +157,7 @@ jobs:
       - name: Install cross-compilation tools
         uses: taiki-e/setup-cross-toolchain-action@v1
         with:
-          target: ${{matrix.target}}
+          target: ${{matrix.settings.target}}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
