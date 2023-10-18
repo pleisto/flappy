@@ -1,214 +1,108 @@
-# name: Nodejs Bindings Build
+name: Nodejs Bindings Build
 
-# concurrency:
-#   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
-#   cancel-in-progress: true
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
-# env:
-#   DEBUG: napi:*
-#   APP_NAME: packages/rust-core/nodejs/flappy-nodejs-bindings
-#   MACOSX_DEPLOYMENT_TARGET: '10.13'
+defaults:
+  run:
+    working-directory: packages/rust-core/nodejs
 
-# permissions:
-#   contents: write
-#   id-token: write
+env:
+  WORKING_DIRECTORY: packages/rust-core/nodejs
 
-# on:
-#   workflow_dispatch:
-#   push:
-#     # branches:
-#     #   - main
-#     paths:
-#       - 'packages/rust-core/**'
-#       - '.github/workflows/nodejs-bindings-build.yml'
-#   # pull_request: null
+permissions:
+  contents: write
+  id-token: write
 
-# jobs:
-#   build:
-#     strategy:
-#       fail-fast: false
-#       matrix:
-#         settings:
-#           - host: [self-hosted, macOS, ARM64]
-#             target: x86_64-apple-darwin
-#             build: |
-#               yarn build:nodejs-bindings --target x86_64-apple-darwin
-#               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.darwin-x64.node
-#           - host: ubuntu-latest
-#             target: x86_64-pc-windows-gnu
-#             build: |
-#               sudo apt-get install -y gcc-mingw-w64-x86-64-win32
-#               cargo install cargo-xwin
-#               yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
-#               strip -x packages/rust-core/nodejs/flappy-nodejs-bindings.win32-x64-gnu.node
-#           - host: ubuntu-latest
-#             target: x86_64-unknown-linux-gnu
-#             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
-#             build: |-
-#               set -e &&
-#               sudo apt-get update &&
-#               sudo apt-get install build-essential -y &&
-#               sudo apt-get install perl -y &&
-#               sudo apt-get install pkg-config libssl-dev -y &&
-#               yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu &&
-#               strip packages/rust-core/nodejs/*.node
-#           - host: ubuntu-latest
-#             target: x86_64-unknown-linux-musl
-#             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-#             build: apk add pkgconfig openssl-dev gcc g++ make perl && set -e && RUST_BACKTRACE=1 yarn build:nodejs-bindings && strip packages/rust-core/nodejs/*.node
-#           - host: macos-latest
-#             target: aarch64-apple-darwin
-#             build: |
-#               yarn build:nodejs-bindings --target aarch64-apple-darwin
-#               strip -x packages/rust-core/nodejs/*.node
-#           - host: ubuntu-latest
-#             target: aarch64-unknown-linux-gnu
-#             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
-#             build: |-
-#               set -e &&
-#               sudo apt-get update &&
-#               sudo apt-get install build-essential -y &&
-#               sudo apt-get install perl -y &&
-#               sudo apt-get install pkg-config libssl-dev -y &&
-#               export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" &&
-#               export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
-#               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" &&
-#               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu &&
-#               aarch64-unknown-linux-gnu-strip packages/rust-core/nodejs/*.node
-#           - host: ubuntu-latest
-#             target: aarch64-linux-android
-#             build: |
-#               yarn build:nodejs-bindings --target aarch64-linux-android
-#               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
-#           - host: ubuntu-latest
-#             target: aarch64-unknown-linux-musl
-#             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-#             build: |-
-#               set -e &&
-#               apk add pkgconfig openssl-dev gcc g++ make perl &&
-#               rustup target add aarch64-unknown-linux-musl &&
-#               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl &&
-#               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/rust-core/nodejs/*.node
-#     name: stable - ${{ matrix.settings.target }} - node@18
-#     runs-on: ${{ matrix.settings.host }}
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Setup node
-#         uses: actions/setup-node@v3
-#         if: ${{ !matrix.settings.docker }}
-#         with:
-#           node-version: 19
-#           check-latest: true
-#           cache: yarn
-#       - name: Install
-#         uses: dtolnay/rust-toolchain@stable
-#         if: ${{ !matrix.settings.docker }}
-#         with:
-#           toolchain: stable
-#           targets: ${{ matrix.settings.target }}
-#       - name: Cache cargo
-#         uses: actions/cache@v3
-#         with:
-#           path: |
-#             ~/.cargo/registry/index/
-#             ~/.cargo/registry/cache/
-#             ~/.cargo/git/db/
-#             .cargo-cache
-#             target/
-#           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
-#       - name: Install dependencies
-#         run: yarn install --immutable
-#       - name: Build in docker
-#         uses: addnab/docker-run-action@v3
-#         if: ${{ matrix.settings.docker }}
-#         with:
-#           image: ${{ matrix.settings.docker }}
-#           options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-#           run: ${{ matrix.settings.build }}
-#       - name: Build
-#         run: ${{ matrix.settings.build }}
-#         if: ${{ !matrix.settings.docker }}
-#         shell: bash
-#       - name: Upload artifact
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: bindings-${{ matrix.settings.target }}
-#           path: ${{ env.APP_NAME }}.*.node
-#           if-no-files-found: error
-#   universal-macOS:
-#     name: Build universal macOS binary
-#     needs:
-#       - build
-#     runs-on: macos-latest
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Setup node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 19
-#           check-latest: true
-#           cache: yarn
-#       - name: Install dependencies
-#         run: yarn install --immutable
-#       - name: Download macOS x64 artifact
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: bindings-x86_64-apple-darwin
-#           path: packages/rust-core/nodejs/artifacts
-#       - name: Download macOS arm64 artifact
-#         uses: actions/download-artifact@v3
-#         with:
-#           name: bindings-aarch64-apple-darwin
-#           path: packages/rust-core/nodejs/artifacts
-#       - name: Combine binaries
-#         run: yarn universal
-#         working-directory: packages/rust-core/nodejs
-#       - name: Upload artifact
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: bindings-universal-apple-darwin
-#           path: ${{ env.APP_NAME }}.*.node
-#           if-no-files-found: error
-#   publish:
-#     name: Publish
-#     runs-on: ubuntu-latest
-#     needs:
-#       - universal-macOS
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Setup node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 19
-#           check-latest: true
-#           cache: yarn
-#       - name: Install dependencies
-#         run: yarn install --immutable
-#       - name: Download all artifacts
-#         uses: actions/download-artifact@v3
-#         with:
-#           path: packages/rust-core/nodejs/artifacts
-#       - name: Move artifacts
-#         run: yarn artifacts
-#         working-directory: packages/rust-core/nodejs
-#       - name: List packages
-#         run: ls -R ./npm
-#         working-directory: packages/rust-core/nodejs
-#         shell: bash
-#       - name: Publish
-#         run: |
-#           if git log -1 --pretty=%B | grep "^node bindings [0-9]\+\.[0-9]\+\.[0-9]\+$";
-#           then
-#             echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
-#             npm publish --access public
-#           elif git log -1 --pretty=%B | grep "^node bindings [0-9]\+\.[0-9]\+\.[0-9]\+";
-#           then
-#             echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
-#             npm publish --tag next --access public
-#           else
-#             echo "Not a release, skipping publish"
-#           fi
-#         working-directory: packages/rust-core/nodejs
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+on:
+  workflow_dispatch:
+  push:
+    # branches:
+    #   - main
+    paths:
+      - 'packages/rust-core/**'
+      - '.github/workflows/nodejs-bindings-build.yml'
+      - '.github/workflows/nodejs-bindings-publish.yml'
+
+jobs:
+  check_if_need_release:
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.compare_version.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          check-latest: true
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Compare version
+        id: compare_version
+        run: |
+          new_version=$(node -p "require('./package.json').version")
+          versions=$(npm view @pleisto/flappy-nodejs-bindings versions)
+          echo "current version: $new_version"
+          echo $versions
+          if [ -z "${versions[@]}" ]; then
+            echo "version is empty"
+            exit 1
+          fi
+
+          if [[ "${versions[@]}" =~ "${new_version}" ]]; then
+            echo "Version is exist."
+            echo "release=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version is not exist."
+            echo "release=yes" >> "$GITHUB_OUTPUT"
+          fi
+  stage-snapshot:
+    needs: [check_if_need_release]
+    if: needs.check_if_need_release.outputs.release == 'yes'
+    uses: ./.github/workflows/nodejs-bindings-publish.yml
+  publish:
+    needs: [check_if_need_release, stage-snapshot]
+    if: needs.check_if_need_release.outputs.release == 'yes'
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          check-latest: true
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{env.WORKING_DIRECTORY}}/artifacts
+      - name: Move artifacts
+        run: yarn artifacts
+      - name: List packages
+        run: ls -R ./npm
+        shell: bash
+      - name: Publish
+        run: |
+          if node -p "require('./package.json').version" | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+          then
+            echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
+            npm publish --access public
+          elif node -p "require('./package.json').version" | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+";
+          then
+            echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
+            npm publish --tag next --access public
+          else
+            echo "Not a release, skipping publish"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
