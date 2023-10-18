@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Pleisto.Flappy.CodeInterpreter
 {
@@ -11,22 +10,20 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// Std Error
     /// </summary>
-    [AllowNull]
-    [JsonProperty("stdErr")]
+    [JsonProperty("stdErr", Required = Required.AllowNull)]
     public string StdErr { get; private set; }
 
     /// <summary>
     /// Std Out
     /// </summary>
-    [AllowNull]
-    [JsonProperty("stdOut")]
+
+    [JsonProperty("stdOut", Required = Required.AllowNull)]
     public string StdOut { get; private set; }
 
     /// <summary>
     /// Exception Message
     /// </summary>
-    [AllowNull]
-    [JsonProperty("exceptionString")]
+    [JsonProperty("exceptionString", Required = Required.AllowNull)]
     public string ExceptionString { get; private set; }
   }
 }

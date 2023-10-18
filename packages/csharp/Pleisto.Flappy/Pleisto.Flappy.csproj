@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>Pleisto</Authors>
 		<ProductName>Pleisto.Flappy</ProductName>
-		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1;net48;net472</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>11.0</LangVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
