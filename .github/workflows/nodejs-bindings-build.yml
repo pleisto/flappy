@@ -58,17 +58,17 @@ jobs:
               sudo apt-get install perl -y
               sudo apt-get install pkg-config libssl-dev -y
               yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu
-              strip "$WORKING_DIRECTORY/$APP_NAME.linux-x64-gnu.node"
+              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-gnu.node"
 
           # target: x86_64-unknown-linux-musl
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            # apk add pkgconfig openssl-dev gcc g++ make perl
             build: |
+              apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
               yarn build:nodejs-bindings
-              strip "$WORKING_DIRECTORY/$APP_NAME.linux-x64-musl.node"
+              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-musl.node"
 
           # target: aarch64-apple-darwin
           - host: macos-latest
@@ -91,7 +91,7 @@ jobs:
               export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu
-              aarch64-unknown-linux-gnu-strip "$WORKING_DIRECTORY/$APP_NAME.linux-arm64-gnu.node"
+              aarch64-unknown-linux-gnu-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-gnu.node"
 
           # target: aarch64-linux-android
           - host: ubuntu-latest
@@ -104,12 +104,12 @@ jobs:
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            # apk add pkgconfig openssl-dev gcc g++ make perl
             build: |
               set -e
+              apk add pkgconfig openssl-dev gcc g++ make perl
               rustup target add aarch64-unknown-linux-musl
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
-              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "$WORKING_DIRECTORY/$APP_NAME.linux-x64-musl.node"
+              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-musl.node"
     name: stable - ${{ matrix.settings.target }} - node@19
     runs-on: ${{ matrix.settings.host }}
     steps:
@@ -123,7 +123,7 @@ jobs:
           cache: yarn
       - name: Install
         uses: dtolnay/rust-toolchain@stable
-        # if: ${{ !matrix.settings.docker }}
+        if: ${{ !matrix.settings.docker }}
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
@@ -139,26 +139,17 @@ jobs:
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
       - name: Install dependencies
         run: yarn install --immutable
-      # - name: Build in docker
-      #   uses: addnab/docker-run-action@v3
-      #   if: ${{ matrix.settings.docker }}
-      #   with:
-      #     image: ${{ matrix.settings.docker }}
-      #     options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-      #     run: ${{ matrix.settings.build }}
-      #     env:
-      #       APP_NAME: ${{ env.APP_NAME }}
-      #       WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+      - name: Build in docker
+        uses: addnab/docker-run-action@v3
+        if: ${{ matrix.settings.docker }}
+        with:
+          image: ${{ matrix.settings.docker }}
+          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+          run: ${{ matrix.settings.build }}
       - name: Build
         run: ${{ matrix.settings.build }}
-        # if: ${{ !matrix.settings.docker }}
+        if: ${{ !matrix.settings.docker }}
         shell: bash
-
-      - name: Install cross-compilation tools
-        uses: taiki-e/setup-cross-toolchain-action@v1
-        with:
-          target: ${{matrix.settings.target}}
-
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
