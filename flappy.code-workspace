@@ -23,6 +23,10 @@
       "path": "packages/rust-core/java"
     },
     {
+      "name": "@flappy/flappy-csharp-bindings",
+      "path": "packages/rust-core/csharp"
+    },
+    {
       "name": "@pleisto/node-flappy",
       "path": "packages/nodejs"
     },
