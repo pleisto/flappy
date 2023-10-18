@@ -18,8 +18,8 @@ permissions:
 on:
   workflow_dispatch:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
     paths:
       - 'packages/nodejs/src/**'
       - 'packages/nodejs/tsconfig.json'
