@@ -109,7 +109,7 @@ jobs:
               apk add pkgconfig openssl-dev gcc g++ make perl
               rustup target add aarch64-unknown-linux-musl
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
-              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-musl.node"
+              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-musl.node"
     name: stable - ${{ matrix.settings.target }} - node@19
     runs-on: ${{ matrix.settings.host }}
     steps:
