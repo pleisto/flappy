@@ -18,7 +18,7 @@
     <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.3-alpha</Version>
+    <Version>0.0.0.4-alpha</Version>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
     
 	</PropertyGroup>
@@ -40,6 +40,10 @@
     <PackageReference Include="OpenAI" Version="1.7.2" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <None Include="runtimes/**/*">
+      <Pack>True</Pack>
+      <PackagePath>runtimes</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -207,18 +207,17 @@ jobs:
           dcp aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-arm64
           dcp x86_64-unknown-linux-musl/release/libflappy_csharp_bindings.so linux-musl-x64
 
-          cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
+          #cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
 
           tar cvf ~/nuget.tar ~/nuget 
           gzip -9 ~/nuget.tar
 
       - name: build nupkg
         run: |
-          cp LICENSE ~/nuget/
-          cp README.md ~/nuget/
+          cd packages/csharp
+          cp -vr ~/nuget/runtimes ./runtimes
 
-          cd ~/nuget
-          dotnet build -c Release Pleisto.Flappy.Native.csproj
+          dotnet build -c Release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -228,7 +227,6 @@ jobs:
             ~/nuget/**/*.nupkg
             ~/nuget.tar.gz
           if-no-files-found: error
-
 
       - name: publish nuget pkg
         run: |
