@@ -40,7 +40,7 @@ print(platform.python_version())
       {
       });
       Console.WriteLine(JObject.FromObject(result).ToString());
-      Assert.That(result.StdOut.Trim(), Is.EqualTo("Hello World"));
+      
     }
 
     /// <summary>

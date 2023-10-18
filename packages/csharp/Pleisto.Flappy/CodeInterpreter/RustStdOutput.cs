@@ -11,12 +11,12 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// StdErr
     /// </summary>
-    public IntPtr StdErr;
+    public IntPtr StdOut;
 
     /// <summary>
     /// StdOut
     /// </summary>
-    public IntPtr StdOut;
+    public IntPtr StdErr;
 
     /// <summary>
     /// Exception Message
@@ -25,29 +25,9 @@ namespace Pleisto.Flappy.CodeInterpreter
 
     public void Dispose()
     {
-      /*if (StdOut != IntPtr.Zero)
-      {
-        Console.WriteLine($"Free Stdout");
-        Marshal.FreeHGlobal(StdOut);
-        StdErr = IntPtr.Zero;
-      }
-      if (StdOut != IntPtr.Zero)
-      {
-        Console.WriteLine($"Free StdErr");
-        Marshal.FreeHGlobal(StdErr);
-        StdOut = IntPtr.Zero;
-      }
-      if (ErrorMessage != IntPtr.Zero)
-        try
-        {
-          Console.WriteLine($"Free ErrorMessage");
-          Marshal.ZeroFreeCoTaskMemUTF8(ErrorMessage);
-
-        }
-        finally
-        {
-          ErrorMessage = IntPtr.Zero;
-        }*/
+      NativeHandler.Free(StdErr);
+      NativeHandler.Free(StdOut);
+      NativeHandler.Free(ErrorMessage);
       GC.SuppressFinalize(this);
     }
   }

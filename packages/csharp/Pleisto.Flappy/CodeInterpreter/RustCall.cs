@@ -45,6 +45,7 @@ namespace Pleisto.Flappy.CodeInterpreter
 
     internal static void Free(IntPtr code)
     {
+      return;
       if (code != IntPtr.Zero)
         Marshal.FreeHGlobal(code);
     }
