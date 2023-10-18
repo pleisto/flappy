@@ -224,13 +224,13 @@ jobs:
         with:
           name: bindings
           path: |
-            ~/nuget/**/*.nupkg
+            packages/csharp/**/*.nupkg
             ~/nuget.tar.gz
           if-no-files-found: error
 
       - name: publish nuget pkg
         run: |
-          cd ~/nuget
+          cd packages/csharp
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"
             nuget push $line \
