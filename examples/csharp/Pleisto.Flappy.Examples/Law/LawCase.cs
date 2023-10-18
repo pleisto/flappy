@@ -4,6 +4,8 @@ using OpenAI_API;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Law;
+using System;
+using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples.Law
 {

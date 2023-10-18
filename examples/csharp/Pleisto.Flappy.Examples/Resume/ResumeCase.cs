@@ -3,6 +3,8 @@ using OpenAI_API;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Resume;
+using System;
+using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples.Resume
 {

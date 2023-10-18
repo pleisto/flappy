@@ -2,6 +2,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Pleisto.Flappy.Examples.CodeInterpreter;
 using Pleisto.Flappy.Examples.Law;
 using Pleisto.Flappy.Examples.Resume;
+using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Pleisto.Flappy.Test")]
