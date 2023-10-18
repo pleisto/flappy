@@ -154,7 +154,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: ${{ env.APP_NAME }}.*.node
+          path: ${{ env.WORKING_DIRECTORY }}/${{ env.APP_NAME }}.*.node
           if-no-files-found: error
   universal-macOS:
     name: Build universal macOS binary
