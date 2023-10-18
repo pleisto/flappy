@@ -14,6 +14,7 @@ on:
     branches: [main]
     paths:
       - 'packages/kotlin/flappy/gradle.properties'
+      - '.github/workflows/kotlin-publish.yml'
 
 defaults:
   run:
@@ -34,7 +35,7 @@ jobs:
       - name: Compare version
         id: compare_version
         run: |
-          new_version=$(echo -n $(awk -F'=' '/version/ {print $2}' packages/kotlin/flappy/gradle.properties))
+          new_version=$(echo -n $(awk -F'=' '/version/ {print $2}' flappy/gradle.properties))
           versions=$(curl https://repo1.maven.org/maven2/com/pleisto/flappy/maven-metadata.xml | awk -F'[><]' '/<version>/{print $3}')
           echo "current version: $new_version"
           echo $versions
