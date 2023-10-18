@@ -19,6 +19,7 @@ defaults:
     working-directory: packages/rust-core/nodejs
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     paths:
