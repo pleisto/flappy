@@ -12,42 +12,59 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  RUST_BACKTRACE: 1
+  RUST_BACKTRACE: full
+  CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
   CARGO_TERM_COLOR: always
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
   RUST_LOG: debug
-  # Disable full debug symbol generation to speed up CI build and keep memory down
-  # "1" means line tables only, which is useful for panic tracebacks.
-  RUSTFLAGS: -C debuginfo=1
 
 defaults:
   run:
     working-directory: packages/rust-core
 
 jobs:
+  lint:
+    name: "Rust lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: fmt
+        run: cargo fmt --check
+
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+
   tests:
-    name: Rust test ${{ matrix.os }}
+    name: "Rust test ${{matrix.target}}"
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          # - windows-latest
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+
+          # - os: macos-latest
+          #   target: x86_64-apple-darwin
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Rust cache
-        uses: ./.github/workflows/rust-cache
-        with:
-          cache_key: ${{matrix.os}}
-
-      - name: DEBUG
-        run: rustup toolchain list -v
-
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: ${{matrix.target}}
+
+      - name: Install cross-compilation tools
+        uses: taiki-e/setup-cross-toolchain-action@v1
+        with:
+          target: ${{matrix.target}}
 
       - name: Test
         run: cargo test --verbose

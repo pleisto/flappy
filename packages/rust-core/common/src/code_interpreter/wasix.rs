@@ -64,7 +64,7 @@ pub async fn python_sandbox(
   // Set the cache path to store the wasm modules and dependencies
   let cache_path = cache_path.map(PathBuf::from).unwrap_or_else(|| {
     dirs::cache_dir()
-      .unwrap_or_else(|| std::env::temp_dir())
+      .unwrap_or_else(std::env::temp_dir)
       .join("flappy/code-interpreter")
   });
   std::fs::create_dir_all(&cache_path).context("Failed to create cache directory")?;
@@ -92,17 +92,17 @@ pub async fn python_sandbox(
     .await
     .unwrap();
   let stderr = Arc::new(Mutex::new(
-    Box::new(Stderr::default()) as Box<dyn BufferedVirtualFile + Send + Sync>
+    Box::<Stderr>::default() as Box<dyn BufferedVirtualFile + Send + Sync>
   ));
   let stdout = Arc::new(Mutex::new(
-    Box::new(Stdout::default()) as Box<dyn BufferedVirtualFile + Send + Sync>
+    Box::<Stdout>::default() as Box<dyn BufferedVirtualFile + Send + Sync>
   ));
   let runner = WasixRunner::new()
     .with_stdout(Arc::clone(&stdout))
     .with_stderr(Arc::clone(&stderr))
     .with_envs(envs)
     .with_capabilities(caps);
-  let _ = runner
+  runner
     .with_args(["-c", &code])
     .run_command("python", &bin_pkg, Arc::new(runtime))?;
 

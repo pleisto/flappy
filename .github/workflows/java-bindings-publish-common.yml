@@ -1,0 +1,129 @@
+name: Java Bindings Publish Common For Workflow Call Only
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+      publish:
+        required: true
+        type: boolean
+    secrets:
+      MAVEN_GPG_PRIVATE_KEY:
+        required: false
+      ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME:
+        required: false
+      ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD:
+        required: false
+      ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD:
+        required: false
+
+defaults:
+  run:
+    working-directory: packages/rust-core/java
+
+env:
+  RUST_BACKTRACE: full
+  CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
+
+jobs:
+  publish:
+    name: "publish: ${{inputs.publish}}, ${{matrix.classifier}}"
+    runs-on: ${{ matrix.os }}
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            classifier: linux-x86_64
+            target: x86_64-unknown-linux-gnu
+
+          - os: ubuntu-latest
+            classifier: linux-aarch_64
+            target: aarch64-unknown-linux-gnu
+
+          - os: ubuntu-latest
+            classifier: linux_musl-x86_64
+            target: x86_64-unknown-linux-musl
+
+          - os: ubuntu-latest
+            classifier: linux_musl-aarch_64
+            target: aarch64-unknown-linux-musl
+
+          - os: ubuntu-latest
+            classifier: windows-x86_64
+            target: x86_64-pc-windows-gnu
+            command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
+
+          - os: macos-latest
+            classifier: osx-x86_64
+            target: x86_64-apple-darwin
+
+          - os: macos-latest
+            classifier: osx-aarch_64
+            target: aarch64-apple-darwin
+
+    steps:
+      - name: Checkout to repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run command ${{matrix.command}}
+        if: ${{matrix.command}}
+        run: ${{matrix.command}}
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: ${{matrix.target}}
+
+      - name: Install cross-compilation tools
+        uses: taiki-e/setup-cross-toolchain-action@v1
+        with:
+          target: ${{matrix.target}}
+
+      - name: Test publish ${{ matrix.classifier }}
+        if: ${{ !inputs.publish }}
+        run: python3 tools/build.py --classifier ${{matrix.classifier}} --profile release
+
+      - name: Local staging
+        if: ${{ inputs.publish }}
+        shell: bash
+        run: |
+          ./mvnw verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
+            -DskipTests=true \
+            -Djni.classifier=${{ matrix.classifier }} \
+            -Dcargo-build.profile=release \
+            -DaltStagingDirectory=local-staging \
+            -DskipRemoteStaging=true \
+            -DserverId=ossrh \
+            -DnexusUrl=https://s01.oss.sonatype.org
+        env:
+          MAVEN_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+
+      - name: Upload local staging directory
+        uses: actions/upload-artifact@v3
+        if: ${{ inputs.publish }}
+        with:
+          name: ${{ matrix.classifier }}-local-staging
+          path: packages/rust-core/java/local-staging
+          if-no-files-found: error
