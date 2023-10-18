@@ -22,9 +22,9 @@ jobs:
         os:
           - ubuntu-latest
           #- windows-latest
-          - macos-latest
+          - [ self-hosted,macOS,ARM64 ]
         dotnet-version:
-          - framework:  netcoreapp3.1
+          - framework: netcoreapp3.1
             runtime: 3.1
           - framework: net6.0
             runtime: 6.0
@@ -71,7 +71,7 @@ jobs:
 
       - name: dotnet test
         run: |
-          export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$PWD/packages/rust-core/target/debug"
           cd packages/csharp
+          mkdir -p ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
           cp ../rust-core/target/debug/*csharp* ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
           dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
