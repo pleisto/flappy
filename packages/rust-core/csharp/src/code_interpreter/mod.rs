@@ -4,7 +4,7 @@ use serde_json;
 use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
-use std::ptr::null;
+
 use tokio::runtime::Builder;
 
 fn str2ptr(str: String) -> *const c_char {
