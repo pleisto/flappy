@@ -151,7 +151,7 @@ jobs:
       #       WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
       - name: Build
         run: ${{ matrix.settings.build }}
-        if: ${{ !matrix.settings.docker }}
+        # if: ${{ !matrix.settings.docker }}
         shell: bash
 
       - name: Install cross-compilation tools
