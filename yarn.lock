@@ -2738,7 +2738,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pleisto/flappy-nodejs-bindings@workspace:*, @pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs":
+"@pleisto/flappy-nodejs-bindings@^0.0.1-alpha.1, @pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs":
   version: 0.0.0-use.local
   resolution: "@pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs"
   dependencies:
@@ -2761,7 +2761,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:
-    "@pleisto/flappy-nodejs-bindings": "workspace:*"
+    "@pleisto/flappy-nodejs-bindings": ^0.0.1-alpha.1
     openai: ^4.11.1
     radash: ^11.0.0
     zod: ^3.22.4
