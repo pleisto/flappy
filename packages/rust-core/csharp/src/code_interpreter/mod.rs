@@ -1,11 +1,11 @@
 use flappy_common::code_interpreter::wasix::*;
+use serde::{Deserialize, Serialize};
+use serde_json;
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::ptr::null;
 use tokio::runtime::Builder;
-use serde::{Serialize, Deserialize};
-use serde_json;
-use std::collections::HashMap;
 
 fn str2ptr(str: String) -> *const c_char {
   CString::new(str)
@@ -36,30 +36,37 @@ pub extern "C" fn eval_native_call() -> bool {
   true
 }
 
-#[derive(Debug,Serialize,Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct InputStruct {
   code: String,
   network: bool,
-  envs: HashMap<String,String>,
-  cache_path: String
+  envs: HashMap<String, String>,
+  cache_path: String,
 }
 
-#[derive(Debug,Serialize,Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct OutputStruct {
   std_out: String,
   std_err: String,
-  exception_string: String
+  exception_string: String,
 }
 
 /// Call python code by json in json out
 #[no_mangle]
-pub extern "C" fn eval_python_code_by_json(input_str: *const c_char ) -> *const c_char{
+pub extern "C" fn eval_python_code_by_json(input_str: *const c_char) -> *const c_char {
   let input_string = ptr2str(input_str);
-  let input : InputStruct = serde_json::from_str(&input_string).unwrap();
+  let input: InputStruct = serde_json::from_str(&input_string).unwrap();
 
   let rt = Builder::new_multi_thread().enable_all().build().unwrap();
   let output = rt.block_on(async {
-    match python_sandbox(input.code, input.network, input.envs.into_iter().collect(), Some(input.cache_path)).await {
+    match python_sandbox(
+      input.code,
+      input.network,
+      input.envs.into_iter().collect(),
+      Some(input.cache_path),
+    )
+    .await
+    {
       Err(err) => OutputStruct {
         exception_string: err.to_string(),
         std_err: String::new(),
@@ -73,7 +80,5 @@ pub extern "C" fn eval_python_code_by_json(input_str: *const c_char ) -> *const 
     }
   });
 
-
   str2ptr(serde_json::to_string(&output).expect("Failed to serialize struct to JSON"))
-
 }
