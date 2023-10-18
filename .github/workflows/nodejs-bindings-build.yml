@@ -64,8 +64,8 @@ jobs:
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            # apk add pkgconfig openssl-dev gcc g++ make perl
             build: |
-              apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
               yarn build:nodejs-bindings
               strip "$WORKING_DIRECTORY/$APP_NAME.linux-x64-musl.node"
@@ -104,9 +104,9 @@ jobs:
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            # apk add pkgconfig openssl-dev gcc g++ make perl
             build: |
               set -e
-              apk add pkgconfig openssl-dev gcc g++ make perl
               rustup target add aarch64-unknown-linux-musl
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "$WORKING_DIRECTORY/$APP_NAME.linux-x64-musl.node"
