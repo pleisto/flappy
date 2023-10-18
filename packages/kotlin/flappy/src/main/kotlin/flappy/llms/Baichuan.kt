@@ -21,7 +21,7 @@ internal fun calculateMd5(input: String): String {
   return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
 }
 
-class Baichuan @JvmOverloads constructor(
+class Baichuan(
   private val baichuanConfig: BaichuanConfig,
 ) :
   FlappyLLMBase() {
