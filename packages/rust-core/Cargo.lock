@@ -882,6 +882,7 @@ dependencies = [
  "mimalloc",
  "num_cpus",
  "once_cell",
+ "openssl",
  "tokio",
 ]
 

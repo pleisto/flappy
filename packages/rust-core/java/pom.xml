@@ -26,7 +26,7 @@
 
   <groupId>com.pleisto</groupId>
   <artifactId>flappy-java-bindings</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <name>flappy-java-bindings</name>
   <description>Java bindings of flappy</description>
   <inceptionYear>2023</inceptionYear>
@@ -62,7 +62,6 @@
 
     <!-- customized properties -->
     <cargo-build.profile>dev</cargo-build.profile>
-    <cargo-build.features>default</cargo-build.features>
     <cargo-build.target/> <!-- override cargo build target; e.g., use musl instead -->
     <jni.classifier>${os.detected.classifier}</jni.classifier>
 

@@ -22,6 +22,8 @@ plugins {
 
   id("com.google.osdetector") version "1.7.3"
 
+  id("com.jraska.module.graph.assertion") version "2.5.0"
+
   signing
 }
 
@@ -66,8 +68,8 @@ dependencies {
   implementation("com.theokanning.openai-gpt3-java:service:0.16.0")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-  implementation("com.pleisto:flappy-java-bindings:0.0.5")
-  implementation("com.pleisto:flappy-java-bindings:0.0.5:${osdetector.classifier}")
+  implementation("com.pleisto:flappy-java-bindings:0.0.6")
+  implementation("com.pleisto:flappy-java-bindings:0.0.6:${osdetector.classifier}")
 }
 
 mavenPublishing {

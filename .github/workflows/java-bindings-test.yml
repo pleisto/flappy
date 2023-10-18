@@ -8,6 +8,7 @@ on:
       - 'packages/rust-core/java/**'
       - 'packages/rust-core/Cargo.toml'
       - '.github/workflows/java-bindings-test.yml'
+      - '.github/workflows/java-bindings-publish-common.yml'
 
 defaults:
   run:
@@ -18,6 +19,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  publish:
+    uses: ./.github/workflows/java-bindings-publish-common.yml
+    with:
+      publish: false
+
   ci:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -37,11 +43,6 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
           cache: 'maven'
-
-      - name: Rust cache
-        uses: ./.github/workflows/rust-cache
-        with:
-          cache_key: ${{matrix.os}}
 
       - name: Install
         run: ./mvnw clean install -DskipTests -D"gpg.skip"

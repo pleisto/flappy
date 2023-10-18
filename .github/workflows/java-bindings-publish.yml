@@ -6,10 +6,16 @@ on:
     branches: [main]
     paths:
       - 'packages/rust-core/java/pom.xml'
+      - '.github/workflows/java-bindings-publish.yml'
+      - '.github/workflows/java-bindings-publish-common.yml'
 
 defaults:
   run:
     working-directory: packages/rust-core/java
+
+env:
+  RUST_BACKTRACE: full
+  CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
@@ -51,69 +57,13 @@ jobs:
           fi
 
   stage-snapshot:
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    environment:
-      name: Maven
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            classifier: linux-x86_64
-          - os: windows-latest
-            classifier: windows-x86_64
-          - os: macos-latest
-            classifier: osx-x86_64
-          - os: macos-latest
-            classifier: osx-aarch_64
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 8
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-          cache: 'maven'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Rust cache
-        uses: ./.github/workflows/rust-cache
-        with:
-          cache_key: ${{matrix.os}}
-
-      - name: Local staging
-        shell: bash
-        run: |
-          ./mvnw verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
-            -DskipTests=true \
-            -Djni.classifier=${{ matrix.classifier }} \
-            -Dcargo-build.profile=release \
-            -DaltStagingDirectory=local-staging \
-            -DskipRemoteStaging=true \
-            -DserverId=ossrh \
-            -DnexusUrl=https://s01.oss.sonatype.org
-        env:
-          MAVEN_USERNAME: ${{ vars.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
-
-      - name: Upload local staging directory
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.classifier }}-local-staging
-          path: packages/rust-core/java/local-staging
-          if-no-files-found: error
+    uses: ./.github/workflows/java-bindings-publish-common.yml
+    with:
+      environment: Maven
+      publish: true
+    secrets: inherit
 
   deploy-staged-snapshots:
     runs-on: ubuntu-latest
@@ -145,16 +95,37 @@ jobs:
         with:
           name: windows-x86_64-local-staging
           path: ~/windows-x86_64-local-staging
+
       - name: Download linux staging directory
         uses: actions/download-artifact@v3
         with:
           name: linux-x86_64-local-staging
           path: ~/linux-x86_64-local-staging
+
+      - name: Download linux (aarch64) staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-aarch_64-local-staging
+          path: ~/linux-aarch_64-local-staging
+
+      - name: Download linux_musl staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: linux_musl-x86_64-local-staging
+          path: ~/linux_musl-x86_64-local-staging
+
+      - name: Download linux_musl (aarch64) staging directory
+        uses: actions/download-artifact@v3
+        with:
+          name: linux_musl-aarch_64-local-staging
+          path: ~/linux_musl-aarch_64-local-staging
+
       - name: Download darwin staging directory
         uses: actions/download-artifact@v3
         with:
           name: osx-x86_64-local-staging
           path: ~/osx-x86_64-local-staging
+
       - name: Download darwin (aarch64) staging directory
         uses: actions/download-artifact@v3
         with:
@@ -166,6 +137,9 @@ jobs:
           bash tools/merge_local_staging.sh $LOCAL_STAGING_DIR/staging \
             ~/windows-x86_64-local-staging/staging \
             ~/linux-x86_64-local-staging/staging \
+            ~/linux-aarch_64-local-staging/staging \
+            ~/linux_musl-x86_64-local-staging/staging \
+            ~/linux_musl-aarch_64-local-staging/staging \
             ~/osx-x86_64-local-staging/staging \
             ~/osx-aarch_64-local-staging/staging
 
