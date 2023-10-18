@@ -11,9 +11,9 @@ crate-type = ["cdylib"]
 
 [dependencies]
 flappy-common = { path = "../common" }
-mimalloc = {version = "0.1.39", default-features = false}
+mimalloc = { version = "0.1.39", default-features = false }
 libc = "0.2"
-tokio = { version = "1.0", features = ["full"] }
+tokio = { version = "1.33.0", features = ["full"] }
 openssl = { version = "0.10", features = ["vendored"] }
 serde = "1.0"
 serde_json = "1.0"
@@ -23,4 +23,4 @@ lto = true
 codegen-units = 1
 
 [profile.dev]
-incremental=true
+incremental = true
