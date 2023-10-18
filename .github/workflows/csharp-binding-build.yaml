@@ -33,7 +33,7 @@ jobs:
             artifact: libflappy_csharp_bindings.dylib
             build: |
               cargo build -r --target aarch64-apple-darwin
-              
+
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
@@ -151,37 +151,37 @@ jobs:
           nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-apple-darwin
           path: ~/artifacts/
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-aarch64-unknown-linux-gnu
           path: ~/artifacts/
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-aarch64-apple-darwin
           path: ~/artifacts/
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-unknown-linux-musl
           path: ~/artifacts/
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-unknown-linux-gnu
           path: ~/artifacts/
 
       - name: download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-pc-windows-gnu
           path: ~/artifacts/
@@ -209,7 +209,7 @@ jobs:
 
           #cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
 
-          tar cvf ~/nuget.tar ~/nuget 
+          tar cvf ~/nuget.tar ~/nuget
           gzip -9 ~/nuget.tar
 
       - name: build nupkg

@@ -10,23 +10,38 @@ independent = true
 [dependencies]
 wasmer = "4.2.2"
 wasmer-registry = "5.8.0"
-wasmer-vm =  "4.2.2"
-wasmer-cache = {version = "4.2.2", features = ["blake3-pure"]}
-wasmer-wasix = {version = "0.15.0", features = [ "sys", "sys-poll",  "logging", "host-fs","host-vnet","host-reqwest","host-threads","sys","sys-thread"]}
-virtual-mio = {version = "0.3.0"}
+wasmer-vm = "4.2.2"
+wasmer-cache = { version = "4.2.2", features = ["blake3-pure"] }
+wasmer-wasix = { version = "0.15.0", features = [
+  "sys",
+  "sys-poll",
+  "logging",
+  "host-fs",
+  "host-vnet",
+  "host-reqwest",
+  "host-threads",
+  "sys",
+  "sys-thread",
+] }
+virtual-mio = { version = "0.3.0" }
 anyhow = "1.0"
 dirs = "5.0.1"
-reqwest = { version = "^0.11.20", default-features = false, features = [
+reqwest = { version = "^0.11.22", default-features = false, features = [
   "native-tls",
   "json",
   "multipart",
 ] }
-webc = "5.5.1"
-virtual-fs = {version = "0.9.0", features = ["host-fs"]}
-virtual-net = {version = "0.6.1", features = ["host-net"]}
-tokio = {version = "1.32.0", features = ["sync", "macros", "time", "rt-multi-thread"] }
+webc = "5.6.0"
+virtual-fs = { version = "0.9.0", features = ["host-fs"] }
+virtual-net = { version = "0.6.1", features = ["host-net"] }
+tokio = { version = "1.33.0", features = [
+  "sync",
+  "macros",
+  "time",
+  "rt-multi-thread",
+] }
 once_cell = "1.18.0"
-async-trait = "0.1.73"
+async-trait = "0.1.74"
 futures = "0.3.28"
 tracing = "0.1.39"
 derivative = "2.2.0"
