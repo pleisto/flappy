@@ -1,0 +1,240 @@
+name: CSharp Bindings Build
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - packages/rust-core/charp/**/*
+      - .github/workflows/csharp-binding-build.yaml
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: [self-hosted, macOS, ARM64]
+            target: x86_64-apple-darwin
+            artifact: libflappy_csharp_bindings.dylib
+            build: |
+              cargo build -r --target x86_64-apple-darwin
+
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            artifact: libflappy_csharp_bindings.dylib
+            build: |
+              cargo build -r --target aarch64-apple-darwin
+              
+
+          - host: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            artifact: flappy_csharp_bindings.dll
+            build: |
+              sudo apt-get install -y gcc-mingw-w64-x86-64-win32
+              cargo install cargo-xwin
+              cargo build -r --target x86_64-pc-windows-gnu
+
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
+            artifact: libflappy_csharp_bindings.so
+            build: |-
+              set -e && \
+              sudo apt-get update
+              sudo apt-get install build-essential perl pkg-config libssl-dev -y
+              cargo build -r --target x86_64-unknown-linux-gnu
+
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            artifact: libflappy_csharp_bindings.so
+            build: |
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              set -e
+              cargo build -r --target x86_64-unknown-linux-musl
+
+
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+            artifact: libflappy_csharp_bindings.so
+            build: |-
+              set -e && \
+              sudo apt-get update && \
+              sudo apt-get install build-essential -y && \
+              sudo apt-get install perl -y && \
+              sudo apt-get install pkg-config libssl-dev -y && \
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" && \
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
+              cargo build -r --target aarch64-unknown-linux-gnu
+
+          #- host: ubuntu-latest
+          #  target: aarch64-linux-android
+          #  artifact: target/x86_64-apple-darwin/*.so
+          #  build: |
+          #    cargo build --target aarch64-linux-android
+          #    ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
+
+          #- host: ubuntu-latest
+          #  target: aarch64-unknown-linux-musl
+          #  docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+          #  artifact: libflappy_csharp_bindings.so
+          #  build: |-
+          #    set -e && \
+          #    apk add pkgconfig openssl-dev gcc g++ make perl && \
+          #    rustup target add aarch64-unknown-linux-musl && \
+          #    cargo build -r --target aarch64-unknow-linux-musl
+
+    name: build and upload rust code - csharp
+    runs-on: ${{ matrix.settings.host }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        if: ${{ !matrix.settings.docker }}
+        with:
+          toolchain: stable
+          targets: ${{ matrix.settings.target }}
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
+
+      - name: Build in docker
+        uses: addnab/docker-run-action@v3
+        if: ${{ matrix.settings.docker }}
+        with:
+          image: ${{ matrix.settings.docker }}
+          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+          run: |
+            cd packages/rust-core/csharp
+            ${{ matrix.settings.build }}
+
+      - name: Build
+        run: ${{ matrix.settings.build }}
+        if: ${{ !matrix.settings.docker }}
+        shell: bash
+        working-directory: packages/rust-core/csharp
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: "**/${{ matrix.settings.artifact }}"
+          if-no-files-found: error
+
+  package-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    name: package and upload nuget package - csharp
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-apple-darwin
+          path: ~/artifacts/
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-aarch64-unknown-linux-gnu
+          path: ~/artifacts/
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-aarch64-apple-darwin
+          path: ~/artifacts/
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-unknown-linux-musl
+          path: ~/artifacts/
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-unknown-linux-gnu
+          path: ~/artifacts/
+
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: bindings-x86_64-pc-windows-gnu
+          path: ~/artifacts/
+
+      - name: make runtimes dir
+        run: |
+          find ~/artifacts
+
+          dcp() {
+            local target=$2
+            local src=$1
+            mkdir -p ~/nuget/runtimes/$target
+            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target
+          }
+
+          mkdir -p ~/nuget
+          dcp x86_64-pc-windows-gnu/release/flappy_csharp_bindings.dll win-x64
+
+          dcp aarch64-apple-darwin/release/libflappy_csharp_bindings.dylib osx-arm64
+          dcp x86_64-apple-darwin/release/libflappy_csharp_bindings.dylib osx-x64
+
+          dcp x86_64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-x64
+          dcp aarch64-unknown-linux-gnu/release/libflappy_csharp_bindings.so linux-arm64
+          dcp x86_64-unknown-linux-musl/release/libflappy_csharp_bindings.so linux-musl-x64
+
+          #cp packages/rust-core/csharp/tools/Pleisto.Flappy.Native.csproj ~/nuget
+
+          tar cvf ~/nuget.tar ~/nuget 
+          gzip -9 ~/nuget.tar
+
+      - name: build nupkg
+        run: |
+          cd packages/csharp
+          cp -vr ~/nuget/runtimes ./runtimes
+
+          dotnet build -c Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings
+          path: |
+            packages/csharp/**/*.nupkg
+            ~/nuget.tar.gz
+          if-no-files-found: error
+
+      - name: publish nuget pkg
+        run: |
+          cd packages/csharp
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
+          done

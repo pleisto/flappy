@@ -1,5 +1,8 @@
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Pleisto.Flappy.CodeInterpreter;
+using Pleisto.Flappy.Exceptions;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.LLM.Interfaces;
@@ -16,6 +19,9 @@ namespace Pleisto.Flappy
     internal readonly FlappyAgentConfig config;
     internal readonly ILLMBase llm;
     internal readonly ILLMBase llmPlaner;
+    private int retry = 0;
+    private const int DEFAULT_RETRY = 1;
+    private readonly ILogger<FlappyAgent> logger;
 
     /// <summary>
     /// Create a flappy agent.
@@ -23,14 +29,17 @@ namespace Pleisto.Flappy
     /// <param name="config">config of flappy</param>
     /// <param name="llm"></param>
     /// <param name="llmPlaner"></param>
+    /// <param name="logger">Logger of FlappyAgent</param>
     /// <exception cref="NullReferenceException"></exception>
-    public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner)
+    public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner, ILogger<FlappyAgent> logger)
     {
       this.config = config;
       if ((config.Functions?.Length ?? 0) <= 0)
         throw new NullReferenceException($"config.functions not be null");
       this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? this.llm;
+      this.retry = config.Retry ?? DEFAULT_RETRY;
+      this.logger = logger;
     }
 
     /// <summary>
@@ -119,12 +128,12 @@ Only the listed functions are allowed to be used."
       var result = await llmPlaner.ChatComplete(requestMessage, null);
       if (result.Success == false)
       {
-        throw new InvalidOperationException("LLM operation return not success");
+        throw new LLMNotSuccessException();
       }
       var plan = ParseComplete(result);
 
       if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
-        throw new InvalidDataException($"Json Schema is invalid");
+        throw new InvalidJsonWithSchemaValidationException(errorList);
 
       LanOutputSchema[] plans;
       if (enableCot)
@@ -165,7 +174,7 @@ Only the listed functions are allowed to be used."
         }
         catch (Exception ex)
         {
-          throw new InvalidProgramException($"unable to process step {Environment.NewLine}{JObject.FromObject(step)}", ex);
+          throw new StepPlainException(JObject.FromObject(step), ex);
         }
       return returnStore[plan.Count];
     }
@@ -175,7 +184,7 @@ Only the listed functions are allowed to be used."
       var startIdx = msg.Data?.IndexOf('[') ?? -1;
       var endIdx = msg.Data?.LastIndexOf(']') ?? -1;
       if (startIdx == -1 || endIdx == -1 || endIdx < startIdx)
-        throw new InvalidDataException($"Invalid JSON response startIdx={startIdx} endIdx={endIdx}");
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data);
       var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
       try
       {
@@ -184,8 +193,85 @@ Only the listed functions are allowed to be used."
       }
       catch (Exception ex)
       {
-        throw new InvalidDataException($"unable to parse json array startIdx={startIdx} endIdx={endIdx} raw={Environment.NewLine}{msg.Data}" +
-            $"{Environment.NewLine}SplitedData:{Environment.NewLine}{content}", ex);
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data, content, ex);
+      }
+    }
+
+    /// <summary>
+    /// Call by code interpreter
+    /// </summary>
+    /// <param name="prompt"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<object> CallCodeInterpreter(string prompt)
+    {
+      if (config.CodeInterpreter == null)
+        throw new CodeInterpreterNotEnabledException();
+      var originalRequestMessage = new ChatMLMessage[]
+      {
+        new ChatMLMessage
+        {
+          Role = ChatMLMessageRole.System,
+          Content= $@"You are an AI that writes Python code using only the built-in library. After you supply the Python code, it will be run in a safe sandbox. The execution time is limited to 120 seconds. The task is to define a function named ""main"" that doesn't take any parameters. The output should be a JSON object: {{""code"": string}}.
+            Network access is {(config.CodeInterpreter.EnableNetwork == true ? "enabled" : "disabled")}"
+        },
+        new ChatMLMessage
+        {
+          Role = ChatMLMessageRole.User,
+          Content = $"{prompt}\n\noutput json:\n"
+        }
+      };
+
+      var retry = this.retry;
+      var requestMessage = originalRequestMessage;
+      ChatMLResponse result = null;
+      while (true)
+      {
+        try
+        {
+          if (retry != this.retry)
+          {
+            logger?.LogDebug("Attempt retry: {}", this.retry - retry);
+          }
+          result = await llm.ChatComplete(requestMessage);
+          var data = JObject.Parse(result.Data)["code"]?.ToString()?.Replace("\\n", "\n");
+          if (data == null)
+            throw new Exception("Invalid JSON response");
+          if (data.Contains("def main():"))
+            throw new Exception("Function \"main\" not found");
+          logger?.LogDebug("Generated Code: {}", data);
+          var pythonResult = NativeHandler.EvalPythonCode($"{data}\nprint(main())", config.CodeInterpreter.EnableNetwork == true, config.CodeInterpreter.Env ?? new Dictionary<string, string>(), config.CodeInterpreter.CacheDir);
+          if (string.IsNullOrWhiteSpace(pythonResult.StdErr))
+            throw new Exception(data);
+          logger?.LogDebug("Code Interpreter Output: {}", pythonResult.StdOut);
+          return pythonResult.StdOut;
+        }
+        catch (Exception ex)
+        {
+          logger?.LogError(ex.ToString());
+          if (retry <= 0)
+            throw new CodeInterpreterRetryException(retry, ex);
+          retry -= 1;
+          if (result?.Success == true && result.Data != null)
+          {
+            requestMessage = requestMessage.Union(new ChatMLMessage[]
+            {
+              new ChatMLMessage
+              {
+                Role = ChatMLMessageRole.Assistant,
+                Content = result?.Data
+              },
+              new ChatMLMessage
+              {
+                Role = ChatMLMessageRole.User,
+                Content= @$"You response is invalid for the following reason:
+            {ex.Message}
+
+            Please try again."
+              }
+            }).ToArray();
+          }
+        }
       }
     }
 

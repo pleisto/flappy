@@ -1,11 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1;net48;net472</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>Pleisto.Flappy.Tests</RootNamespace>
+
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Example.Law\Pleisto.Flappy.Example.Law.csproj" />
-    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Example.Resume\Pleisto.Flappy.Example.Resume.csproj" />
+    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Examples\Pleisto.Flappy.Examples.csproj" />
     <ProjectReference Include="..\Pleisto.Flappy\Pleisto.Flappy.csproj" />
   </ItemGroup>
 

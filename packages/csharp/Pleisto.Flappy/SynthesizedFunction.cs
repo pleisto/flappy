@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using Pleisto.Flappy.Exceptions;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM.Interfaces;
 
@@ -73,7 +74,7 @@ Please try again."}
       var startIdx = msg.Data?.IndexOf('{') ?? -1;
       var endIdx = msg.Data?.LastIndexOf('}') ?? -1;
       if (startIdx == -1 || endIdx == -1 || endIdx < startIdx)
-        throw new InvalidDataException($"Invalid JSON response startIndex={startIdx} endIdx={endIdx}");
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data);
 
       var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
       try
@@ -83,7 +84,7 @@ Please try again."}
       }
       catch (Exception ex)
       {
-        throw new InvalidDataException($"exception on {nameof(ParseComplete)} {Environment.NewLine}{content}", ex);
+        throw new InvalidJsonDataException(startIdx, endIdx, msg.Data, content, ex);
       }
     }
 

@@ -1,34 +1,29 @@
+using Microsoft.Extensions.Logging;
 using OpenAI_API;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
+using Pleisto.Flappy.Test.Resume;
+using System;
+using System.Threading.Tasks;
 
-namespace Pleisto.Flappy.Test.Resume
+namespace Pleisto.Flappy.Examples.Resume
 {
-  public static class Program
+  internal class ResumeCase : ExampleBase
   {
-    private static string OpenApiKey => Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new Exception("no environment found: OPENAI_API_KEY");
-
-    public static bool ConsoleRun { get; set; } = true;
-
-    public static async Task Main()
+    async public override Task OnExecuteAsync()
     {
-      try
+      var gpt35 = new ChatGPT(new OpenAIAPI
       {
-        var gpt35 = new ChatGPT(new OpenAIAPI
-        {
-          Auth = new APIAuthentication(apiKey: OpenApiKey),
-          ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
-          ApiVersion = "v1",
-        }, "gpt-3.5-turbo", null)
-        {
-          DebugGPT = true
-        };
+        Auth = new APIAuthentication(apiKey: OpenAIApiKey),
+        ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+        ApiVersion = "v1",
+      }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
 
-        var lawAgent = new FlappyAgent(new FlappyAgentConfig
-        {
-          LLM = gpt35,
-          Functions = new IFlappyFunction[]
-             {
+      var lawAgent = new FlappyAgent(new FlappyAgentConfig
+      {
+        LLM = gpt35,
+        Functions = new IFlappyFunction[]
+           {
                new SynthesizedFunction<GetMetaArgs,GetMetaReturn>(new SynthesizedFunctionDefinition<GetMetaArgs, GetMetaReturn>
                {
                  Name = "getMeta",
@@ -50,18 +45,13 @@ namespace Pleisto.Flappy.Test.Resume
                     });
                   })
                })
-             },
-        }, null, null);
-        var data = (await lawAgent.CreateExecutePlan("Find the resume of a frontend engineer and return their metadata."));
-        Console.WriteLine($"====================== Final Result =========================");
-        Console.WriteLine(data.ToString());
-        Console.WriteLine($"====================== Final Result Of Data =========================");
-        //    Console.WriteLine(JArray.Parse(data["data"].ToString()));
-      }
-      catch (Exception ex) when (ConsoleRun)
-      {
-        Console.Error.WriteLine(ex.ToString());
-      }
+           },
+      }, null, null, new LoggerFactory().CreateLogger<FlappyAgent>());
+      var data = (await lawAgent.CreateExecutePlan("找到前端工程师的简历并返回他的元数据"));
+      Console.WriteLine($"====================== Final Result =========================");
+      Console.WriteLine(data.ToString());
+      Console.WriteLine($"====================== Final Result Of Data =========================");
+      //    Console.WriteLine(JArray.Parse(data["data"].ToString()));
     }
 
     private const string MOCK_LAWSUIT_DATA =

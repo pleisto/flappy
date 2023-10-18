@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>Pleisto</Authors>
 		<ProductName>Pleisto.Flappy</ProductName>
-		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1;net48;net472</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>11.0</LangVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
@@ -11,23 +11,26 @@
 		<Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>IDE1006</WarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!--Nuget Package Info-->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.3-alpha</Version>
+    <Version>0.0.0.4-alpha</Version>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
+    
 	</PropertyGroup>
 
 	<ItemGroup>
     <None Include="../.editorconfig" Link=".editorconfig" />
-		<None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False"/>
-		<None Include="../../../README.md" PackagePath="" Pack="True" Visible="False"/>
+		<None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False" />
+		<None Include="../../../README.md" PackagePath="" Pack="True" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,6 +40,10 @@
     <PackageReference Include="OpenAI" Version="1.7.2" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <None Include="runtimes/**/*">
+      <Pack>True</Pack>
+      <PackagePath>runtimes</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 [workspace]
-members = ["./common", "./nodejs", "./java"]
+members = ["./common", "./nodejs","./java", "./csharp"]
 resolver = "2"
 package.license = "Apache-2.0"
 

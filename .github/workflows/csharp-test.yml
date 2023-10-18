@@ -1,4 +1,4 @@
-name: CSharp Nuget Test
+name: CSharp Nuget Test - Linux
 
 on:
   workflow_dispatch:
@@ -12,20 +12,28 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: packages/csharp
-
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} - dotnet-${{ matrix.dotnet-version.framework }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          #- windows-latest
+          #- macos-latest
+        dotnet-version:
+          - framework: netcoreapp3.1
+            runtime: 3.1
+          - framework: net6.0
+            runtime: 6.0
+          - framework: net7.0
+            runtime: 7.0
     steps:
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: |
-            3.1
-            6.0
-            7.0
+          dotnet-version: ${{ matrix.dotnet-version.runtime }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -37,8 +45,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: ${{ matrix.os }}-cargo
+
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
       - uses: actions/checkout@v4
+
+      - name: build binding native
+        run: |
+          cd packages/rust-core/csharp
+          cargo build
+
       - name: dotnet test
-        env:
-          OPENAI_API_KEY:
-        run: dotnet test -e NO_GPT_TEST=true
+        run: |
+          cd packages/csharp
+          mkdir -p ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
+          cp ../rust-core/target/debug/*csharp* ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
+          dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
