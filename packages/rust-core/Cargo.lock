@@ -867,6 +867,8 @@ dependencies = [
  "libc",
  "mimalloc",
  "openssl",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
