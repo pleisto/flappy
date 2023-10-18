@@ -7,36 +7,44 @@ from pathlib import Path
 import shutil
 import subprocess
 
+TARGET_META = {
+    "x86_64-unknown-linux-gnu": {
+        "classifier": "linux-x86_64",
+        "artifact_name": "libflappy_java_bindings.so",
+    },
+    "aarch64-unknown-linux-gnu": {
+        "classifier": "linux-aarch_64",
+        "artifact_name": "libflappy_java_bindings.so",
+    },
+    "x86_64-unknown-linux-musl": {
+        "classifier": "linux_musl-x86_64",
+        "artifact_name": "libflappy_java_bindings.so",
+    },
+    "aarch64-unknown-linux-musl": {
+        "classifier": "linux_musl-aarch_64",
+        "artifact_name": "libflappy_java_bindings.so",
+    },
+    "x86_64-pc-windows-gnu": {
+        "classifier": "windows-x86_64",
+        "artifact_name": "flappy_java_bindings.dll",
+    },
+    "aarch64-apple-darwin": {
+        "classifier": "osx-aarch_64",
+        "artifact_name": "libflappy_java_bindings.dylib",
+    },
+    "x86_64-apple-darwin": {
+        "classifier": "osx-x86_64",
+        "artifact_name": "libflappy_java_bindings.dylib",
+    },
+}
 
-def classifier_to_target(classifier: str) -> str:
-    if classifier == "osx-aarch_64":
-        return "aarch64-apple-darwin"
-    if classifier == "osx-x86_64":
-        return "x86_64-apple-darwin"
-    if classifier == "linux-x86_64":
-        return "x86_64-unknown-linux-gnu"
-    if classifier == "windows-x86_64":
-        return "x86_64-pc-windows-msvc"
-    raise Exception(f"Unsupported classifier: {classifier}")
-
-
-def get_cargo_artifact_name(classifier: str) -> str:
-    if classifier == "osx-aarch_64":
-        return "libflappy_java_bindings.dylib"
-    if classifier == "osx-x86_64":
-        return "libflappy_java_bindings.dylib"
-    if classifier == "linux-x86_64":
-        return "libflappy_java_bindings.so"
-    if classifier == "windows-x86_64":
-        return "flappy_java_bindings.dll"
-    raise Exception(f"Unsupported classifier: {classifier}")
-
+CLASSIFIER_META = {v["classifier"]: k for k, v in TARGET_META.items()}
 
 if __name__ == "__main__":
     basedir = Path(__file__).parent.parent
 
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--classifier", type=str, required=True)
+    parser.add_argument("--classifier", type=str)
     parser.add_argument("--target", type=str, default="")
     parser.add_argument("--profile", type=str, default="dev")
     args = parser.parse_args()
@@ -45,8 +53,18 @@ if __name__ == "__main__":
 
     if args.target:
         target = args.target
+        if target not in TARGET_META:
+            raise Exception(f"Unsupported target: {target}")
+        classifier = TARGET_META[target]["classifier"]
+    elif args.classifier:
+        classifier = args.classifier
+        if classifier not in CLASSIFIER_META:
+            raise Exception(f"Unsupported classifier: {classifier}")
+        target = CLASSIFIER_META[classifier]
     else:
-        target = classifier_to_target(args.classifier)
+        raise Exception("Missing target or classifier")
+
+    print("#### target: " + target + ",classifier: " + classifier)
 
     command = ["rustup", "target", "add", target]
     print("$ " + subprocess.list2cmdline(command))
@@ -62,8 +80,8 @@ if __name__ == "__main__":
 
     # History reason of cargo profiles.
     profile = "debug" if args.profile in ["dev", "test", "bench"] else args.profile
-    artifact = get_cargo_artifact_name(args.classifier)
+    artifact = TARGET_META[target]["artifact_name"]
     src = output / target / profile / artifact
-    dst = basedir / "target" / "classes" / "native" / args.classifier / artifact
+    dst = basedir / "target" / "classes" / "native" / classifier / artifact
     dst.parent.mkdir(exist_ok=True, parents=True)
     shutil.copy2(src, dst)

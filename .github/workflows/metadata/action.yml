@@ -1,4 +1,4 @@
-name: 'Metadata'
+name: Metadata
 outputs:
   sha_short:
     description: 'Git short rev'

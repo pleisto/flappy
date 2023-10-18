@@ -57,8 +57,8 @@ Then add the dependency to `flappy-java-bindings` as following:
 
 ```groovy
 dependencies {
-    implementation "com.pleisto:flappy-java-bindings:0.0.3"
-    implementation "com.pleisto:flappy-java-bindings:0.0.3:$osdetector.classifier"
+    implementation "com.pleisto:flappy-java-bindings:0.0.6"
+    implementation "com.pleisto:flappy-java-bindings:0.0.6:$osdetector.classifier"
 }
 ```
 

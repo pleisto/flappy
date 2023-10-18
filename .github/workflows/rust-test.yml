@@ -39,11 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Rust cache
-        uses: ./.github/workflows/rust-cache
-        with:
-          cache_key: ${{matrix.os}}
-
       - name: DEBUG
         run: rustup toolchain list -v
 
