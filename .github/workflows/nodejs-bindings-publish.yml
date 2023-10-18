@@ -65,7 +65,7 @@ jobs:
   stage-snapshot:
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    uses: ./.github/workflows/nodejs-bindings-publish.yml
+    uses: ./.github/workflows/nodejs-bindings-build.yml
   publish:
     needs: [check_if_need_release, stage-snapshot]
     if: needs.check_if_need_release.outputs.release == 'yes'
