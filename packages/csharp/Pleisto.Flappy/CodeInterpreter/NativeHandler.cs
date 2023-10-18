@@ -88,15 +88,5 @@ namespace Pleisto.Flappy.CodeInterpreter
         Free(sendToPtr);
       }
     }
-
-    /// <summary>
-    /// On native code call event
-    /// </summary>
-    public static event EventHandler<string> OnNavtiveCodeCall;
-
-    /// <summary>
-    /// After native code call
-    /// </summary>
-    public static event EventHandler<RustStdOutputManaged> AfterNativeCodeCall;
   }
 }
