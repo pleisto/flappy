@@ -12,13 +12,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-defaults:
-  run:
-    working-directory: packages/csharp
-
 jobs:
   tests:
-    name: ${{ matrix.os }} - dotnet-${{ matrix.dotnet-version }}
+    name: ${{ matrix.os }} - dotnet-${{ matrix.dotnet-version.framework }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -71,7 +67,7 @@ jobs:
       - name: build binding native
         run: |
           cd packages/rust-core/csharp
-          cargo build --target-dir 
+          cargo build
 
       - name: dotnet test
         run: |
