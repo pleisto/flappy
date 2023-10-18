@@ -8,6 +8,7 @@ env:
   DEBUG: napi:*
   APP_NAME: flappy-nodejs-bindings
   MACOSX_DEPLOYMENT_TARGET: '10.13'
+  WORKING_DIRECTORY: packages/rust-core/nodejs
 
 permissions:
   contents: write
@@ -187,5 +188,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
-          path: ${{ env.APP_NAME }}.*.node
+          path: ${{ env.WORKING_DIRECTORY }}/${{ env.APP_NAME }}.*.node
           if-no-files-found: error
