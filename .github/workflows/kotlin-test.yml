@@ -41,14 +41,13 @@ jobs:
         kotlin-ir-enabled: [true]
         kotlin-test-mode: ['REFLECT']
         include:
-          - os: ubuntu-latest
-            excludeJniTests: false
-          - os: macos-latest
-            excludeJniTests: true
+          - excludeJniTests: false
           - os: windows-latest
             excludeJniTests: true
+          - os: macos-latest
+            excludeJniTests: true
         # kotlin-test-mode: [ 'REFLECT', 'KSP', 'KAPT' ]
-    name: '<${{ matrix.os }}> [java=${{ matrix.java-version }}, kotlin=${{ matrix.kotlin-version }}, IR=${{ matrix.kotlin-ir-enabled }}]'
+    name: '<${{ matrix.os }}> [java=${{ matrix.java-version }}, kotlin=${{ matrix.kotlin-version }}, IR=${{ matrix.kotlin-ir-enabled }}], ${{matrix.excludeJniTests}}'
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4

@@ -97,7 +97,7 @@ pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_ping<'local>(
   _: JClass<'local>,
 ) -> jstring {
   let output = env
-    .new_string(format!("pong"))
+    .new_string("pong".to_string())
     .expect("Couldn't create java string!");
   output.into_raw()
 }
