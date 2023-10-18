@@ -16,7 +16,6 @@ fn str2ptr(str: String) -> *const c_char {
 fn ptr2str(c_char_ptr: *const std::os::raw::c_char) -> String {
   unsafe {
     if c_char_ptr.is_null() {
-      // 处理空指针情况
       return String::new();
     }
 
