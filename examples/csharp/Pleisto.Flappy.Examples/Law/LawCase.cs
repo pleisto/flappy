@@ -52,7 +52,7 @@ namespace Pleisto.Flappy.Examples.Law
                })
            },
       }, null, null, Logger.CreateLogger<FlappyAgent>());
-      var data = (await lawAgent.CreateExecutePlan("找到原告为张三的最新案件并返回它的元数据"));
+      var data = await lawAgent.CreateExecutePlan("Find the resume of a frontend engineer and return their metadata.");
       Console.WriteLine($"====================== Final Result =========================");
       Console.WriteLine(data.ToString());
       Console.WriteLine($"====================== Final Result Of Data =========================");
