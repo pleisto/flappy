@@ -7,12 +7,13 @@ on:
       - 'packages/rust-core/**'
       - '.github/workflows/rust-test.yml'
   push:
+    branches: [main]
     paths:
       - 'packages/rust-core/**'
       - '.github/workflows/rust-test.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -28,7 +29,7 @@ defaults:
 
 jobs:
   lint:
-    name: 'Rust lint'
+    name: rust-ci-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +43,7 @@ jobs:
         run: cargo clippy -- -D warnings
 
   tests:
-    name: 'Rust test ${{matrix.target}}'
+    name: rust-ci-test
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:

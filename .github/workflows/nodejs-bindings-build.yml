@@ -1,7 +1,7 @@
 name: Nodejs Bindings Build
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -30,6 +30,7 @@ on:
       - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build.yml'
   push:
+    branches: [main]
     paths:
       - 'packages/rust-core/common/**'
       - 'packages/rust-core/nodejs/**'
@@ -40,12 +41,13 @@ on:
 
 jobs:
   build:
+    name: nodejs-bindings-ci-build
     strategy:
       fail-fast: false
       matrix:
         settings:
           # target: x86_64-apple-darwin
-          - host: [self-hosted, macOS, ARM64]
+          - host: macos-latest
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target x86_64-apple-darwin
@@ -54,9 +56,8 @@ jobs:
           # target: x86_64-pc-windows-gnu
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
+            command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
             build: |
-              sudo apt-get install -y gcc-mingw-w64-x86-64-win32
-              cargo install cargo-xwin
               yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
               strip -x "$APP_NAME.win32-x64-gnu.node"
 
@@ -123,10 +124,10 @@ jobs:
               rustup target add aarch64-unknown-linux-musl
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-musl.node"
-    name: stable - ${{ matrix.settings.target }} - node@19
     runs-on: ${{ matrix.settings.host }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v3
         if: ${{ !matrix.settings.docker }}
@@ -134,12 +135,24 @@ jobs:
           node-version: 19
           check-latest: true
           cache: yarn
+
+      - name: Run command ${{matrix.settings.command}}
+        if: ${{matrix.settings.command}}
+        run: ${{matrix.settings.command}}
+
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
+
+      - name: Install cross-compilation tools
+        uses: taiki-e/setup-cross-toolchain-action@v1
+        if: ${{ !matrix.settings.docker }}
+        with:
+          target: ${{matrix.settings.target}}
+
       - name: Cache cargo
         uses: actions/cache@v3
         with:
@@ -170,12 +183,13 @@ jobs:
           path: ${{ env.WORKING_DIRECTORY }}/${{ env.APP_NAME }}.*.node
           if-no-files-found: error
   universal-macOS:
-    name: Build universal macOS binary
+    name: nodejs-bindings-ci-build-universal-macos
     needs:
       - build
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:

@@ -9,6 +9,7 @@ on:
       - 'examples/java/**'
       - '.github/workflows/kotlin-test.yml'
   push:
+    branches: [main]
     paths:
       - 'packages/kotlin/**'
       - 'examples/kotlin/**'
@@ -16,7 +17,7 @@ on:
       - '.github/workflows/kotlin-test.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 defaults:
@@ -28,8 +29,8 @@ env:
 
 jobs:
   validate:
+    name: kotlin-ci-validate
     runs-on: ubuntu-latest
-    name: Validate
     steps:
       - uses: actions/checkout@v4
 
@@ -37,6 +38,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
   tests:
+    name: kotlin-ci-test
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -53,7 +55,6 @@ jobs:
           - os: macos-latest
             excludeJniTests: true
         # kotlin-test-mode: [ 'REFLECT', 'KSP', 'KAPT' ]
-    name: '<${{ matrix.os }}> [java=${{ matrix.java-version }}, kotlin=${{ matrix.kotlin-version }}, IR=${{ matrix.kotlin-ir-enabled }}], ${{matrix.excludeJniTests}}'
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
