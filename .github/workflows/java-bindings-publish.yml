@@ -18,7 +18,7 @@ env:
   CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
   cancel-in-progress: true
 
 jobs:
