@@ -23,11 +23,19 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'packages/rust-core/**'
+      - 'packages/rust-core/common/**'
+      - 'packages/rust-core/nodejs/**'
+      - 'packages/rust-core/Cargo.toml'
+      - 'packages/rust-core/Cargo.lock'
+      - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build.yml'
   push:
     paths:
-      - 'packages/rust-core/**'
+      - 'packages/rust-core/common/**'
+      - 'packages/rust-core/nodejs/**'
+      - 'packages/rust-core/Cargo.toml'
+      - 'packages/rust-core/Cargo.lock'
+      - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build.yml'
 
 jobs:
