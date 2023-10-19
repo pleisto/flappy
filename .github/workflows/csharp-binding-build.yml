@@ -167,7 +167,8 @@ jobs:
     name: csharp-bindings-publish-release
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - uses: nuget/setup-nuget@v1
         with:
           nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
