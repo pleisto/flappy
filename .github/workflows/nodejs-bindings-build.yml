@@ -23,6 +23,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - 'yarn.lock'
       - 'packages/rust-core/common/**'
       - 'packages/rust-core/nodejs/**'
       - 'packages/rust-core/Cargo.toml'
@@ -32,6 +33,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'yarn.lock'
       - 'packages/rust-core/common/**'
       - 'packages/rust-core/nodejs/**'
       - 'packages/rust-core/Cargo.toml'
@@ -133,7 +135,6 @@ jobs:
         if: ${{ !matrix.settings.docker }}
         with:
           node-version: 19
-          check-latest: true
           cache: yarn
 
       - name: Run command ${{matrix.settings.command}}
@@ -194,7 +195,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19
-          check-latest: true
           cache: yarn
       - name: Install dependencies
         run: yarn install --immutable
