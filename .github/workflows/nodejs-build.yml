@@ -12,12 +12,14 @@ on:
       - 'packages/nodejs/src/**'
       - 'packages/nodejs/tsconfig.json'
       - 'packages/nodejs/package.json'
+      - 'packages/nodejs/yarn.lock'
       - '.github/workflows/nodejs-build.yml'
   push:
     paths:
       - 'packages/nodejs/src/**'
       - 'packages/nodejs/tsconfig.json'
       - 'packages/nodejs/package.json'
+      - 'packages/nodejs/yarn.lock'
       - '.github/workflows/nodejs-build.yml'
 
 jobs:
