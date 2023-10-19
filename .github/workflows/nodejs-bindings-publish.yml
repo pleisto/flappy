@@ -72,7 +72,7 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     environment:
-      name: NPM
+      name: Npm
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
