@@ -5,7 +5,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 on:
@@ -13,8 +13,10 @@ on:
   push:
     branches: [main]
     paths:
-      - packages/rust-core/common/**/*
-      - packages/rust-core/charp/**/*
+      - packages/rust-core/common/**
+      - packages/rust-core/charp/**
+      - 'packages/rust-core/Cargo.toml'
+      - 'packages/rust-core/Cargo.lock'
       - .github/workflows/csharp-binding-build.yaml
 
 jobs:
