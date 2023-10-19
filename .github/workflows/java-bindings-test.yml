@@ -10,6 +10,7 @@ on:
       - '.github/workflows/java-bindings-test.yml'
       - '.github/workflows/java-bindings-publish-common.yml'
   push:
+    branches: [main]
     paths:
       - 'packages/rust-core/common/**'
       - 'packages/rust-core/java/**'
@@ -22,13 +23,13 @@ defaults:
     working-directory: packages/rust-core/java
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Java Bindings Lint
+    name: java-bindings-ci-lint
     steps:
       - uses: actions/checkout@v4
 
@@ -42,7 +43,8 @@ jobs:
       - name: Install
         run: ./mvnw clean compile spotless:check -DskipTests -D"gpg.skip"
 
-  publish:
+  build:
+    name: java-bindings-ci-build
     uses: ./.github/workflows/java-bindings-publish-common.yml
     with:
       publish: false
@@ -50,7 +52,7 @@ jobs:
   ci:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    name: Java Bindings Test ${{ matrix.os }}
+    name: java-bindings-ci-test
     strategy:
       fail-fast: false
       matrix:

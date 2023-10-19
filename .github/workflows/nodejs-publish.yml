@@ -1,7 +1,7 @@
 name: Nodejs Publish
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 defaults:
@@ -18,8 +18,7 @@ permissions:
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'packages/nodejs/package.json'
       - '.github/workflows/nodejs-build.yml'
@@ -27,6 +26,7 @@ on:
 
 jobs:
   check_if_need_release:
+    name: nodejs-publish-version-check
     runs-on: ubuntu-latest
     outputs:
       release: ${{ steps.compare_version.outputs.release }}
@@ -63,15 +63,16 @@ jobs:
             echo "release=yes" >> "$GITHUB_OUTPUT"
           fi
   build:
+    name: nodejs-publish-build
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
     uses: ./.github/workflows/nodejs-build.yml
   publish:
+    name: nodejs-publish-release
     environment:
       name: Npm
     needs: [check_if_need_release, build]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    name: Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

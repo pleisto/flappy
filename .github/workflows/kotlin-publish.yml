@@ -21,11 +21,12 @@ defaults:
     working-directory: packages/kotlin
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   check_if_need_release:
+    name: kotlin-publish-version-check
     runs-on: ubuntu-latest
     outputs:
       release: ${{ steps.compare_version.outputs.release }}
@@ -54,7 +55,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    name: Publish Maven
+    name: kotlin-publish-release
     timeout-minutes: 30
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
@@ -93,4 +94,3 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD}}
           ORG_GRADLE_PROJECT_GithubPackagesUsername: ${{vars.ORG_GRADLE_PROJECT_GITHUBPACKAGESUSERNAME}}
           ORG_GRADLE_PROJECT_GithubPackagesPassword: ${{secrets.ORG_GRADLE_PROJECT_GITHUBPACKAGESPASSWORD}}
-

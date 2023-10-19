@@ -1,7 +1,7 @@
 name: Nodejs Bindings Publish
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 defaults:
@@ -18,8 +18,7 @@ permissions:
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'packages/rust-core/nodejs/package.json'
       - '.github/workflows/nodejs-bindings-build.yml'
@@ -27,6 +26,7 @@ on:
 
 jobs:
   check_if_need_release:
+    name: nodejs-bindings-publish-version-check
     runs-on: ubuntu-latest
     outputs:
       release: ${{ steps.compare_version.outputs.release }}
@@ -63,13 +63,14 @@ jobs:
             echo "release=yes" >> "$GITHUB_OUTPUT"
           fi
   build:
+    name: nodejs-bindings-publish-build
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
     uses: ./.github/workflows/nodejs-bindings-build.yml
   publish:
+    name: nodejs-bindings-publish-release
     needs: [check_if_need_release, build]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    name: Publish
     runs-on: ubuntu-latest
     environment:
       name: Npm

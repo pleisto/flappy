@@ -5,19 +5,26 @@ permissions:
   id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packages/rust-core/common/**'
+      - 'packages/rust-core/charp/**'
+      - 'packages/rust-core/Cargo.toml'
+      - 'packages/rust-core/Cargo.lock'
+      - .github/workflows/csharp-binding-build.yml
   push:
     branches: [main]
     paths:
-      - packages/rust-core/common/**
-      - packages/rust-core/charp/**
+      - 'packages/rust-core/common/**'
+      - 'packages/rust-core/charp/**'
       - 'packages/rust-core/Cargo.toml'
       - 'packages/rust-core/Cargo.lock'
-      - .github/workflows/csharp-binding-build.yaml
+      - .github/workflows/csharp-binding-build.yml
 
 jobs:
   build:
@@ -25,7 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: [self-hosted, macOS, ARM64]
+          - host: macos-latest
             target: x86_64-apple-darwin
             artifact: libflappy_csharp_bindings.dylib
             build: |
@@ -96,7 +103,7 @@ jobs:
           #    rustup target add aarch64-unknown-linux-musl && \
           #    cargo build -r --target aarch64-unknow-linux-musl
 
-    name: build and upload rust code - csharp
+    name: csharp-bindings-publish-build
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v3
@@ -141,9 +148,12 @@ jobs:
           if-no-files-found: error
 
   package-nuget:
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.head_ref || github.ref_name) == 'refs/heads/main' }}
     needs: build
     runs-on: ubuntu-latest
-    name: package and upload nuget package - csharp
+    environment:
+      name: Nuget
+    name: csharp-bindings-publish-release
 
     steps:
       - uses: actions/checkout@v3

@@ -1,7 +1,7 @@
 name: Nodejs Build
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 on:
@@ -9,22 +9,17 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'packages/nodejs/src/**'
-      - 'packages/nodejs/tsconfig.json'
-      - 'packages/nodejs/package.json'
-      - 'packages/nodejs/yarn.lock'
+      - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build.yml'
   push:
+    branches: [main]
     paths:
-      - 'packages/nodejs/src/**'
-      - 'packages/nodejs/tsconfig.json'
-      - 'packages/nodejs/package.json'
-      - 'packages/nodejs/yarn.lock'
+      - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build.yml'
 
 jobs:
   build:
-    name: Nodejs Building
+    name: nodejs-ci-build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
