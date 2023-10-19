@@ -21,8 +21,6 @@ on:
     branches:
       - main
     paths:
-      - 'packages/nodejs/src/**'
-      - 'packages/nodejs/tsconfig.json'
       - 'packages/nodejs/package.json'
       - '.github/workflows/nodejs-build.yml'
       - '.github/workflows/nodejs-publish.yml'

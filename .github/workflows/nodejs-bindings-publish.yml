@@ -21,7 +21,7 @@ on:
     branches:
       - main
     paths:
-      - 'packages/rust-core/**'
+      - 'packages/rust-core/nodejs/package.json'
       - '.github/workflows/nodejs-bindings-build.yml'
       - '.github/workflows/nodejs-bindings-publish.yml'
 
