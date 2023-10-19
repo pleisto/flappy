@@ -49,6 +49,29 @@ pub struct SandboxOutput {
   pub stderr: String,
 }
 
+async fn get_sandbox_path(cache_path: PathBuf) -> anyhow::Result<PathBuf> {
+  // Get python interpreter web container from the wasmer registry
+  let file_path = get_package(
+    PYTHON_INTERPRETER_WASM_PKG.to_string(),
+    cache_path.clone(),
+    None,
+  )
+  .await?;
+
+  Ok(file_path)
+}
+
+pub async fn prepare_sandbox(cache_path: Option<String>) -> anyhow::Result<()> {
+  match cache_path {
+    Some(cache_path) => {
+      get_sandbox_path(PathBuf::from(cache_path)).await?;
+      Ok(())
+    }
+
+    None => Ok(()),
+  }
+}
+
 /**
  * Execute a python code snippet in a wasm sandbox
  */
@@ -60,7 +83,6 @@ pub async fn python_sandbox(
 ) -> anyhow::Result<SandboxOutput> {
   // Default to no network access on the sandbox
   //let network = network.unwrap_or(false);
-
   // Set the cache path to store the wasm modules and dependencies
   let cache_path = cache_path.map(PathBuf::from).unwrap_or_else(|| {
     dirs::cache_dir()
@@ -69,13 +91,8 @@ pub async fn python_sandbox(
   });
   std::fs::create_dir_all(&cache_path).context("Failed to create cache directory")?;
 
-  // Get python interpreter web container from the wasmer registry
-  let file_path = get_package(
-    PYTHON_INTERPRETER_WASM_PKG.to_string(),
-    cache_path.clone(),
-    None,
-  )
-  .await?;
+  let file_path = get_sandbox_path(cache_path.clone()).await?;
+
   let container = Container::from_disk(file_path)?;
 
   // Create a capability set

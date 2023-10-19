@@ -1,5 +1,7 @@
 package com.pleisto;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -8,6 +10,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
 
 public class FlappyJniSandbox extends FlappyJniLoader {
+    String cachePath;
+
+    FlappyJniSandbox(String cachePath) throws IOException {
+        this.cachePath = cachePath == null || cachePath.isEmpty()
+                ? Files.createTempDirectory("flappyJniSandbox").toFile().getAbsolutePath()
+                : cachePath;
+    }
+
+    FlappyJniSandbox() throws IOException {
+        this(null);
+    }
+
     public static class FlappyJniSandboxInput {
         public final String code;
 
@@ -15,18 +29,10 @@ public class FlappyJniSandbox extends FlappyJniLoader {
 
         public final Map<String, String> envs;
 
-        public final String cachePath;
-
-        public FlappyJniSandboxInput(
-                @NonNull String code, boolean network, @NonNull Map<String, String> envs, String cachePath) {
+        public FlappyJniSandboxInput(@NonNull String code, boolean network, @NonNull Map<String, String> envs) {
             this.code = code;
             this.network = network;
             this.envs = envs;
-            this.cachePath = cachePath == null ? "" : cachePath;
-        }
-
-        public FlappyJniSandboxInput(@NonNull String code, boolean network, @NonNull Map<String, String> envs) {
-            this(code, network, envs, null);
         }
 
         public FlappyJniSandboxInput(@NonNull String code, boolean network) {
@@ -72,10 +78,17 @@ public class FlappyJniSandbox extends FlappyJniLoader {
     private static native long nativeEvalPythonCode(
             String code, boolean network, Map<String, String> envs, String cache_path);
 
+    private static native long nativePrepareSandbox(String cache_path);
+
     public static native String ping();
 
+    public CompletableFuture<Void> nativePrepareSandbox() {
+        final long requestId = nativePrepareSandbox(this.cachePath);
+        return (CompletableFuture<Void>) AsyncRegistry.get(requestId);
+    }
+
     public CompletableFuture<FlappyJniSandboxResult> evalPythonCode(FlappyJniSandboxInput input) {
-        final long requestId = nativeEvalPythonCode(input.code, input.network, input.envs, input.cachePath);
+        final long requestId = nativeEvalPythonCode(input.code, input.network, input.envs, this.cachePath);
         return (CompletableFuture<FlappyJniSandboxResult>) AsyncRegistry.get(requestId);
     }
 }
