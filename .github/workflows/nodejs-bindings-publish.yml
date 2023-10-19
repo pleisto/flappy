@@ -1,7 +1,7 @@
 name: Nodejs Bindings Publish
 
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 defaults:
@@ -62,12 +62,12 @@ jobs:
             echo "Version is not exist."
             echo "release=yes" >> "$GITHUB_OUTPUT"
           fi
-  stage-snapshot:
+  build:
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
     uses: ./.github/workflows/nodejs-bindings-build.yml
   publish:
-    needs: [check_if_need_release, stage-snapshot]
+    needs: [check_if_need_release, build]
     if: needs.check_if_need_release.outputs.release == 'yes'
     name: Publish
     runs-on: ubuntu-latest
