@@ -69,6 +69,8 @@ jobs:
     if: needs.check_if_need_release.outputs.release == 'yes'
     uses: ./.github/workflows/nodejs-build.yml
   publish:
+    environment:
+      name: NPM
     needs: [check_if_need_release, stage-snapshot]
     if: needs.check_if_need_release.outputs.release == 'yes'
     name: Publish

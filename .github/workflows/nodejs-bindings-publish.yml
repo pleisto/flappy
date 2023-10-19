@@ -71,6 +71,8 @@ jobs:
     if: needs.check_if_need_release.outputs.release == 'yes'
     name: Publish
     runs-on: ubuntu-latest
+    environment:
+      name: NPM
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
