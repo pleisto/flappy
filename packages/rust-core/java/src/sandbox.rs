@@ -105,15 +105,15 @@ pub extern "system" fn Java_com_pleisto_FlappyJniSandbox_ping<'local>(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_pleisto_FlappyJniDummy_echo<'local>(
-  env: &mut JNIEnv<'local>,
-  _: JClass<'local>,
+pub extern "system" fn Java_com_pleisto_FlappyJniDummy_echo(
+  mut env: JNIEnv,
+  _: JClass,
   code: JString,
   network: jboolean,
   envs: JObject,
   cache_path: JString,
 ) -> jstring {
-  intern_echo(env, code, network, envs, cache_path).unwrap()
+  intern_echo(&mut env, code, network, envs, cache_path).unwrap()
 }
 
 fn intern_echo(

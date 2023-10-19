@@ -84,11 +84,11 @@ public class FlappyJniSandbox extends FlappyJniLoader {
 
     public CompletableFuture<Void> nativePrepareSandbox() {
         final long requestId = nativePrepareSandbox(this.cachePath);
-        return (CompletableFuture<Void>) AsyncRegistry.get(requestId);
+        return AsyncRegistry.take(requestId);
     }
 
     public CompletableFuture<FlappyJniSandboxResult> evalPythonCode(FlappyJniSandboxInput input) {
         final long requestId = nativeEvalPythonCode(input.code, input.network, input.envs, this.cachePath);
-        return (CompletableFuture<FlappyJniSandboxResult>) AsyncRegistry.get(requestId);
+        return AsyncRegistry.take(requestId);
     }
 }

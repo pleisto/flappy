@@ -26,6 +26,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
   cancel-in-progress: true
 
+env:
+  RUST_BACKTRACE: full
+  CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest

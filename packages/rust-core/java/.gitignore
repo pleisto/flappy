@@ -1,3 +1,7 @@
 .mvn/wrapper/maven-wrapper.jar
-tmp/
 local-staging/**
+
+!tmp/
+
+tmp/**
+!tmp/.gitkeep
