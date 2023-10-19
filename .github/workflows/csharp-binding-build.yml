@@ -46,10 +46,9 @@ jobs:
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
+            command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
             artifact: flappy_csharp_bindings.dll
             build: |
-              sudo apt-get install -y gcc-mingw-w64-x86-64-win32
-              cargo install cargo-xwin
               cargo build -r --target x86_64-pc-windows-gnu
 
           - host: ubuntu-latest
@@ -106,13 +105,25 @@ jobs:
     name: csharp-bindings-publish-build
     runs-on: ${{ matrix.settings.host }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Run command ${{matrix.settings.command}}
+        if: ${{matrix.settings.command}}
+        run: ${{matrix.settings.command}}
+
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
         with:
           toolchain: stable
           targets: ${{ matrix.settings.target }}
+
+      - name: Install cross-compilation tools
+        uses: taiki-e/setup-cross-toolchain-action@v1
+        if: ${{ !matrix.settings.docker }}
+        with:
+          target: ${{matrix.settings.target}}
+
       - name: Cache cargo
         uses: actions/cache@v3
         with:
