@@ -2,6 +2,11 @@ name: CSharp Nuget Test - Linux
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'examples/csharp/**/*'
+      - 'packages/csharp/**/*'
+      - '.github/workflows/csharp-test.yml'
   push:
     paths:
       - 'examples/csharp/**/*'
@@ -9,7 +14,7 @@ on:
       - '.github/workflows/csharp-test.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:

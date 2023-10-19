@@ -2,6 +2,12 @@ name: Kotlin Test
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packages/kotlin/**'
+      - 'examples/kotlin/**'
+      - 'examples/java/**'
+      - '.github/workflows/kotlin-test.yml'
   push:
     paths:
       - 'packages/kotlin/**'
@@ -18,7 +24,7 @@ defaults:
     working-directory: packages/kotlin
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+  GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false'
 
 jobs:
   validate:

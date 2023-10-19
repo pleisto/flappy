@@ -5,15 +5,18 @@ permissions:
   id-token: write
 
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - packages/rust-core/charp/**/*
+      - packages/rust-core/common/**
+      - packages/rust-core/charp/**
+      - 'packages/rust-core/Cargo.toml'
+      - 'packages/rust-core/Cargo.lock'
       - .github/workflows/csharp-binding-build.yaml
 
 jobs:
@@ -33,7 +36,6 @@ jobs:
             artifact: libflappy_csharp_bindings.dylib
             build: |
               cargo build -r --target aarch64-apple-darwin
-
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
@@ -61,7 +63,6 @@ jobs:
               apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
               cargo build -r --target x86_64-unknown-linux-musl
-
 
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
@@ -136,7 +137,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: "**/${{ matrix.settings.artifact }}"
+          path: '**/${{ matrix.settings.artifact }}'
           if-no-files-found: error
 
   package-nuget:

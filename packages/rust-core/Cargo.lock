@@ -895,6 +895,7 @@ dependencies = [
  "napi",
  "napi-build",
  "napi-derive",
+ "openssl",
 ]
 
 [[package]]

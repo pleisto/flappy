@@ -1,9 +1,48 @@
 {
-  "name": "@flappy/flappy-nodejs-bindings",
+  "name": "@pleisto/flappy-nodejs-bindings",
+  "version": "0.0.1-alpha.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "napi": {
+    "name": "flappy-nodejs-bindings",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
+        "aarch64-apple-darwin",
+        "aarch64-linux-android",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "x86_64-unknown-linux-musl",
+        "universal-apple-darwin",
+        "x86_64-pc-windows-gnu"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleisto/flappy.git"
+  },
+  "license": "Apache-2.0",
   "devDependencies": {
-    "@napi-rs/cli": "2.16.3"
+    "@napi-rs/cli": "^2.16.3",
+    "ava": "^5.1.1"
+  },
+  "ava": {
+    "timeout": "3m"
+  },
+  "engines": {
+    "node": ">= 10"
   },
   "scripts": {
-    "build": "napi build --release"
-  }
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "prepublishOnly": "napi prepublish -t npm",
+    "test": "ava",
+    "universal": "napi universal",
+    "version:napi": "napi version"
+  },
+  "stableVersion": "0.0.1-alpha"
 }
