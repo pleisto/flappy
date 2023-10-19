@@ -2,6 +2,13 @@ name: Java Bindings Test
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packages/rust-core/common/**'
+      - 'packages/rust-core/java/**'
+      - 'packages/rust-core/Cargo.toml'
+      - '.github/workflows/java-bindings-test.yml'
+      - '.github/workflows/java-bindings-publish-common.yml'
   push:
     paths:
       - 'packages/rust-core/common/**'

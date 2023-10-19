@@ -21,6 +21,10 @@ defaults:
 on:
   workflow_call:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packages/rust-core/**'
+      - '.github/workflows/nodejs-bindings-build.yml'
   push:
     paths:
       - 'packages/rust-core/**'

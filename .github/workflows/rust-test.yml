@@ -2,6 +2,10 @@ name: Rust Test
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packages/rust-core/**'
+      - '.github/workflows/rust-test.yml'
   push:
     paths:
       - 'packages/rust-core/**'
@@ -24,7 +28,7 @@ defaults:
 
 jobs:
   lint:
-    name: "Rust lint"
+    name: 'Rust lint'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +42,7 @@ jobs:
         run: cargo clippy -- -D warnings
 
   tests:
-    name: "Rust test ${{matrix.target}}"
+    name: 'Rust test ${{matrix.target}}'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -68,4 +72,3 @@ jobs:
 
       - name: Test
         run: cargo test --verbose
-
