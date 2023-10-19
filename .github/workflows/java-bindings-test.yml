@@ -26,6 +26,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Java Bindings Lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Install
+        run: ./mvnw clean compile spotless:check -DskipTests -D"gpg.skip"
+
   publish:
     uses: ./.github/workflows/java-bindings-publish-common.yml
     with:
