@@ -21,7 +21,7 @@ on:
     branches: [main]
     paths:
       - 'packages/nodejs/package.json'
-      - '.github/workflows/nodejs-build.yml'
+      - '.github/workflows/nodejs-build-common.yml'
       - '.github/workflows/nodejs-publish.yml'
 
 jobs:
@@ -65,7 +65,7 @@ jobs:
     name: nodejs-publish-build
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    uses: ./.github/workflows/nodejs-build.yml
+    uses: ./.github/workflows/nodejs-build-common.yml
   publish:
     name: nodejs-publish-release
     environment:

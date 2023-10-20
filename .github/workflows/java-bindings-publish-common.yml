@@ -1,4 +1,4 @@
-name: Java Bindings Publish Common For Workflow Call Only
+name: Java Bindings Publish Common for Workflow Call Only
 
 on:
   workflow_call:
@@ -18,10 +18,6 @@ on:
         required: false
       ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD:
         required: false
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}-${{inputs.publish}}-${{inputs.environment}}
-  cancel-in-progress: true
 
 defaults:
   run:

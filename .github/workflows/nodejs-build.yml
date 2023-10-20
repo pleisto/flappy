@@ -5,48 +5,22 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  workflow_call:
   workflow_dispatch:
   pull_request:
     paths:
       - 'yarn.lock'
       - 'packages/nodejs/**'
+      - '.github/workflows/nodejs-build-common.yml'
       - '.github/workflows/nodejs-build.yml'
   push:
     branches: [main]
     paths:
       - 'yarn.lock'
       - 'packages/nodejs/**'
+      - '.github/workflows/nodejs-build-common.yml'
       - '.github/workflows/nodejs-build.yml'
 
 jobs:
   build:
     name: nodejs-ci-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout the codebase
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Detect what files changed
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          token: ${{ github.token }}
-          filters: |
-            src_or_deps_changed:
-              - 'packages/nodejs/src/**'
-              - '**/*.[tj]{s,sx}'
-              - 'packages/nodejs/package.json'
-              - '**/yarn.lock'
-      - name: Install yarn dependencies
-        if: steps.changes.outputs.src_or_deps_changed == 'true'
-        run: yarn install --immutable
-        shell: bash
-      - name: Run build
-        if: steps.changes.outputs.src_or_deps_changed == 'true'
-        run: yarn build:nodejs
+    uses: ./.github/workflows/nodejs-build-common.yml

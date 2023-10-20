@@ -1,0 +1,196 @@
+name: Nodejs Bindings Build Common for Workflow Calling Only
+
+env:
+  DEBUG: napi:*
+  APP_NAME: flappy-nodejs-bindings
+  MACOSX_DEPLOYMENT_TARGET: '10.13'
+  WORKING_DIRECTORY: packages/rust-core/nodejs
+
+permissions:
+  contents: write
+  id-token: write
+
+defaults:
+  run:
+    working-directory: packages/rust-core/nodejs
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          # target: x86_64-apple-darwin
+          - host: macos-latest
+            target: x86_64-apple-darwin
+            build: |
+              yarn build:nodejs-bindings --target x86_64-apple-darwin
+              strip -x "$APP_NAME.darwin-x64.node"
+
+          # target: x86_64-pc-windows-gnu
+          - host: ubuntu-latest
+            target: x86_64-pc-windows-gnu
+            command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
+            build: |
+              yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
+              strip -x "$APP_NAME.win32-x64-gnu.node"
+
+          # target: x86_64-unknown-linux-gnu
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
+            build: |
+              set -e
+              sudo apt-get update
+              sudo apt-get install build-essential -y
+              sudo apt-get install perl -y
+              sudo apt-get install pkg-config libssl-dev -y
+              yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu
+              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-gnu.node"
+
+          # target: x86_64-unknown-linux-musl
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            build: |
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              set -e
+              yarn build:nodejs-bindings
+              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-musl.node"
+
+          # target: aarch64-apple-darwin
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build: |
+              yarn build:nodejs-bindings --target aarch64-apple-darwin
+              strip -x "$APP_NAME.darwin-arm64.node"
+
+          # target: aarch64-unknown-linux-gnu
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+            build: |
+              set -e
+              sudo apt-get update
+              sudo apt-get install build-essential -y
+              sudo apt-get install perl -y
+              sudo apt-get install pkg-config libssl-dev -y
+              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5"
+              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
+              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
+              yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu
+              aarch64-unknown-linux-gnu-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-gnu.node"
+
+          # target: aarch64-linux-android
+          - host: ubuntu-latest
+            target: aarch64-linux-android
+            build: |
+              yarn build:nodejs-bindings --target aarch64-linux-android
+              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip "$APP_NAME.android-arm64.node"
+
+          # target: aarch64-unknown-linux-musl
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            build: |
+              set -e
+              apk add pkgconfig openssl-dev gcc g++ make perl
+              rustup target add aarch64-unknown-linux-musl
+              yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
+              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-musl.node"
+    runs-on: ${{ matrix.settings.host }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        if: ${{ !matrix.settings.docker }}
+        with:
+          node-version: 19
+          check-latest: true
+          cache: yarn
+
+      - name: Run command ${{matrix.settings.command}}
+        if: ${{matrix.settings.command}}
+        run: ${{matrix.settings.command}}
+
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        if: ${{ !matrix.settings.docker }}
+        with:
+          toolchain: stable
+          targets: ${{ matrix.settings.target }}
+
+      - name: Install cross-compilation tools
+        uses: taiki-e/setup-cross-toolchain-action@v1
+        if: ${{ !matrix.settings.docker }}
+        with:
+          target: ${{matrix.settings.target}}
+
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Build in docker
+        uses: addnab/docker-run-action@v3
+        if: ${{ matrix.settings.docker }}
+        with:
+          image: ${{ matrix.settings.docker }}
+          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+          run: ${{ matrix.settings.build }}
+      - name: Build
+        run: ${{ matrix.settings.build }}
+        if: ${{ !matrix.settings.docker }}
+        shell: bash
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: ${{ env.WORKING_DIRECTORY }}/${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
+  universal-macOS:
+    name: nodejs-bindings-ci-build-universal-macos
+    needs:
+      - build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          check-latest: true
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Download macOS x64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bindings-x86_64-apple-darwin
+          path: packages/rust-core/nodejs/artifacts
+      - name: Download macOS arm64 artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bindings-aarch64-apple-darwin
+          path: packages/rust-core/nodejs/artifacts
+      - name: Combine binaries
+        run: yarn universal
+        working-directory: packages/rust-core/nodejs
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings-universal-apple-darwin
+          path: ${{ env.WORKING_DIRECTORY }}/${{ env.APP_NAME }}.*.node
+          if-no-files-found: error
