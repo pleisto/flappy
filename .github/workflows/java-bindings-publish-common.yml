@@ -19,10 +19,6 @@ on:
       ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD:
         required: false
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}-${{inputs.publish}}-${{inputs.environment}}
-  cancel-in-progress: true
-
 defaults:
   run:
     working-directory: packages/rust-core/java

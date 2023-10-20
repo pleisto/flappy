@@ -1,9 +1,5 @@
 name: Nodejs Build Common for Workflow Call Only
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
-  cancel-in-progress: true
-
 on:
   workflow_call:
 
@@ -11,8 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    permissions:
-      contents: write
     steps:
       - name: Checkout the codebase
         uses: actions/checkout@v4

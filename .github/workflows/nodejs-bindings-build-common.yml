@@ -1,9 +1,5 @@
 name: Nodejs Bindings Build Common for Workflow Calling Only
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
-  cancel-in-progress: true
-
 env:
   DEBUG: napi:*
   APP_NAME: flappy-nodejs-bindings
