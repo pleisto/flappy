@@ -1,4 +1,4 @@
-name: Java Bindings Publish Common For Workflow Call Only
+name: Java Bindings Publish Common for Workflow Call Only
 
 on:
   workflow_call:
