@@ -1,0 +1,38 @@
+core:
+  - 'packages/rust-core/**'
+
+docs:
+  - 'docs/**'
+
+nodejs-bindings:
+  - 'packages/rust-core/nodejs/**'
+
+java-bindings:
+  - 'packages/rust-core/java/**'
+
+csharp-bindings:
+  - 'packages/rust-core/csharp/**'
+
+nodejs:
+  - 'packages/nodejs/**'
+
+kotlin:
+  - 'packages/kotlin/**'
+
+csharp:
+  - 'packages/csharp/**'
+
+devkit:
+  - 'tools/devkit/**'
+
+node-example:
+  - 'examples/nodejs/**'
+
+kotlin-example:
+  - 'examples/kotlin/**'
+
+java-example:
+  - 'examples/java/**'
+
+csharp-example:
+  - 'examples/csharp/**'
