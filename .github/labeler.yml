@@ -1,8 +1,11 @@
-core:
-  - 'packages/rust-core/**'
+github:
+  - '.github/**'
 
 docs:
   - 'docs/**'
+
+core:
+  - 'packages/rust-core/**'
 
 nodejs-bindings:
   - 'packages/rust-core/nodejs/**'
