@@ -18,7 +18,7 @@
     "build": "rm -rf ./dist && yarn run -T tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "@pleisto/flappy-nodejs-bindings": "^0.0.1-alpha.1",
+    "@pleisto/flappy-nodejs-bindings": "next",
     "radash": "^11.0.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.21.4"
