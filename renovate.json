@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended"
   ],
-  "branchConcurrentLimit": 3,
+  "dependencyDashboardApproval": true,
+  "branchConcurrentLimit": 2,
   "dependencyDashboard": true,
   "schedule": [
     "on monday and thursday"

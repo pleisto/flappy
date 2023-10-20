@@ -9,11 +9,13 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - 'yarn.lock'
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build.yml'
   push:
     branches: [main]
     paths:
+      - 'yarn.lock'
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build.yml'
 

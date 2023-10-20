@@ -37,7 +37,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19
-          check-latest: true
           cache: yarn
 
       - name: Install dependencies
@@ -80,7 +79,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19
-          check-latest: true
           cache: yarn
       - name: Install dependencies
         run: yarn install --immutable

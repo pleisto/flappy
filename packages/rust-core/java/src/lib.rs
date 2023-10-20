@@ -5,7 +5,9 @@ use std::ffi::c_void;
 use jni::objects::JMap;
 use jni::objects::JObject;
 use jni::objects::JString;
+use jni::sys::jboolean;
 use jni::sys::jint;
+use jni::sys::JNI_TRUE;
 use jni::sys::JNI_VERSION_1_8;
 use jni::JNIEnv;
 use jni::JavaVM;
@@ -86,6 +88,25 @@ unsafe fn get_global_runtime<'local>() -> &'local Runtime {
 fn jstring_to_string(env: &mut JNIEnv, s: &JString) -> Result<String> {
   let res = unsafe { env.get_string_unchecked(s)? };
   Ok(res.into())
+}
+
+fn jstring_to_option_string(env: &mut JNIEnv, s: &JString) -> Result<Option<String>> {
+  let s: String = jstring_to_string(env, s)?;
+
+  if s.is_empty() {
+    Ok(Default::default())
+  } else {
+    Ok(Some(s))
+  }
+}
+
+fn jboolean_to_bool(_env: &mut JNIEnv, bol: jboolean) -> Result<bool> {
+  Ok(bol == JNI_TRUE)
+}
+
+fn jmap_to_vec_string_string(env: &mut JNIEnv, params: &JObject) -> Result<Vec<(String, String)>> {
+  let envs: Vec<(String, String)> = jmap_to_hashmap(env, params)?.into_iter().collect();
+  Ok(envs)
 }
 
 fn jmap_to_hashmap(env: &mut JNIEnv, params: &JObject) -> Result<HashMap<String, String>> {

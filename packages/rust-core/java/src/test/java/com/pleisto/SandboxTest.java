@@ -1,12 +1,22 @@
 package com.pleisto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 
 public class SandboxTest {
+
+    FlappyJniSandbox sandbox = new FlappyJniSandbox("tmp");
+
+    public SandboxTest() throws IOException {}
+
+    @Test
+    public void prepare() throws ExecutionException, InterruptedException {
+        sandbox.nativePrepareSandbox().get();
+    }
 
     @Test
     public void ping() {
@@ -15,9 +25,8 @@ public class SandboxTest {
 
     @Test
     public void evalFail() throws InterruptedException {
-        final FlappyJniSandbox op = new FlappyJniSandbox();
         try {
-            FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput("foobar"))
+            FlappyJniSandboxResult result = sandbox.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput("foobar"))
                     .get();
             assertThat(false).isTrue();
         } catch (ExecutionException e) {
@@ -27,9 +36,8 @@ public class SandboxTest {
 
     @Test
     public void evalSuccess() throws ExecutionException, InterruptedException {
-        final FlappyJniSandbox op = new FlappyJniSandbox();
         String code = "print('hello world')";
-        FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
+        FlappyJniSandboxResult result = sandbox.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
                 .get();
         assertThat(result).isNotNull();
         assertThat(result.stdout).isEqualTo("hello world\n");
@@ -38,9 +46,8 @@ public class SandboxTest {
 
     @Test
     public void evalDumb() throws ExecutionException, InterruptedException {
-        final FlappyJniSandbox op = new FlappyJniSandbox();
         String code = "1+1";
-        FlappyJniSandboxResult result = op.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
+        FlappyJniSandboxResult result = sandbox.evalPythonCode(new FlappyJniSandbox.FlappyJniSandboxInput(code))
                 .get();
         assertThat(result).isNotNull();
         assertThat(result.stdout).isEqualTo("");
