@@ -2738,7 +2738,106 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pleisto/flappy-nodejs-bindings@^0.0.1-alpha.1, @pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs":
+"@pleisto/flappy-nodejs-bindings-android-arm64@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-android-arm64@npm:0.0.1-alpha.1"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-darwin-arm64@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-darwin-arm64@npm:0.0.1-alpha.1"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-darwin-universal@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-darwin-universal@npm:0.0.1-alpha.1"
+  conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-darwin-x64@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-darwin-x64@npm:0.0.1-alpha.1"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-linux-arm64-gnu@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-linux-arm64-gnu@npm:0.0.1-alpha.1"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-linux-arm64-musl@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-linux-arm64-musl@npm:0.0.1-alpha.1"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-linux-x64-gnu@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-linux-x64-gnu@npm:0.0.1-alpha.1"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-linux-x64-musl@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-linux-x64-musl@npm:0.0.1-alpha.1"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings-win32-x64-gnu@npm:0.0.1-alpha.1":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings-win32-x64-gnu@npm:0.0.1-alpha.1"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings@npm:next":
+  version: 0.0.1-alpha.1
+  resolution: "@pleisto/flappy-nodejs-bindings@npm:0.0.1-alpha.1"
+  dependencies:
+    "@pleisto/flappy-nodejs-bindings-android-arm64": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-darwin-arm64": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-darwin-universal": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-darwin-x64": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-linux-arm64-gnu": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-linux-arm64-musl": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-linux-x64-gnu": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-linux-x64-musl": 0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings-win32-x64-gnu": 0.0.1-alpha.1
+  dependenciesMeta:
+    "@pleisto/flappy-nodejs-bindings-android-arm64":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-darwin-arm64":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-darwin-universal":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-darwin-x64":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-linux-arm64-gnu":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-linux-arm64-musl":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-linux-x64-gnu":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-linux-x64-musl":
+      optional: true
+    "@pleisto/flappy-nodejs-bindings-win32-x64-gnu":
+      optional: true
+  checksum: 6f2f4d56cb6dcd8a413f293da40a304ac3216d62125f34cdc0fef1e0cc7fe6af0c16bf05c8c7b52d38ae248df6c022492c00b21daff29045e1594a7fdc3323c7
+  languageName: node
+  linkType: hard
+
+"@pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs":
   version: 0.0.0-use.local
   resolution: "@pleisto/flappy-nodejs-bindings@workspace:packages/rust-core/nodejs"
   dependencies:
@@ -2761,7 +2860,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@pleisto/node-flappy@workspace:packages/nodejs"
   dependencies:
-    "@pleisto/flappy-nodejs-bindings": ^0.0.1-alpha.1
+    "@pleisto/flappy-nodejs-bindings": next
     openai: ^4.11.1
     radash: ^11.0.0
     zod: ^3.22.4
