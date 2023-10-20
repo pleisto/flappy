@@ -1,0 +1,36 @@
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    name: 'Cleanup After PR Closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Cancel build runs
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          ignore_sha: true
+          workflow_id: all
+
+      # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#force-deleting-cache-entries
+      - name: Delete branch related cache
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache key"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
+
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeysForPR
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge

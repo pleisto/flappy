@@ -1,12 +1,12 @@
 name: CSharp Bindings Build
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 permissions:
   contents: write
   id-token: write
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
-  cancel-in-progress: true
 
 on:
   workflow_dispatch:

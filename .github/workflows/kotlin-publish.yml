@@ -1,5 +1,9 @@
 name: Kotlin Publish
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -19,10 +23,6 @@ on:
 defaults:
   run:
     working-directory: packages/kotlin
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}
-  cancel-in-progress: true
 
 jobs:
   check_if_need_release:
