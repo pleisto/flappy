@@ -10821,8 +10821,8 @@ __metadata:
   linkType: hard
 
 "openai@npm:^4.11.1":
-  version: 4.12.1
-  resolution: "openai@npm:4.12.1"
+  version: 4.12.4
+  resolution: "openai@npm:4.12.4"
   dependencies:
     "@types/node": ^18.11.18
     "@types/node-fetch": ^2.6.4
@@ -10832,9 +10832,10 @@ __metadata:
     form-data-encoder: 1.7.2
     formdata-node: ^4.3.2
     node-fetch: ^2.6.7
+    web-streams-polyfill: ^3.2.1
   bin:
     openai: bin/cli
-  checksum: 5ffb4d248d71071a33248c07542e4f37fa254a196c51fc98f4c17476f19dab36a44abca85b31e9c8537823fe5b3d40f3335f5315df54717b386e6e66362c6dbd
+  checksum: d0de3d4785387f5dae61545ae753c39bb8fde72770d55b81137d0d5a8ed4d0abd308f4aa8e0ee755a3f64a66a0200f91d7ba4d7c9db10001b50c052e3ed46e29
   languageName: node
   linkType: hard
 
@@ -14427,6 +14428,13 @@ __metadata:
   version: 4.0.0-beta.3
   resolution: "web-streams-polyfill@npm:4.0.0-beta.3"
   checksum: dfec1fbf52b9140e4183a941e380487b6c3d5d3838dd1259be81506c1c9f2abfcf5aeb670aeeecfd9dff4271a6d8fef931b193c7bedfb42542a3b05ff36c0d16
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "web-streams-polyfill@npm:3.2.1"
+  checksum: b119c78574b6d65935e35098c2afdcd752b84268e18746606af149e3c424e15621b6f1ff0b42b2676dc012fc4f0d313f964b41a4b5031e525faa03997457da02
   languageName: node
   linkType: hard
 
