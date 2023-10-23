@@ -1,3 +1,5 @@
+name: "Pull Request Cleanup"
+
 on:
   pull_request:
     types: [closed]
