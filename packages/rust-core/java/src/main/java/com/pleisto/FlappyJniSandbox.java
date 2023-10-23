@@ -12,13 +12,13 @@ import lombok.NonNull;
 public class FlappyJniSandbox extends FlappyJniLoader implements AutoCloseable {
     String cachePath;
 
-    FlappyJniSandbox(String cachePath) throws IOException {
+    public FlappyJniSandbox(String cachePath) throws IOException {
         this.cachePath = cachePath == null || cachePath.isEmpty()
                 ? Files.createTempDirectory("flappyJniSandbox").toFile().getAbsolutePath()
                 : cachePath;
     }
 
-    FlappyJniSandbox() throws IOException {
+    public FlappyJniSandbox() throws IOException {
         this(null);
     }
 
