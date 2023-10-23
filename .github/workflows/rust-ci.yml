@@ -1,4 +1,4 @@
-name: Rust Test
+name: Rust CI
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -9,12 +9,12 @@ on:
   pull_request:
     paths:
       - 'packages/rust-core/**'
-      - '.github/workflows/rust-test.yml'
+      - '.github/workflows/rust-ci.yml'
   push:
     branches: [main]
     paths:
       - 'packages/rust-core/**'
-      - '.github/workflows/rust-test.yml'
+      - '.github/workflows/rust-ci.yml'
 
 env:
   RUST_BACKTRACE: full

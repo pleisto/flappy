@@ -1,4 +1,4 @@
-name: Java Bindings Publish Common for Workflow Call Only
+name: Java Bindings Build Common for Workflow Call Only
 
 on:
   workflow_call:
@@ -28,7 +28,7 @@ env:
   CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
 
 jobs:
-  publish:
+  build:
     runs-on: ${{ matrix.os }}
     environment: ${{ inputs.environment }}
     timeout-minutes: 60

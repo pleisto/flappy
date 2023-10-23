@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/kotlin-test.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/kotlin-test.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/kotlin-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/kotlin-ci.yml)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue)](https://central.sonatype.com/artifact/com.pleisto/flappy)
 [![Documentation](https://javadoc.io/badge/com.pleisto/flappy.svg)](https://javadoc.io/doc/com.pleisto/flappy)
 

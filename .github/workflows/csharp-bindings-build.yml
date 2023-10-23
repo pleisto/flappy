@@ -16,7 +16,7 @@ on:
       - 'packages/rust-core/charp/**'
       - 'packages/rust-core/Cargo.toml'
       - 'packages/rust-core/Cargo.lock'
-      - .github/workflows/csharp-binding-build.yml
+      - .github/workflows/csharp-bindings-build.yml
   push:
     branches: [main]
     paths:
@@ -24,7 +24,7 @@ on:
       - 'packages/rust-core/charp/**'
       - 'packages/rust-core/Cargo.toml'
       - 'packages/rust-core/Cargo.lock'
-      - .github/workflows/csharp-binding-build.yml
+      - .github/workflows/csharp-bindings-build.yml
 
 jobs:
   build:

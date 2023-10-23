@@ -3,7 +3,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/nodejs-build.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/nodejs-build.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/nodejs-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/nodejs-ci.yml)
 [![NPM version](https://img.shields.io/npm/v/@pleisto/node-flappy.svg)](https://npmjs.org/package/@pleisto/node-flappy)
 
 This package is about the Node.js version of the implementation which is written in TypeScript.
