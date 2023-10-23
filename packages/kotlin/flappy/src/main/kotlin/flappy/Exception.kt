@@ -10,8 +10,10 @@ sealed class FlappyException(message: String) : Exception(message) {
   class CompileException(message: String) : FlappyException(message)
 
   class FatalException(message: String) : FlappyException(message)
-  
+
   class ParseException(message: String) : FlappyException(message)
 
   class FieldNotFoundException(message: String) : FlappyException(message)
+
+  class EvalException(message: String) : FlappyException(message)
 }

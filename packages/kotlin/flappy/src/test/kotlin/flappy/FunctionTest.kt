@@ -2,6 +2,7 @@ package flappy
 
 import flappy.annotations.FlappyField
 import flappy.annotations.flappyFieldMetadataList
+import flappy.functions.FlappyEvalFunction
 import flappy.functions.FlappyInvokeFunction
 import flappy.functions.FlappySynthesizedFunction
 import flappy.llms.Dummy
@@ -76,21 +77,46 @@ class FunctionTest {
     returnType = SampleReturn::class.java,
   )
 
+
   @Test
   fun argsSchemaPropertiesString() {
     assertEquals(
       sampleFunction.argsTypeSchemaPropertiesString,
       """{"properties":{"argsString":{"type":"string","description":"Lawsuit full text."},"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsString","argsLong"],"description":"Function arguments","type":"object"}"""
     )
-  }
 
-  @Test
-  fun returnTypeSchemaPropertiesString() {
     assertEquals(
       sampleFunction.returnTypeSchemaPropertiesString,
       """{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","items":{"type":"string","enum":["Innocent","Guilty","Unknown"]}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}"""
     )
+
+    assertEquals(
+      sampleFunction.definition().asString(),
+      """{"name":"getMeta","description":"Extract meta data from a lawsuit full text.","parameters":{"properties":{"args":{"properties":{"argsString":{"type":"string","description":"Lawsuit full text."},"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsString","argsLong"],"description":"Function arguments","type":"object"},"returnType":{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","items":{"type":"string","enum":["Innocent","Guilty","Unknown"]}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}},"type":"object"}}"""
+    )
   }
+
+  @Test
+  fun evalFunction() {
+    val sandboxFunction = FlappyEvalFunction()
+    sandboxFunction.use {
+      assertEquals(
+        sandboxFunction.argsTypeSchemaPropertiesString,
+        """{"type":"string","description":"Function arguments"}"""
+      )
+
+      assertEquals(
+        sandboxFunction.returnTypeSchemaPropertiesString,
+        """{"type":"string","description":"Function return type"}"""
+      )
+
+      assertEquals(
+        sandboxFunction.definition().asString(),
+        """{"name":"sandbox","description":"An safe sandbox that only support the built-in library. The execution time is limited to 120 seconds. The task is to define a function named \"main\" that doesn't take any parameters. The output should be a String.\n        Network access is disabled","parameters":{"properties":{"args":{"type":"string","description":"Function arguments"},"returnType":{"type":"string","description":"Function return type"}},"type":"object"}}"""
+      )
+    }
+  }
+
 
   @Test
   fun functionInit() {

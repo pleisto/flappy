@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
 
-public class FlappyJniSandbox extends FlappyJniLoader {
+public class FlappyJniSandbox extends FlappyJniLoader implements AutoCloseable {
     String cachePath;
 
     FlappyJniSandbox(String cachePath) throws IOException {
@@ -21,6 +21,9 @@ public class FlappyJniSandbox extends FlappyJniLoader {
     FlappyJniSandbox() throws IOException {
         this(null);
     }
+
+    @Override
+    public void close() {}
 
     public static class FlappyJniSandboxInput {
         public final String code;

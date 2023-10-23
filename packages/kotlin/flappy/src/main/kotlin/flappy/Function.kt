@@ -8,10 +8,9 @@ internal typealias AnyClass = Class<*>
 
 abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
   val name: String,
-  private val description: String,
   val argsType: Class<Args>,
   val returnType: Class<Ret>,
-) {
+) : AutoCloseable {
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
 
   val source = "#function#$name"
@@ -22,9 +21,11 @@ abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
   val argsTypeSchemaPropertiesString: String = argsTypeSchemaProperties.asString()
   val returnTypeSchemaPropertiesString: String = returnTypeSchemaProperties.asString()
 
+  internal abstract fun buildDescription(): String
+
   internal fun definition() = FunctionSchema(
     name = name,
-    description = description,
+    description = buildDescription(),
     parameters = FunctionParameters(
       FunctionProperties(
         args = argsTypeSchemaProperties,
@@ -36,7 +37,7 @@ abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
 
   private fun buildSystemMessage() = SystemMessage(
     """
-            $description
+            ${buildDescription()}
             User request according to the following JSON Schema:
             $argsTypeSchemaPropertiesString
 
@@ -84,4 +85,5 @@ abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
   suspend fun call(args: Args, agent: FlappyBaseAgent, config: LLMGenerateConfig? = null) {
     invoke(if (args is String) (args.castBy(argsType)) else args, agent, config)
   }
+
 }
