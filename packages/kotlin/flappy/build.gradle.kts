@@ -118,6 +118,8 @@ tasks.test {
   // Use JUnit Platform for unit tests.
   useJUnitPlatform()
 
+//  maxParallelForks = Runtime.getRuntime().availableProcessors()
+
   // show standard out and standard error of the test JVM(s) on the console
   testLogging.showStandardStreams = true
 
