@@ -5,17 +5,18 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
 
-# Quick Start
+# 快速开始
 
 :::caution
 
-⚠️ This project is still under development. We're working hard to release the first version of Flappy as soon as possible. Stay tuned! Documentation and code examples will be available soon.
+⚠️ 本项目仍在开发中。我们正努力尽快发布Flappy的首个版本。敬请期待！文档和代码示例将很快提供。
 :::
 
 
-Flappy is a programming language agnostic sdk for building LLM based agents/applications. Please specify the language you are using to get started.
+Flappy是一个用于构建基于大语言模型（LLM）的AI Agent/AI应用程序的开发框架，同时支持多种不同编程语言。请指定您正在使用的语言以开始使用。
 
-## Installation
+
+## 安装
 
 <Tabs>
   <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
@@ -57,13 +58,14 @@ implementation("com.pleisto:flappy:0.0.7")
   </TabItem>
 </Tabs>
 
-## Create LLM Adapter
+## 创建LLM适配器
 
-Flappy supports multiple LLM implementations, such as OpenAI ChatGPT and hugingface transformers. You can also create your own LLM adapter by implementing the `LLMBase` interface.
+Flappy支持多种LLM实现，例如OpenAI的ChatGPT和hugingface的transformers。您也可以通过实现LLMBase接口来创建自己的LLM适配器。
+
 
 
 <Tabs>
-  <TabItem value="nodejs-chatgpt" label="NodeJS (TypeScript) with ChatGPT" default>
+  <TabItem value="nodejs-chatgpt" label="NodeJS (TypeScript) & ChatGPT" default>
 
 ```ts
 // you need to manually install `openai` package.
@@ -81,7 +83,7 @@ const chatGpt = new ChatGPT(
 ```
 
   </TabItem>
-  <TabItem value="nodejs-baichuan" label="NodeJS (TypeScript) with Baichuan-53B API" default>
+  <TabItem value="nodejs-baichuan" label="NodeJS (TypeScript) & 百川53B大模型API" default>
 
 ```ts
 import { env } from 'node:process'
@@ -96,7 +98,7 @@ const chatGpt = new Baichuan(
 ```
 
   </TabItem>
-  <TabItem value="java" label="Java" default>
+  <TabItem value="java" label="Java  with ChatGPT" default>
 
 ```java
     Dotenv dotenv = Dotenv.load();
@@ -104,7 +106,7 @@ const chatGpt = new Baichuan(
 ```
 
   </TabItem>
-  <TabItem value="kotlin" label="Kotlin" default>
+  <TabItem value="kotlin" label="Kotlin  with ChatGPT" default>
 
 
 ```kotlin
@@ -122,30 +124,28 @@ const chatGpt = new Baichuan(
   </TabItem>
 </Tabs>
 
-## Define your agent
+## 定义你的 Agent
 
-In artificial intelligence, an agent is a computer program or system that is designed to perceive its environment, make decisions and take actions to achieve a specific goal or set of goals. The agent operates autonomously, meaning it is not directly controlled by a human operator.
+在人工智能中，Agent 是一个计算机程序或系统，其设计目的是感知其环境，做出决定，并采取行动以实现特定的目标或一组目标。Agent 自主运行，意味着它不直接受人类操作员的控制。
 
-In Flappy's ecosystem, the agent operates as a versatile conduit for the LLM. It's designed to juggle a variety of tasks - structuring data, invoking external APIs, or sandboxing LLM-generated Python code - in any combination as needed. It's a flexible tool, not a rigid cog, adapting to your needs for a more efficient and secure LLM interaction.
+在 Flappy 的生态系统中，Agent 作为 LLM 的多功能通道进行操作。它的设计目的是进行各种任务的处理 - 结构化数据，调用外部 API，或者对 LLM 生成的 Python 代码进行沙盒处理 - 根据需要以任何组合进行。它是一个灵活的工具，而不是一个僵化的齿轮，能够适应您对更高效和安全的 LLM 交互的需求。
 
-### Key Concepts
+### 关键概念
 
-#### Functions
+#### 函数
 
-Functions act as the foundation for your agent in the Flappy framework. In this documentation, we will introduce `InvokeFunction` and `SythesizedFunction`, two essential function types you can define and utilize.
+函数作为 Flappy 框架中你的 Agent 的基础。在这个文档中，我们将介绍 `InvokeFunction` 和 `SythesizedFunction`，这两种你可以定义和使用的基础函数类型。
 
+- `InvokeFunction` 使 Agent 能够与环境进行交互，类似于 Langchain 的 Agent 中的工具。它由输入和输出参数定义，这些参数的结构必须清晰，以便语言学习模型（LLM）能够有效地进行交互。理解这些参数以及函数在与用户请求和世界交互中的角色是非常重要的，它对于成本效益的任务计划至关重要。
+- `SythesizedFunction` 是由 LLM 扮演的一种函数。你只需要定义它的描述和它的输入和输出的结构。然后，LLM 将尝试按照定义的格式处理输入并产生预期格式的输出。这使得 SythesizedFunction 在 LLM 执行结构化数据提取任务，或者预期 LLM 输出结构化数据的场景中尤其有用。
 
-- `InvokeFunction` enables agents to interact with the environment, similar to Tools in Langchain's Agents. It's defined by input and output parameters, whose structures must be clear for the Language Learning Model (LLM) to interact efficiently. Understanding these parameters and the function's role in interacting with user requests and the world is essential. For cost-effective task planning.
-- `SythesizedFunction` is a type of function played by the LLM. You only need to define its description and the structure of its inputs and outputs. The LLM will then attempt to process inputs in the defined format and produce outputs in the expected format. This feature makes SythesizedFunction particularly useful in scenarios where structured data extraction tasks are performed by the LLM or when the LLM is expected to output structured data.
+#### 代码解释器
 
-#### Code Interpreter
-
-The Code Interpreter in Flappy serves as an equivalent replacement for ChatGPT Code Interpreter, enabling the language model to fulfill complex user requirements through Python code. What sets Flappy's Code Interpreter apart from other open-source implementations in the market is its sandboxed safety feature. This ensures that it meets the stringent security needs necessary for deployment in a production environment.
-
+Flappy 中的代码解释器作为 ChatGPT 代码解释器的等效替代品，使语言模型能够通过 Python 代码满足复杂的用户需求。Flappy 的代码解释器与市场上其他开源实现的区别在于其沙盒化的安全特性。这确保了它满足生产环境部署所必需的严格的安全需求。
 
 
 <Tabs>
-  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
 import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction,  z } from '@pleisto/node-flappy'
@@ -213,16 +213,16 @@ const agent = createFlappyAgent({
   </TabItem>
 </Tabs>
 
-## Call your agent
+### 调用你的代理
 
-### Create and execute a action plan
+### 创建并执行一个行动计划
 
-Augmented Language Models (ALMs) blend the reasoning capabilities of Large Language Models (LLMs) with tools that allow for knowledge retrieval and action execution. Existing ALM systems trigger LLM thought processes while pulling observations from these tools in an interleaved fashion. Specifically, an LLM reasons to call an external tool, gets halted to fetch the tool's response, and then decides the next action based on all preceding response tokens. Such a paradigm, though straightforward and easy to implement, often leads to huge computation complexity from redundant prompts and repeated execution.
+增强语言模型（ALMs）将大型语言模型（LLMs）的推理能力与允许知识检索和行动执行的工具相结合。现有的ALM系统在从这些工具中拉取观察结果的同时触发LLM的思考流程。具体来说，LLM调用外部工具进行推理，获取工具的响应后暂停，然后根据所有先前的响应令牌决定下一步行动。尽管这种范例直接且易于实施，但通常会因冗余提示和重复执行导致巨大的计算复杂性。
 
-Flappy uses [ReWOO](https://arxiv.org/abs/2305.18323) instead of [ReAct](https://arxiv.org/abs/2210.03629) to minimize LLM token output, thereby reducing costs. Building on this, the agent is equipped to autonomously devise a plan based on the user's prompt. This involves determining the sequence of functions that need to be invoked to fulfill the given prompt. The execution then proceeds according to this formulated plan, further optimizing the efficiency of our system.
+Flappy使用[ReWOO](https://arxiv.org/abs/2305.18323)代替[ReAct](https://arxiv.org/abs/2210.03629)来将LLM输出的Token数最小化从而降低成本。在此基础之上，Agent具备了根据用户的Prompt自主设计执行计划的能力。它需确定一系列需要调用的函数，以满足Prompt的要求。随后，系统按照这个精心制定的计划进行执行，从而进一步提升了我们系统的效率。
 
 <Tabs>
-  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
 agent.executePlan('Find the latest case with the plaintiff being families of victims and return its metadata.')
@@ -251,13 +251,14 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
 </Tabs>
 
 
-### Call sythesized function directly
+### 直接调用 sythesized function
 
-You can also call sythesized function directly without executing a action plan.
+你也可以直接调用sythesized function 而无需创建或执行动作计划。
+
 
 
 <Tabs>
-  <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
+  <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
 agent.callFunction('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
@@ -277,9 +278,9 @@ agent.callFunction('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
 
 
 
-### Call Code Interpreter
+### 调用 Code Interpreter
 
-Code Interpreter currently needs to be called directly. We are working on a better way to integrate it with the agent.
+Code Interpreter 当前需要被直接调用. We are working on a better way to integrate it with the agent.
 
 <Tabs>
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
