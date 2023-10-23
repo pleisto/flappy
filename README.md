@@ -6,7 +6,7 @@ This monorepo gathers all the Flappy libraries, each implemented in a different 
 
 ## Overview
 
-Flappy is a production-ready Language Learning Model (LLM) Application/Agent SDK designed to simplify AI integration in your projects. It is an easy-to-use, universally compatible, and production-ready solution that brings the power of AI to developers regardless of their preferred programming language.
+Flappy is a production-ready Language Language Model (LLM) Application/Agent SDK designed to simplify AI integration in your projects. It is an easy-to-use, universally compatible, and production-ready solution that brings the power of AI to developers regardless of their preferred programming language.
 
 ## Key Features
 

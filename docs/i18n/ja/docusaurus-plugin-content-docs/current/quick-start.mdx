@@ -5,17 +5,18 @@ sidebar_position: 2
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
 
-# Quick Start
+# はじめに
 
 :::caution
 
-⚠️ This project is still under development. We're working hard to release the first version of Flappy as soon as possible. Stay tuned! Documentation and code examples will be available soon.
+⚠️ このプロジェクトは現在開発中です。Flappyの初版をできるだけ早くリリースするために、一生懸命に作業しています。お楽しみに！ドキュメンテーションとコード例は近日公開予定です。
 :::
 
 
-Flappy is a programming language agnostic sdk for building LLM based agents/applications. Please specify the language you are using to get started.
+Flappyは、LLMベースのエージェント/アプリケーションを構築するためのプログラミング言語に依存しないSDKです。始めるには、使用している言語を指定してください。
 
-## Installation
+## インストール
+
 
 <Tabs>
   <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
@@ -57,10 +58,9 @@ implementation("com.pleisto:flappy:0.0.7")
   </TabItem>
 </Tabs>
 
-## Create LLM Adapter
+## LLMアダプターの作成
 
-Flappy supports multiple LLM implementations, such as OpenAI ChatGPT and hugingface transformers. You can also create your own LLM adapter by implementing the `LLMBase` interface.
-
+Flappyは、OpenAIのChatGPTやhugingfaceのtransformersなど、複数のLLM実装をサポートしています。また、`LLMBase` インターフェースを実装することで、自分自身のLLMアダプターを作成することも可能です。
 
 <Tabs>
   <TabItem value="nodejs-chatgpt" label="NodeJS (TypeScript) with ChatGPT" default>
@@ -122,26 +122,24 @@ const chatGpt = new Baichuan(
   </TabItem>
 </Tabs>
 
-## Define your agent
+## エージェントの定義
 
-In artificial intelligence, an agent is a computer program or system that is designed to perceive its environment, make decisions and take actions to achieve a specific goal or set of goals. The agent operates autonomously, meaning it is not directly controlled by a human operator.
+人工知能では、エージェントは環境を認識し、判断を下し、特定の目標または目標セットを達成するための行動を取るように設計されたコンピュータプログラムまたはシステムを指します。エージェントは自律的に動作し、つまり、人間のオペレーターによって直接制御されることはありません。
 
-In Flappy's ecosystem, the agent operates as a versatile conduit for the LLM. It's designed to juggle a variety of tasks - structuring data, invoking external APIs, or sandboxing LLM-generated Python code - in any combination as needed. It's a flexible tool, not a rigid cog, adapting to your needs for a more efficient and secure LLM interaction.
+Flappyのエコシステムでは、エージェントはLLMの多目的な伝送路として作用します。エージェントは、データの構造化、外部APIの呼び出し、またはLLMが生成したPythonコードのサンドボックス化など、様々なタスクを必要に応じて組み合わせて処理するように設計されています。これは硬直した歯車ではなく、効率的で安全なLLMのインタラクションを必要に応じて適応する柔軟なツールです。
 
-### Key Concepts
+### 主要な概念
 
-#### Functions
+#### 関数
 
-Functions act as the foundation for your agent in the Flappy framework. In this documentation, we will introduce `InvokeFunction` and `SythesizedFunction`, two essential function types you can define and utilize.
+関数はFlappyフレームワークにおけるエージェントの基盤となります。このドキュメンテーションでは、定義と利用が可能な2つの主要な関数タイプ、`InvokeFunction`と`SythesizedFunction`を紹介します。
 
+- `InvokeFunction`はエージェントが環境と対話するための機能を提供し、LangchainのAgentsのToolsに類似しています。これは入力と出力のパラメータで定義され、その構造はLanguage Learning Model (LLM)が効率的に対話するために明確である必要があります。これらのパラメータと関数がユーザーのリクエストや世界との対話において果たす役割を理解することは、効率的なタスク計画のために重要です。
+- `SythesizedFunction`はLLMが演じる関数の一種です。その説明と入力と出力の構造を定義するだけでよく、LLMはその後、定義された形式で入力を処理し、期待される形式で出力を生成しようとします。この特徴は、LLMが構造化データの抽出タスクを実行したり、LLMが構造化データを出力することが期待されるシナリオで、特に有用です。
 
-- `InvokeFunction` enables agents to interact with the environment, similar to Tools in Langchain's Agents. It's defined by input and output parameters, whose structures must be clear for the Language Learning Model (LLM) to interact efficiently. Understanding these parameters and the function's role in interacting with user requests and the world is essential. For cost-effective task planning.
-- `SythesizedFunction` is a type of function played by the LLM. You only need to define its description and the structure of its inputs and outputs. The LLM will then attempt to process inputs in the defined format and produce outputs in the expected format. This feature makes SythesizedFunction particularly useful in scenarios where structured data extraction tasks are performed by the LLM or when the LLM is expected to output structured data.
+#### コードインタープリタ
 
-#### Code Interpreter
-
-The Code Interpreter in Flappy serves as an equivalent replacement for ChatGPT Code Interpreter, enabling the language model to fulfill complex user requirements through Python code. What sets Flappy's Code Interpreter apart from other open-source implementations in the market is its sandboxed safety feature. This ensures that it meets the stringent security needs necessary for deployment in a production environment.
-
+Flappyのコードインタープリタは、ChatGPTコードインタープリタの等価な代替品として機能し、言語モデルがPythonコードを通じて複雑なユーザー要求を満たすことを可能にします。Flappyのコードインタープリタが市場の他のオープンソース実装と異なるのは、そのサンドボックス化された安全機能です。これにより、本番環境での展開に必要な厳格なセキュリティ要件を満たすことが確保されます。
 
 
 <Tabs>

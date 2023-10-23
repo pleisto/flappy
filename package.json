@@ -40,12 +40,12 @@
   "packageManager": "yarn@3.6.4",
   "devDependencies": {
     "@pleisto/eslint-plugin": "^1.4.84",
-    "@types/node": "^20.8.4",
+    "@types/node": "^20.8.7",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.0",
+    "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   }

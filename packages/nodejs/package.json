@@ -24,9 +24,9 @@
     "zod-to-json-schema": "^3.21.4"
   },
   "optionalDependencies": {
-    "openai": "^4.11.1"
+    "openai": "^4.12.4"
   },
   "devDependencies": {
-    "openai": "^4.11.1"
+    "openai": "^4.12.4"
   }
 }

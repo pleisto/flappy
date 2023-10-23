@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@pleisto/node-flappy": "workspace:^",
-    "openai": "^4.11.1",
+    "openai": "^4.12.4",
     "ts-node": "^10.9.1"
   }
 }
