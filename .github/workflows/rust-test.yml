@@ -28,6 +28,20 @@ defaults:
     working-directory: packages/rust-core
 
 jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Generate lockfile
+        run: cargo generate-lockfile
+
+      - name: Audit dependencies
+        run: cargo audit
+
   lint:
     name: rust-ci-lint
     runs-on: ubuntu-latest
@@ -41,7 +55,6 @@ jobs:
 
       - name: Clippy
         run: cargo clippy -- -D warnings
-
   tests:
     name: rust-ci-test
     runs-on: ${{ matrix.os }}
@@ -49,6 +62,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        toolchain:
+          - stable
+          - beta
+          - nightly
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -64,6 +81,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain: ${{matrix.toolchain}}
           target: ${{matrix.target}}
 
       - name: Install cross-compilation tools

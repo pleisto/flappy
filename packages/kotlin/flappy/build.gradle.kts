@@ -65,7 +65,7 @@ dependencies {
   implementation("io.ktor:ktor-client-java-jvm:2.3.5")
   implementation("io.ktor:ktor-client-core:2.3.5")
   implementation("io.ktor:ktor-client-okhttp:2.3.5")
-  implementation("com.theokanning.openai-gpt3-java:service:0.16.0")
+  implementation("com.theokanning.openai-gpt3-java:service:0.16.1")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
   implementation("com.pleisto:flappy-java-bindings:0.0.6")
