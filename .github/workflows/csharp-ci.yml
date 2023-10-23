@@ -1,4 +1,4 @@
-name: CSharp Nuget Test - Linux
+name: CSharp Nuget CI
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -10,13 +10,13 @@ on:
     paths:
       - 'examples/csharp/**'
       - 'packages/csharp/**'
-      - '.github/workflows/csharp-test.yml'
+      - '.github/workflows/csharp-ci.yml'
   push:
     branches: [main]
     paths:
       - 'examples/csharp/**'
       - 'packages/csharp/**'
-      - '.github/workflows/csharp-test.yml'
+      - '.github/workflows/csharp-ci.yml'
 
 
 jobs:

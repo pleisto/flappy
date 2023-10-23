@@ -1,4 +1,4 @@
-name: Nodejs Bindings Build
+name: Nodejs Bindings CI
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,7 +29,7 @@ on:
       - 'packages/rust-core/Cargo.lock'
       - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build-common.yml'
-      - '.github/workflows/nodejs-bindings-build.yml'
+      - '.github/workflows/nodejs-bindings-ci.yml'
   push:
     branches: [main]
     paths:
@@ -40,7 +40,7 @@ on:
       - 'packages/rust-core/Cargo.lock'
       - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build-common.yml'
-      - '.github/workflows/nodejs-bindings-build.yml'
+      - '.github/workflows/nodejs-bindings-ci.yml'
 
 jobs:
   build:

@@ -11,7 +11,7 @@ on:
     paths:
       - 'packages/rust-core/java/pom.xml'
       - '.github/workflows/java-bindings-publish.yml'
-      - '.github/workflows/java-bindings-publish-common.yml'
+      - '.github/workflows/java-bindings-build-common.yml'
 
 defaults:
   run:
@@ -61,7 +61,7 @@ jobs:
     name: java-bindings-publish-stage
     needs: [check_if_need_release]
     if: needs.check_if_need_release.outputs.release == 'yes'
-    uses: ./.github/workflows/java-bindings-publish-common.yml
+    uses: ./.github/workflows/java-bindings-build-common.yml
     with:
       environment: Maven
       publish: true

@@ -4,15 +4,16 @@ import flappy.*
 
 class FlappySynthesizedFunction<Args : Any, Ret : Any>(
   name: String,
-  description: String,
+  val description: String,
   args: Class<Args>,
   returnType: Class<Ret>
 ) : FlappyFunctionBase<Args, Ret>(
-  name,
-  description,
-  args,
-  returnType
+  name = name,
+  argsType = args,
+  returnType = returnType
 ) {
+  override fun buildDescription(): String = description
+
   override suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: LLMGenerateConfig?): Ret {
     val chatMessages = this.buildChatMessages(args)
 
@@ -42,4 +43,6 @@ class FlappySynthesizedFunction<Args : Any, Ret : Any>(
       }
     }
   }
+
+  override fun close() {}
 }

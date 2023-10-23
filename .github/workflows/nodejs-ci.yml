@@ -1,4 +1,4 @@
-name: Nodejs Build
+name: Nodejs CI
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,14 +11,14 @@ on:
       - 'yarn.lock'
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build-common.yml'
-      - '.github/workflows/nodejs-build.yml'
+      - '.github/workflows/nodejs-ci.yml'
   push:
     branches: [main]
     paths:
       - 'yarn.lock'
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build-common.yml'
-      - '.github/workflows/nodejs-build.yml'
+      - '.github/workflows/nodejs-ci.yml'
 
 jobs:
   build:

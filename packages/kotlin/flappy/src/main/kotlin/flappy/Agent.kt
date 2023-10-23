@@ -17,6 +17,8 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
   override fun close() {
     inferenceLLM.close()
+
+    functions.map { it.close() }
   }
 
   companion object {
