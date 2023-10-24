@@ -102,7 +102,7 @@ export class Baichuan extends LLMBase {
         return { success: false, data: `Invalid status: ${response.status}` }
       }
 
-      const result: BaichuanResponseBody = await response.json()
+      const result: BaichuanResponseBody = (await response.json()) as BaichuanResponseBody
       console.debug('baichuan resp', JSON.stringify(result, null, 2))
 
       if (result.code !== 0) return { success: false, data: result.msg }
