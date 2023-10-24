@@ -1,4 +1,4 @@
-name: "Pull Request Cleanup"
+name: 'Pull Request Cleanup'
 
 on:
   pull_request:
