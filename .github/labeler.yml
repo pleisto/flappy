@@ -5,7 +5,7 @@ docs:
   - 'docs/**'
 
 core:
-  - 'packages/rust-core/**'
+  - any: ['packages/rust-core/**', '!packages/rust-core/nodejs/**', '!packages/rust-core/java/**', '!packages/rust-core/csharp/**']
 
 nodejs-bindings:
   - 'packages/rust-core/nodejs/**'
