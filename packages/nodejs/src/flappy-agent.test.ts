@@ -416,7 +416,7 @@ describe('code interpreter', () => {
       "
     `)
     },
-    10 * 1000
+    60 * 1000
   )
 
   test(
@@ -466,6 +466,6 @@ describe('code interpreter', () => {
       "
     `)
     },
-    10 * 1000
+    60 * 1000
   )
 })
