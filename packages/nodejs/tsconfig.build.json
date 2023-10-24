@@ -4,6 +4,7 @@
     "module": "CommonJS",
     "declaration": true,
     "noEmit": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "importHelpers": false
   }
 }
