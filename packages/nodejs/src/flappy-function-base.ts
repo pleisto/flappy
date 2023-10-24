@@ -37,10 +37,12 @@ export abstract class FlappyFunctionBase<
 > {
   define: FlappyFunctionDefinition<TName, TArgs, TReturn>
   callingSchema: object
-  constructor(define: FlappyFunctionDefinition<TName, TArgs, TReturn>) {
+  options?: FlappyFunctionOptions
+  constructor(define: FlappyFunctionDefinition<TName, TArgs, TReturn>, options?: FlappyFunctionOptions) {
     this.define = define
     this.callingSchema = buildJsonSchema(define)
+    this.options = options
   }
 
-  public abstract call(agent: FlappyAgent, args: z.infer<TArgs>, options?: FlappyFunctionOptions): z.infer<TReturn>
+  public abstract call(agent: FlappyAgent, args: z.infer<TArgs>): z.infer<TReturn>
 }

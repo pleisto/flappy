@@ -15,11 +15,7 @@ export class SynthesizedFunction<
 > extends FlappyFunctionBase<TName, TArgs, TReturn> {
   declare define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
 
-  public async call(
-    agent: FlappyAgent,
-    args: z.infer<TArgs>,
-    options?: FlappyFunctionOptions
-  ): Promise<z.infer<TReturn>> {
+  public async call(agent: FlappyAgent, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
     const describe = this.define.description
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
@@ -40,7 +36,7 @@ export class SynthesizedFunction<
       }
     ]
     let requestMessage = originalRequestMessage
-    let retry = options?.retry ?? agent.retry
+    let retry = this.options?.retry ?? agent.retry
     let result: ChatMLResponse | undefined
 
     while (true) {
@@ -98,5 +94,6 @@ export const createSynthesizedFunction = <
   const TArgs extends z.ZodType,
   const TReturn extends z.ZodType
 >(
-  define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
-): SynthesizedFunction<TName, TArgs, TReturn> => new SynthesizedFunction(define)
+  define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>,
+  options?: FlappyFunctionOptions
+): SynthesizedFunction<TName, TArgs, TReturn> => new SynthesizedFunction(define, options)
