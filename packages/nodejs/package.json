@@ -18,6 +18,9 @@
     "build": "yarn clean && yarn run -T tsc -p tsconfig.build.json",
     "clean": "rm -rf ./dist",
     "test": "vitest",
+    "lint": "yarn lint:eslint && yarn lint:type",
+    "lint:eslint": "yarn run -T eslint",
+    "lint:type": "yarn run -T tsc",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {

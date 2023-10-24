@@ -24,3 +24,38 @@ jobs:
   build:
     name: nodejs-ci-build
     uses: ./.github/workflows/nodejs-build-common.yml
+  lint:
+    name: nodejs-ci-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Lint
+        run: yarn lint
+        working-directory: ./packages/nodejs
+  test:
+    name: nodejs-ci-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Test
+        run: yarn coverage
+        working-directory: ./packages/nodejs
+      - name: Report coverage
+        if: always() # Also generate the report if tests are failing
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: ./packages/nodejs
