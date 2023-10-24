@@ -36,7 +36,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version-file: 'package.json'
           cache: yarn
 
       - name: Install dependencies
@@ -75,11 +75,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 19
+          node-version-file: 'package.json'
           cache: yarn
+
       - name: Install dependencies
         run: yarn install --immutable
       - name: Download build

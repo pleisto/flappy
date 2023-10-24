@@ -10,26 +10,11 @@ jobs:
     steps:
       - name: Checkout the codebase
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Detect what files changed
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          token: ${{ github.token }}
-          filters: |
-            src_or_deps_changed:
-              - 'packages/nodejs/src/**'
-              - '**/*.[tj]{s,sx}'
-              - 'packages/nodejs/package.json'
-              - '**/yarn.lock'
       - name: Install yarn dependencies
-        if: steps.changes.outputs.src_or_deps_changed == 'true'
         run: yarn install --immutable
-        shell: bash
+
       - name: Run build
-        if: steps.changes.outputs.src_or_deps_changed == 'true'
         run: yarn build:nodejs
       - name: Upload build
         uses: actions/upload-artifact@v3
