@@ -25,6 +25,8 @@ plugins {
   id("com.jraska.module.graph.assertion") version "2.5.0"
 
   signing
+
+  id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }
 
 repositories {
