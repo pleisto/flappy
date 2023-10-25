@@ -3043,6 +3043,7 @@ __metadata:
     openai: "npm:^4.12.4"
     radash: "npm:^11.0.0"
     vitest: "npm:^0.34.6"
+    yaml: "npm:^2.3.3"
     zod: "npm:^3.22.4"
     zod-to-json-schema: "npm:^3.21.4"
   dependenciesMeta:
@@ -15828,7 +15829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:2.3.3":
+"yaml@npm:2.3.3, yaml@npm:^2.3.3":
   version: 2.3.3
   resolution: "yaml@npm:2.3.3"
   checksum: a0c56bf682159b0567e9cbbddf23efc2f6806f6450716d9be6ec5eb1af1b941e95c8d3dc9c47da20d1b6883a9d6c61e31cf98bb4b77ebca4396bf772657f2f00
