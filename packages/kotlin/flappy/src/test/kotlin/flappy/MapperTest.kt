@@ -30,6 +30,14 @@ private class MapperTest {
       val foobar = "123132"
     }
 
+    assertEquals(
+      object {
+        val a = 1
+      }.asJSON(true), """{
+  "a": 1
+}"""
+    )
+
     assertEquals(Opt().asJSON(), """{"y":"123","obj":{"answer":"123"},"map":{"foo":1,"bar":2},"foobar":"123132"}""")
     assertEquals(
       Opt().asJSON(true),
