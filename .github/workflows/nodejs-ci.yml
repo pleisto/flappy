@@ -59,7 +59,7 @@ jobs:
         run: yarn coverage
         working-directory: ./packages/nodejs
       - name: Report coverage
-        if: always() # Also generate the report if tests are failing
+        if: always()
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           working-directory: ./packages/nodejs

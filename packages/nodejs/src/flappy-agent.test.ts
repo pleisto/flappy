@@ -7,6 +7,7 @@ import { createSynthesizedFunction } from './synthesized-function'
 import { createInvokeFunction } from './invoke-function'
 import { z } from './flappy-type'
 import { env } from 'node:process'
+import { type FlappyFunctionDefinition } from './flappy-agent.interface'
 
 test('create flappy agent normally', async () => {
   class TestLLM extends LLMBase {
@@ -30,6 +31,7 @@ test('create flappy agent normally', async () => {
     returnType: z.string(),
     resolve: async () => invokeValue
   })
+
   const synthesizedFunction = createSynthesizedFunction({
     name: 'synthesizedFunction',
     description: 'synthesizedFunction',
@@ -45,6 +47,74 @@ test('create flappy agent normally', async () => {
   expect(agent.llmPlaner).toBe(llm)
   expect(agent.invokeFunctions()[0]).toBe(invokeFunction)
   expect(agent.synthesizedFunctions()[0]).toBe(synthesizedFunction)
+
+  expect(agent.executePlanSystemMessage().content).toMatchInlineSnapshot(`
+    "You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
+            Make as few plans as possible if it can solve the problem.
+            The functions list is described using the following YAML schema array:
+            - name: synthesizedFunction
+      description: synthesizedFunction
+      parameters:
+        type: object
+        properties:
+          args:
+            type: object
+            properties: {}
+            description: Function arguments
+          returnType:
+            type: string
+            description: Function return type
+    - name: invokeFunction
+      description: invokeFunction
+      parameters:
+        type: object
+        properties:
+          args:
+            type: object
+            properties: {}
+            description: Function arguments
+          returnType:
+            type: string
+            description: Function return type
+
+
+            Your specified plans should be output as JSON object array and adhere to the following JSON schema:
+            {
+        \\"type\\": \\"array\\",
+        \\"items\\": {
+            \\"type\\": \\"object\\",
+            \\"properties\\": {
+                \\"thought\\": {
+                    \\"type\\": \\"string\\",
+                    \\"description\\": \\"The thought why this step is needed.\\"
+                },
+                \\"id\\": {
+                    \\"type\\": \\"integer\\",
+                    \\"exclusiveMinimum\\": 0,
+                    \\"description\\": \\"Increment id starting from 1\\"
+                },
+                \\"functionName\\": {
+                    \\"type\\": \\"string\\"
+                },
+                \\"args\\": {
+                    \\"type\\": \\"object\\",
+                    \\"additionalProperties\\": {},
+                    \\"description\\": \\"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '%@_' + the ID of the previous step (e.g. '%@_1'). If an argument's value is derived from the **previous** step's function's return value's properties, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.\\"
+                }
+            },
+            \\"required\\": [
+                \\"thought\\",
+                \\"id\\",
+                \\"functionName\\",
+                \\"args\\"
+            ],
+            \\"additionalProperties\\": false
+        },
+        \\"description\\": \\"An array storing the steps.\\"
+    }
+
+            Only the listed functions are allowed to be used."
+  `)
 
   expect(await agent.callFunction<'invokeFunction', typeof invokeFunction>('invokeFunction', {})).toBe(invokeValue)
 })
@@ -73,7 +143,7 @@ describe('execute plan', () => {
     }),
     returnType: z.string(),
     resolve: async (...args: any[]) => getLatestLawsuitsByPlaintiff(args)
-  }
+  } satisfies FlappyFunctionDefinition
 
   beforeEach(() => {
     const MOCK_LAWSUIT_DATA =
