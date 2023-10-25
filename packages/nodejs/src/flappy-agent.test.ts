@@ -72,7 +72,7 @@ describe('execute plan', () => {
       arg2: z.array(z.string()).describe('ignore it').optional()
     }),
     returnType: z.string(),
-    resolve: getLatestLawsuitsByPlaintiff
+    resolve: async (...args: any[]) => getLatestLawsuitsByPlaintiff(args)
   }
 
   beforeEach(() => {
@@ -88,7 +88,7 @@ describe('execute plan', () => {
         arg2: z.array(z.string()).describe('ignore it').optional()
       }),
       returnType: z.string(),
-      resolve: getLatestLawsuitsByPlaintiff
+      resolve: async (...args: any[]) => getLatestLawsuitsByPlaintiff(args)
     }
   })
 
@@ -328,7 +328,7 @@ describe('execute plan', () => {
                 id: 1,
                 functionName: 'getLatestLawsuitsByPlaintiff',
                 args: {
-                  plaintiff: 'families of victims',
+                  plaintiff: 'John Doe',
                   arg1: false
                 }
               },
@@ -369,7 +369,12 @@ describe('execute plan', () => {
       'Find the latest case with the plaintiff being families of victims and return its metadata.'
     )
 
-    expect(getLatestLawsuitsByPlaintiff).toBeCalled()
+    expect(getLatestLawsuitsByPlaintiff).toBeCalledWith([
+      {
+        plaintiff: 'John Doe',
+        arg1: false
+      }
+    ])
   })
 })
 

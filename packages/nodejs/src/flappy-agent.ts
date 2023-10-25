@@ -10,7 +10,7 @@ import { type LLMBase } from './llm/llm-base'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { z } from './flappy-type'
-import { zodToCleanJsonSchema } from './utils'
+import { convertJsonToYaml, zodToCleanJsonSchema } from './utils'
 import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -21,7 +21,7 @@ const lanOutputSchema = (enableCoT: boolean) => {
     args: z
       .record(z.any())
       .describe(
-        `an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '${STEP_PREFIX}' + the ID of the previous step (e.g. '${STEP_PREFIX}1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.`
+        `an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '${STEP_PREFIX}' + the ID of the previous step (e.g. '${STEP_PREFIX}1'). If an argument's value is derived from the **previous** step's function's return value's properties, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.`
       )
   }
   const thought = enableCoT
@@ -169,15 +169,15 @@ export class FlappyAgent<
    * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
    */
   public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
-    const functions = JSON.stringify(this.functionsDefinitions())
+    const functions = convertJsonToYaml(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
-    const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema))
+    const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema), null, 4)
     const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
         content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
         Make as few plans as possible if it can solve the problem.
-        The functions list is described using the following JSON schema array:
+        The functions list is described using the following YAML schema array:
         ${functions}
 
         Your specified plans should be output as JSON object array and adhere to the following JSON schema:
