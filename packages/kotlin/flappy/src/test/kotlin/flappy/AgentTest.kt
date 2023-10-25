@@ -103,7 +103,7 @@ class AgentTest {
         description: "Function return type"
         type: "string"
     type: "object"
-""".toUniversal()
+"""
     )
   }
 
@@ -141,7 +141,7 @@ class AgentTest {
   },
   "type": "array",
   "description": "An array storing the steps."
-}""".toUniversal()
+}"""
     )
   }
 }

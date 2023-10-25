@@ -77,8 +77,10 @@ jobs:
         kotlin-test-mode: ['REFLECT']
         include:
           - excludeJniTests: false
+            excludeWindowsTests: false
           - os: windows-latest
             excludeJniTests: true
+            excludeWindowsTests: true
           - os: macos-latest
             excludeJniTests: true
         # kotlin-test-mode: [ 'REFLECT', 'KSP', 'KAPT' ]
@@ -103,6 +105,7 @@ jobs:
           ./gradlew build check
           --stacktrace
           -P"excludeJniTests=${{ matrix.excludeJniTests }}"
+          -P"excludeWindowsTests=${{ matrix.excludeWindowsTests }}"
           -P"kotlin.version=${{ matrix.kotlin-version }}"
           -P"kotlin.ir.enabled=${{ matrix.kotlin-ir-enabled }}"
           -P"javaToolchainTestVersion=${{ matrix.java-version }}"

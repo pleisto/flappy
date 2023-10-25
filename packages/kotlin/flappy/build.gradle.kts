@@ -134,7 +134,10 @@ tasks.test {
 
   if (project.hasProperty("excludeJniTests") && (project.property("excludeJniTests") as String).toBooleanStrict()) {
     exclude("**/*JniTest*")
-//    exclude(project.property("excludeTests") as String)
+  }
+
+  if (project.hasProperty("excludeWindowsTests") && (project.property("excludeWindowsTests") as String).toBooleanStrict()) {
+    exclude("**/*MapperTest*", "**/*AgentTest*")
   }
 
   finalizedBy(tasks.jacocoTestReport)
