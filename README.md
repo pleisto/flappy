@@ -1,5 +1,12 @@
 # Flappy Monorepo
 
+<div align="center">
+
+[![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
+
+</div>
+
+
 > :warning: **This project is still under development.** We're working hard to release the first version of Flappy as soon as possible. Stay tuned! Documentation and code examples will be available soon.
 
 This monorepo gathers all the Flappy libraries, each implemented in a different programming language. Flappy is a library developed to streamline the creation of AI applications and agents that use Large Language Models (LLMs).
@@ -13,6 +20,18 @@ Flappy is a production-ready Language Language Model (LLM) Application/Agent SDK
 - **Ease of Use**: Flappy is designed to be as user-friendly as CRUD application development, minimizing the learning curve for developers new to AI.
 - **Production-Ready**: Beyond research, Flappy is a robust SDK that balances cost-efficiency and sandbox security to provide a stable platform for commercial environments.
 - **Language-Agnostic**: Flappy integrates seamlessly with any programming language, eliminating the need for Python unless explicitly required by your application.
+
+## SDK
+
+|   | Source | Package | Documentation  | CI Status | Coverage |
+| - | ------ | ------- | -------------- | --------- | -------- |
+| <img src="./assets/languages/nodejs.png" width=24px height=24px> | [**NodeJS**][NodeJS integration] | [![NPM version](https://img.shields.io/npm/v/%40pleisto/node-flappy/next.svg)](https://npmjs.org/package/@pleisto/node-flappy) | [![Documentation](https://img.shields.io/badge/documentation-documentation.svg)](https://flappy.pleisto.com) | [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/nodejs-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/nodejs-ci.yml) | |
+| <img src="./assets/languages/java.svg" width=24px height=24px>    | [**JVM**][Kotlin integration]    | [![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue)](https://central.sonatype.com/artifact/com.pleisto/flappy) | [![Documentation](https://img.shields.io/badge/documentation-documentation.svg)](https://javadoc.io/doc/com.pleisto/flappy) | [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/kotlin-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/kotlin-ci.yml) | [![codecov](https://codecov.io/gh/pleisto/flappy/graph/badge.svg?token=8C94YY3KBD)](https://codecov.io/gh/pleisto/flappy)
+| <img src="./assets/languages/csharp.svg" width=24px height=24px>     | [**C#**][C# integration]         | [![NuGet version (Pleisto.Flappy)](https://img.shields.io/nuget/v/Pleisto.Flappy.svg?style=flat-square)](https://www.nuget.org/packages/Pleisto.Flappy/) | [![Documentation](https://img.shields.io/badge/documentation-documentation.svg)](https://flappy.pleisto.com) | [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/csharp-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/csharp-ci.yml) | |
+
+[nodejs integration]: ./packages/nodejs/README.md
+[kotlin integration]: ./packages/kotlin/README.md
+[c# integration]: ./packages/csharp/README.md
 
 ## Core Components
 
