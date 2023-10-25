@@ -26,7 +26,7 @@ plugins {
 
   signing
 
-  id("org.jetbrains.kotlinx.kover") version "0.7.4"
+  jacoco
 }
 
 repositories {
@@ -137,6 +137,21 @@ tasks.test {
 //    exclude(project.property("excludeTests") as String)
   }
 
+  finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+  toolVersion = "0.8.10"
+}
+
+tasks.jacocoTestReport {
+  dependsOn(tasks.test) // tests are required to run before generating the report
+
+  reports {
+    xml.required = true
+    csv.required = true
+    html.required = true
+  }
 }
 
 //https://kotlinlang.org/docs/dokka-gradle.html#package-options

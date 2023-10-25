@@ -57,14 +57,12 @@ jobs:
           gradle-version: wrapper
 
       - name: coverage
-        run: ./gradlew koverXmlReport
+        run: ./gradlew build check
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: report.xml
-          path: ${{ env.WORKING_DIRECTORY }}/flappy/build/reports/kover/report.xml
-          if-no-files-found: error
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   tests:
     name: kotlin-ci-test
