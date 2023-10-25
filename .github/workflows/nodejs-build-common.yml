@@ -18,8 +18,7 @@ jobs:
         run: yarn build:nodejs
       - name: Upload build
         uses: actions/upload-artifact@v3
-        if: ${{ inputs.publish }}
         with:
           name: nodejs-build
-          path: packages/nodejs/build
+          path: packages/nodejs/dist
           if-no-files-found: error

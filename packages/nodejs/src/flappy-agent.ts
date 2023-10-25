@@ -163,19 +163,13 @@ export class FlappyAgent<
     }
   }
 
-  /**
-   * executePlan
-   * @param prompt user input prompt
-   * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
-   */
-  public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
+  public executePlanSystemMessage(enableCot: boolean = true): ChatMLMessage {
     const functions = convertJsonToYaml(this.functionsDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema), null, 4)
-    const originalRequestMessage: ChatMLMessage[] = [
-      {
-        role: 'system',
-        content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
+    return {
+      role: 'system',
+      content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
         Make as few plans as possible if it can solve the problem.
         The functions list is described using the following YAML schema array:
         ${functions}
@@ -184,11 +178,19 @@ export class FlappyAgent<
         ${returnSchema}
 
         Only the listed functions are allowed to be used.`
-      },
-      {
-        role: 'user',
-        content: `Prompt: ${prompt}\n\nPlan array:`
-      }
+    }
+  }
+
+  /**
+   * executePlan
+   * @param prompt user input prompt
+   * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
+   */
+  public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
+    const zodSchema = lanOutputSchema(enableCot)
+    const originalRequestMessage: ChatMLMessage[] = [
+      this.executePlanSystemMessage(enableCot),
+      { role: 'user', content: `Prompt: ${prompt}\n\nPlan array:` }
     ]
     let requestMessage = originalRequestMessage
     let plan: any[] = []

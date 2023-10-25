@@ -1,0 +1,14 @@
+name: Rust cache
+outputs:
+  cache-hit:
+    value: ${{ steps.rust_cache.outputs.cache-hit }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Rust cache
+      id: rust_cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        prefix-key: 'rust-cache-v0'
+        save-if: ${{ github.ref == 'refs/heads/master' }}
