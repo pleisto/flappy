@@ -15,7 +15,7 @@ This package is about the Node.js version of the implementation which is written
 ### Installation
 
 ```bash
-yarn add @pleisto/node-flappy
+yarn add @pleisto/node-flappy@next
 ```
 
 ### Create a Plan
@@ -77,7 +77,7 @@ const exampleAgent = createFlappyAgent({
 })
 ```
 
-#### create a Invoke Function
+#### Create an Invoke Function
 
 In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `invokeFunction`.
 
