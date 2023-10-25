@@ -4,7 +4,7 @@ import { type InvokeFunction } from './invoke-function'
 import { type LLMBase } from './llm/llm-base'
 
 type ResolveFunction<in TArgs extends z.ZodType, TReturn extends z.ZodType> = (
-  args: TArgs
+  args: z.infer<TArgs>
 ) => Promise<z.infer<Writable<TReturn>>>
 
 interface FunctionsDefinitionBase<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType> {
