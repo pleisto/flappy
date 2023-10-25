@@ -26,7 +26,7 @@ plugins {
 
   signing
 
-  id("org.jetbrains.kotlinx.kover") version "0.7.4"
+  jacoco
 }
 
 repositories {
@@ -69,6 +69,7 @@ dependencies {
   implementation("io.ktor:ktor-client-okhttp:2.3.5")
   implementation("com.theokanning.openai-gpt3-java:service:0.16.1")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
   implementation("com.pleisto:flappy-java-bindings:0.0.8")
   implementation("com.pleisto:flappy-java-bindings:0.0.8:${osdetector.classifier}")
@@ -133,9 +134,27 @@ tasks.test {
 
   if (project.hasProperty("excludeJniTests") && (project.property("excludeJniTests") as String).toBooleanStrict()) {
     exclude("**/*JniTest*")
-//    exclude(project.property("excludeTests") as String)
   }
 
+  if (project.hasProperty("excludeWindowsTests") && (project.property("excludeWindowsTests") as String).toBooleanStrict()) {
+    exclude("**/*MapperTest*", "**/*AgentTest*")
+  }
+
+  finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+  toolVersion = "0.8.10"
+}
+
+tasks.jacocoTestReport {
+  dependsOn(tasks.test) // tests are required to run before generating the report
+
+  reports {
+    xml.required = true
+    csv.required = true
+    html.required = true
+  }
 }
 
 //https://kotlinlang.org/docs/dokka-gradle.html#package-options

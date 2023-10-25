@@ -24,7 +24,7 @@ class JniTest {
       )
 
       assertEquals(
-        sandboxFunction.definition().asString(),
+        sandboxFunction.definition().asJSON(),
         """{"name":"sandbox","description":"An safe sandbox that only support the built-in library. The execution time is limited to 120 seconds. The task is to define a function named \"main\" that doesn't take any parameters. The output should be a String.\n        Network access is disabled","parameters":{"properties":{"args":{"type":"string","description":"Function arguments"},"returnType":{"type":"string","description":"Function return type"}},"type":"object"}}"""
       )
     }

@@ -4,40 +4,13 @@
 package flappy
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.module.kotlin.readValue
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 private class MapperTest {
 
   @Test
-  fun mapper() {
-    data class KmsCmkSecret(val cmkIdentifier: String, val dataKeyCiphertext: String)
-
-    val secretJson = """{"cmkIdentifier": "foo", "dataKeyCiphertext":"bar"}"""
-    val kmsCmkSecret1 = jacksonMapper.readValue<KmsCmkSecret>(secretJson)
-    println(kmsCmkSecret1)
-    val kmsCmkSecret2: KmsCmkSecret = jacksonMapper.readValue(secretJson)
-    println(kmsCmkSecret2)
-
-    val secretArrayJSON = """[]"""
-    val kmsCmkSecretArray = jacksonMapper.readValue<List<KmsCmkSecret>>(secretArrayJSON)
-    println(kmsCmkSecretArray)
-  }
-
-  @Test
   fun mapper2() {
-    data class Foo(val xxx: String)
-
-    data class Bar(val foo: Foo)
-
-    data class Baz(val bar: List<Bar>, val foo: Foo)
-
-    val foo = Foo(xxx = "foo")
-    val baz = Baz(bar = listOf(Bar(foo = foo)), foo = foo)
-
-    println(jacksonMapper.writeValueAsString(baz))
-    println(jacksonMapper.writeValueAsString(listOf(baz)))
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     data class Opt(
       val xxx: String? = null,
@@ -56,7 +29,23 @@ private class MapperTest {
     ) {
       val foobar = "123132"
     }
-    println(jacksonMapper.writeValueAsString(Opt()))
+
+    assertEquals(Opt().asJSON(), """{"y":"123","obj":{"answer":"123"},"map":{"foo":1,"bar":2},"foobar":"123132"}""")
+    assertEquals(
+      Opt().asJSON(true),
+      """{
+  "y": "123",
+  "obj": {
+    "answer": "123"
+  },
+  "map": {
+    "foo": 1,
+    "bar": 2
+  },
+  "foobar": "123132"
+}"""
+    )
+
   }
 
 }

@@ -17,7 +17,7 @@ class SchemaTest {
 
 
     assertEquals(
-      SampleArguments::class.java.buildFieldProperties("foo").asString(), """
+      SampleArguments::class.java.buildFieldProperties("foo").asJSON(), """
         {"properties":{"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsLong"],"description":"foo","type":"object"}
     """.trimIndent()
     )
@@ -29,7 +29,7 @@ class SchemaTest {
     )
 
     assertEquals(
-      SampleOptional::class.java.buildFieldProperties().asString(), """
+      SampleOptional::class.java.buildFieldProperties().asJSON(), """
         {"properties":{"optLong":{"type":"long","description":"long desc"}},"type":"object"}
     """.trimIndent()
     )
@@ -42,19 +42,19 @@ class SchemaTest {
   @Test
   fun literal() {
     assertEquals(
-      String::class.java.buildFieldProperties().asString(), """
+      String::class.java.buildFieldProperties().asJSON(), """
         {"type":"string"}
     """.trimIndent()
     )
 
     assertEquals(
-      Double::class.java.buildFieldProperties("double").asString(), """
+      Double::class.java.buildFieldProperties("double").asJSON(), """
         {"type":"double","description":"double"}
     """.trimIndent()
     )
 
     assertEquals(
-      SampleEnum::class.java.buildFieldProperties("enum").asString(), """
+      SampleEnum::class.java.buildFieldProperties("enum").asJSON(), """
         {"type":"string","description":"enum","enum":["Foo","Bar","Baz"]}
     """.trimIndent()
     )
@@ -63,15 +63,15 @@ class SchemaTest {
   @Test
   fun nullable() {
     assertFails {
-      NullType::class.java.buildFieldProperties().asString()
+      NullType::class.java.buildFieldProperties().asJSON()
     }
 
     assertFails {
-      Nothing::class.java.buildFieldProperties().asString()
+      Nothing::class.java.buildFieldProperties().asJSON()
     }
 
     assertEquals(
-      FlappyClass.Null::class.java.buildFieldProperties().asString(),
+      FlappyClass.Null::class.java.buildFieldProperties().asJSON(),
       """{"type":"null"}"""
     )
 
@@ -108,14 +108,16 @@ class SchemaTest {
       @FlappyField
       val bars: List<Bar>
     )
-
-    println(Foo::class.java.buildFieldProperties().asString())
+    assertEquals(
+      Foo::class.java.buildFieldProperties().asJSON(),
+      """{"properties":{"foo":{"type":"array","items":{"type":"string"}},"enum":{"type":"array","items":{"type":"string","enum":["Foo","Bar","Baz"]}},"bar":{"properties":{"bar":{"type":"object"}},"required":["bar"],"type":"object"},"bars":{"type":"array","items":{"properties":{"bar":{"type":"object"}},"required":["bar"],"type":"object"}}},"required":["foo","enum","bar","bars"],"type":"object"}"""
+    )
   }
 
   @Test
   fun array() {
     val arrayKlass = Array<String>::class.java
-    assertEquals(arrayKlass.buildFieldProperties().asString(), """{"type":"array","items":{"type":"string"}}""")
+    assertEquals(arrayKlass.buildFieldProperties().asJSON(), """{"type":"array","items":{"type":"string"}}""")
     assertEquals(jacksonMapper.readValue("[]", arrayKlass).size, 0)
     assertEquals(jacksonMapper.readValue("""["foo"]""", arrayKlass).size, 1)
   }
@@ -146,10 +148,10 @@ class SchemaTest {
       val foo: String
     )
 
-    // https://github.com/search?type=code&q=KTypeProjection+language%3AKotlin&l=Kotlin
+    // https://github.com/search?type=code&q=KTypePrLawTestJavaojection+language%3AKotlin&l=Kotlin
     val kClass = Foo::class.java
     assertEquals(
-      kClass.buildFieldProperties().asString(),
+      kClass.buildFieldProperties().asJSON(),
       """{"properties":{"foo":{"type":"string"}},"required":["foo"],"type":"object"}"""
     )
   }
@@ -185,7 +187,7 @@ class SchemaTest {
     )
 
     assertEquals(
-      Bar::class.java.buildFieldProperties("desc").asString(), """
+      Bar::class.java.buildFieldProperties("desc").asJSON(), """
         {"properties":{"foo":{"properties":{"name":{"type":"string"},"e":{"type":"string","enum":["Foo","Bar","Baz"]}},"required":["name"],"type":"object"},"a1":{"type":"array","items":{"type":"int"}},"a2":{"type":"array","items":{"type":"string","enum":["Foo","Bar","Baz"]}},"baz":{"type":"array","items":{"properties":{"baz":{"type":"long"}},"required":["baz"],"type":"object"}}},"required":["foo","a1","a2","baz"],"description":"desc","type":"object"}
     """.trimIndent()
     )

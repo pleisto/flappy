@@ -18,8 +18,8 @@ abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
   private val argsTypeSchemaProperties = this.argsType.buildFieldProperties("Function arguments")
   private val returnTypeSchemaProperties = this.returnType.buildFieldProperties("Function return type")
 
-  val argsTypeSchemaPropertiesString: String = argsTypeSchemaProperties.asString()
-  val returnTypeSchemaPropertiesString: String = returnTypeSchemaProperties.asString()
+  val argsTypeSchemaPropertiesString: String = argsTypeSchemaProperties.asJSON()
+  val returnTypeSchemaPropertiesString: String = returnTypeSchemaProperties.asJSON()
 
   internal abstract fun buildDescription(): String
 

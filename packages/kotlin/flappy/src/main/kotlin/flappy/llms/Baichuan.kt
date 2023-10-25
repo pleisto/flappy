@@ -105,7 +105,7 @@ class Baichuan(
       parameters = BaichuanParameters(temperature = config?.temperature, top_p = config?.topP)
     )
 
-    val jsonBody = body.asString()
+    val jsonBody = body.asJSON()
 
     val signature = calculateMd5("${baichuanConfig.secretKey}$jsonBody$timestamp")
 

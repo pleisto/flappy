@@ -2,7 +2,6 @@ package flappy
 
 import flappy.annotations.FlappyField
 import flappy.annotations.flappyFieldMetadataList
-import flappy.functions.FlappyEvalFunction
 import flappy.functions.FlappyInvokeFunction
 import flappy.functions.FlappySynthesizedFunction
 import flappy.llms.Dummy
@@ -91,11 +90,11 @@ class FunctionTest {
     )
 
     assertEquals(
-      sampleFunction.definition().asString(),
+      sampleFunction.definition().asJSON(),
       """{"name":"getMeta","description":"Extract meta data from a lawsuit full text.","parameters":{"properties":{"args":{"properties":{"argsString":{"type":"string","description":"Lawsuit full text."},"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsString","argsLong"],"description":"Function arguments","type":"object"},"returnType":{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","items":{"type":"string","enum":["Innocent","Guilty","Unknown"]}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}},"type":"object"}}"""
     )
   }
-  
+
 
   @Test
   fun functionInit() {
