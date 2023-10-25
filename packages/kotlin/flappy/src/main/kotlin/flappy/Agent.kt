@@ -39,7 +39,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
     val functionName: String,
 
     @FlappyField(
-      description = "an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '${STEP_PREFIX}' + the ID of the previous step (e.g. '${STEP_PREFIX}1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema."
+      description = "an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '$STEP_PREFIX' + the ID of the previous step (e.g. '${STEP_PREFIX}1'). If an argument's value is derived from the **previous** step's function's return value's properties, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema."
     )
     val args: Map<String, Any>,
 
@@ -49,12 +49,12 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
   private val stepSchema = BaseStep::class.java.buildFieldProperties("Base step.")
 
-  internal val functionDefinitionString: String = functionsDefinition.asString()
+  internal val functionDefinitionString: String = functionsDefinition.asYAML()
   internal val lanOutputSchemaString: String = object {
     val items = stepSchema
     val type = FieldType.LIST.typeName
     val description = "An array storing the steps."
-  }.asString()
+  }.asJSON(prettyPrint = true)
 
   init {
     if (finalMaxRetry <= 0) throw FlappyException.CompileException("retry should be positive")
@@ -82,7 +82,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
     """
         You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
         Make as few plans as possible if it can solve the problem.
-        The functions list is described using the following JSON schema array:
+        The functions list is described using the following YAML schema array:
         $functionDefinitionString
 
         Your specified plans should be output as JSON object array and adhere to the following JSON schema:

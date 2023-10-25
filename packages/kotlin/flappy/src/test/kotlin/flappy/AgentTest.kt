@@ -1,63 +1,147 @@
 package flappy
 
-import flappy.annotations.FlappyField
-import flappy.functions.FlappySynthesizedFunction
-import flappy.llms.ChatGPT
+import flappy.llms.Dummy
+import org.example.kotlin.getFrontendEngineerResumes
+import org.example.kotlin.resumeGetMeta
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AgentTest {
-  class SampleArguments(
-    @FlappyField(description = "Lawsuit full text.")
-    val lawsuit: String
-  )
-
-  enum class Verdict {
-    Innocent, Guilty, Unknown
-  }
-
-  class SampleReturn(
-    @FlappyField
-    val verdict: Verdict,
-
-    @FlappyField
-    val plaintiff: String,
-
-    @FlappyField
-    val defendant: String,
-
-    @FlappyField
-    val judgeOptions: List<String>
-  )
-
-  private val sampleFunction = FlappySynthesizedFunction(
-    name = "getMeta",
-    description = "Extract meta data from a lawsuit full text.",
-    args = SampleArguments::class.java,
-    returnType = SampleReturn::class.java,
-  )
-
-  val llm = ChatGPT(ChatGPT.ChatGPTConfig(token = "your-token-key"))
-
-  val lawAgent = FlappyBaseAgent(
-    inferenceLLM = llm,
-    functions = listOf(sampleFunction)
+  private val resumeAgent = FlappyBaseAgent(
+    inferenceLLM = Dummy(),
+    functions = listOf(resumeGetMeta, getFrontendEngineerResumes),
+    maxRetry = 2
   )
 
   @Test
-  fun functionCheck() {
+  fun functionDefinitionString() {
     assertEquals(
-      lawAgent.functionDefinitionString,
-      """[{"name":"getMeta","description":"Extract meta data from a lawsuit full text.","parameters":{"properties":{"args":{"properties":{"lawsuit":{"type":"string","description":"Lawsuit full text."}},"required":["lawsuit"],"description":"Function arguments","type":"object"},"returnType":{"properties":{"verdict":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"plaintiff":{"type":"string"},"defendant":{"type":"string"},"judgeOptions":{"type":"array","items":{"type":"string"}}},"required":["verdict","plaintiff","defendant","judgeOptions"],"description":"Function return type","type":"object"}},"type":"object"}}]"""
+      resumeAgent.functionDefinitionString,
+      """---
+- name: "getMeta"
+  description: "Extract meta data from a lawsuit full text."
+  parameters:
+    properties:
+      args:
+        description: "Function arguments"
+        type: "object"
+        properties:
+          text:
+            description: "Resume full text."
+            type: "string"
+        required:
+        - "text"
+      returnType:
+        description: "Function return type"
+        type: "object"
+        properties:
+          name:
+            type: "string"
+          profession:
+            type: "string"
+          experienceYears:
+            type: "int"
+          skills:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                proficiency:
+                  type: "string"
+              required:
+              - "name"
+              - "proficiency"
+          projectExperiences:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                role:
+                  type: "string"
+                description:
+                  type: "string"
+              required:
+              - "title"
+              - "role"
+              - "description"
+          education:
+            type: "object"
+            properties:
+              degree:
+                type: "string"
+              fieldOfStudy:
+                type: "string"
+              university:
+                type: "string"
+              year:
+                type: "number"
+            required:
+            - "degree"
+            - "fieldOfStudy"
+            - "university"
+            - "year"
+        required:
+        - "name"
+        - "profession"
+        - "experienceYears"
+        - "skills"
+        - "projectExperiences"
+        - "education"
+    type: "object"
+- name: "getFrontendEngineerResumes"
+  description: "Get all frontend engineer resumes."
+  parameters:
+    properties:
+      args:
+        description: "Function arguments"
+        type: "null"
+      returnType:
+        description: "Function return type"
+        type: "string"
+    type: "object"
+"""
     )
   }
 
 
   @Test
-  fun xxx() {
+  fun lanOutputSchemaString() {
     assertEquals(
-      lawAgent.lanOutputSchemaString,
-      """{"items":{"properties":{"id":{"type":"int","description":"Increment id starting from 1"},"functionName":{"type":"string"},"args":{"description":"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '%@_' + the ID of the previous step (e.g. '%@_1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.","type":"object"},"thought":{"type":"string","description":"The thought why this step is needed."}},"required":["id","functionName","args","thought"],"description":"Base step.","type":"object"},"type":"array","description":"An array storing the steps."}"""
+      resumeAgent.lanOutputSchemaString, """{
+  "items": {
+    "properties": {
+      "id": {
+        "type": "int",
+        "description": "Increment id starting from 1"
+      },
+      "functionName": {
+        "type": "string"
+      },
+      "args": {
+        "description": "an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '%@_' + the ID of the previous step (e.g. '%@_1'). If an argument's value is derived from the **previous** step's function's return value's properties, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.",
+        "type": "object"
+      },
+      "thought": {
+        "type": "string",
+        "description": "The thought why this step is needed."
+      }
+    },
+    "required": [
+      "id",
+      "functionName",
+      "args",
+      "thought"
+    ],
+    "description": "Base step.",
+    "type": "object"
+  },
+  "type": "array",
+  "description": "An array storing the steps."
+}"""
     )
   }
 }
