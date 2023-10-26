@@ -55,11 +55,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
       - name: Test
         run: yarn coverage
         working-directory: ./packages/nodejs
-      - name: Report coverage
-        if: always()
-        uses: davelosert/vitest-coverage-report-action@v2
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
         with:
           working-directory: ./packages/nodejs
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: nodejs
+          fail_ci_if_error: true
+          verbose: true
