@@ -204,9 +204,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:16.2.7, @angular-devkit/core@npm:^16.2.7":
-  version: 16.2.7
-  resolution: "@angular-devkit/core@npm:16.2.7"
+"@angular-devkit/core@npm:16.2.8, @angular-devkit/core@npm:^16.2.7":
+  version: 16.2.8
+  resolution: "@angular-devkit/core@npm:16.2.8"
   dependencies:
     ajv: "npm:8.12.0"
     ajv-formats: "npm:2.1.1"
@@ -219,36 +219,36 @@ __metadata:
   peerDependenciesMeta:
     chokidar:
       optional: true
-  checksum: 5e5d2cbc6e1800f2942d78be9b5f21cdb12b82ce4dca787aa683bb43e6b71da33ed155ad99566b4d36782919972005d0b85a17c96564a150634f359f3db0c959
+  checksum: 1f68787d4837249c3c7f99405d55f21d9584d31035a6020466879d803f17dbc18de59dd71caaa08665a22caedb52d02d0ebcacd1809dcf905f9a4b7340bfe324
   languageName: node
   linkType: hard
 
 "@angular-devkit/schematics-cli@npm:^16.2.7":
-  version: 16.2.7
-  resolution: "@angular-devkit/schematics-cli@npm:16.2.7"
+  version: 16.2.8
+  resolution: "@angular-devkit/schematics-cli@npm:16.2.8"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.7"
-    "@angular-devkit/schematics": "npm:16.2.7"
+    "@angular-devkit/core": "npm:16.2.8"
+    "@angular-devkit/schematics": "npm:16.2.8"
     ansi-colors: "npm:4.1.3"
     inquirer: "npm:8.2.4"
     symbol-observable: "npm:4.0.0"
     yargs-parser: "npm:21.1.1"
   bin:
     schematics: bin/schematics.js
-  checksum: 4fa081f728c57a84a91d9494959045f14f8d2437d718ddcb9fbffc1874d293ef596a9562eb53843cc57f2e4c614ece9baaed61173a40b61e9dec6cc7562ec69f
+  checksum: 9208b3dfbe3d534923cc4f3a193f0dd1d8ad73bbbfb3f869686e07fbe7663a4464c5fb28e0d0d176286482b85a8afaa2c9f6f058d7929d0b4bbb8595aa7f26d0
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:16.2.7, @angular-devkit/schematics@npm:^16.2.7":
-  version: 16.2.7
-  resolution: "@angular-devkit/schematics@npm:16.2.7"
+"@angular-devkit/schematics@npm:16.2.8, @angular-devkit/schematics@npm:^16.2.7":
+  version: 16.2.8
+  resolution: "@angular-devkit/schematics@npm:16.2.8"
   dependencies:
-    "@angular-devkit/core": "npm:16.2.7"
+    "@angular-devkit/core": "npm:16.2.8"
     jsonc-parser: "npm:3.2.0"
     magic-string: "npm:0.30.1"
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
-  checksum: c3791b7125420ea0b27f05916d406e5395ed3d2b45849be0f97be7818bab5fbaf90317078660abd00d191d8f6be3c35c11e5b9d9b93a553b87988f5da26fb979
+  checksum: 8657b5324c7a13d9a95ede9c9eda4240fe986a1923d24de86e7dc57e71247c8e3138618ae603dd68505b46a0916cb45b5ea817d51e57b56ba15abaec70a58b77
   languageName: node
   linkType: hard
 
@@ -2792,6 +2792,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mdx-js/react@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@mdx-js/react@npm:3.0.0"
+  dependencies:
+    "@types/mdx": "npm:^2.0.0"
+  peerDependencies:
+    "@types/react": ">=16"
+    react: ">=16"
+  checksum: 865f6ebc7ae83c6cb9f7e92db4eddd3f85cd1664391643b4736887ddc32b0ddb5aec012db6fbc9b486b552e08e6d5ad800450fcd9d51c20665667ff0f174d966
+  languageName: node
+  linkType: hard
+
 "@mdx-js/util@npm:1.6.22":
   version: 1.6.22
   resolution: "@mdx-js/util@npm:1.6.22"
@@ -2886,7 +2898,7 @@ __metadata:
     "@angular-devkit/core": "npm:^16.2.7"
     "@angular-devkit/schematics": "npm:^16.2.7"
     "@angular-devkit/schematics-cli": "npm:^16.2.7"
-    "@swc/core": "npm:1.3.94"
+    "@swc/core": "npm:1.3.95"
     "@swc/helpers": "npm:^0.5.3"
     "@types/node": "npm:^20.8.7"
     "@types/yargs": "npm:^17.0.29"
@@ -2906,7 +2918,7 @@ __metadata:
     "@docusaurus/core": "npm:2.4.3"
     "@docusaurus/module-type-aliases": "npm:2.4.3"
     "@docusaurus/preset-classic": "npm:2.4.3"
-    "@mdx-js/react": "npm:^1.6.22"
+    "@mdx-js/react": "npm:^3.0.0"
     "@tsconfig/docusaurus": "npm:^2.0.0"
     clsx: "npm:^2.0.0"
     prism-react-renderer: "npm:^2.1.0"
@@ -3347,90 +3359,90 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-darwin-arm64@npm:1.3.94"
+"@swc/core-darwin-arm64@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-darwin-arm64@npm:1.3.95"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-darwin-x64@npm:1.3.94"
+"@swc/core-darwin-x64@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-darwin-x64@npm:1.3.95"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.94"
+"@swc/core-linux-arm-gnueabihf@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.95"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.94"
+"@swc/core-linux-arm64-gnu@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.95"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.94"
+"@swc/core-linux-arm64-musl@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-linux-arm64-musl@npm:1.3.95"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.94"
+"@swc/core-linux-x64-gnu@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-linux-x64-gnu@npm:1.3.95"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.94"
+"@swc/core-linux-x64-musl@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-linux-x64-musl@npm:1.3.95"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.94"
+"@swc/core-win32-arm64-msvc@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.95"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.94"
+"@swc/core-win32-ia32-msvc@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.95"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.94"
+"@swc/core-win32-x64-msvc@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core-win32-x64-msvc@npm:1.3.95"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:1.3.94":
-  version: 1.3.94
-  resolution: "@swc/core@npm:1.3.94"
+"@swc/core@npm:1.3.95":
+  version: 1.3.95
+  resolution: "@swc/core@npm:1.3.95"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.3.94"
-    "@swc/core-darwin-x64": "npm:1.3.94"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.3.94"
-    "@swc/core-linux-arm64-gnu": "npm:1.3.94"
-    "@swc/core-linux-arm64-musl": "npm:1.3.94"
-    "@swc/core-linux-x64-gnu": "npm:1.3.94"
-    "@swc/core-linux-x64-musl": "npm:1.3.94"
-    "@swc/core-win32-arm64-msvc": "npm:1.3.94"
-    "@swc/core-win32-ia32-msvc": "npm:1.3.94"
-    "@swc/core-win32-x64-msvc": "npm:1.3.94"
+    "@swc/core-darwin-arm64": "npm:1.3.95"
+    "@swc/core-darwin-x64": "npm:1.3.95"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.3.95"
+    "@swc/core-linux-arm64-gnu": "npm:1.3.95"
+    "@swc/core-linux-arm64-musl": "npm:1.3.95"
+    "@swc/core-linux-x64-gnu": "npm:1.3.95"
+    "@swc/core-linux-x64-musl": "npm:1.3.95"
+    "@swc/core-win32-arm64-msvc": "npm:1.3.95"
+    "@swc/core-win32-ia32-msvc": "npm:1.3.95"
+    "@swc/core-win32-x64-msvc": "npm:1.3.95"
     "@swc/counter": "npm:^0.1.1"
     "@swc/types": "npm:^0.1.5"
   peerDependencies:
@@ -3459,7 +3471,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: ba5b073f682f952caec06a32c4707a158a9255d96c08d275af6b3da59c080d320ef62a6965f4553c3685071257bf4e7be5a9fef6aefbae57e2369981cf5e1ab5
+  checksum: f0386b7cc1288d97ef3636fff06c1798914e453b574934778d6c90019acf6893bf566c805369ab74b7c7b559243de37e3fe8bb2bbe9b1ac3214a0575cc4f7335
   languageName: node
   linkType: hard
 
@@ -3752,6 +3764,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mdx@npm:^2.0.0":
+  version: 2.0.9
+  resolution: "@types/mdx@npm:2.0.9"
+  checksum: b6afd7adf039d64aaacd49f445dee4e5eba70a6199cc29df5d798c6704347bcd7c87868e59ec2614dd64127f74fad572c01d4e72ea08e7d23aa8f909fefafb87
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:*":
   version: 3.0.2
   resolution: "@types/mime@npm:3.0.2"
@@ -3777,11 +3796,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^20.8.7":
-  version: 20.8.8
-  resolution: "@types/node@npm:20.8.8"
+  version: 20.8.9
+  resolution: "@types/node@npm:20.8.9"
   dependencies:
-    undici-types: "npm:~5.25.1"
-  checksum: 739b3d6f4aa760d72373d504d91adec86ac2eab502f68a80214711983e7d1886fd276ade78a276a2affe4942a55ad65cf655c3aa9464d1150f6405445c5ba635
+    undici-types: "npm:~5.26.4"
+  checksum: 6fb5604ac087c8be9aeb9ee1413fae2e691c603c9a691bd722e113597b883f21e8380a44d114ab894b435a491bfc939c8478cd57bcf890c585b961343b124964
   languageName: node
   linkType: hard
 
@@ -3800,9 +3819,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^18.11.18":
-  version: 18.18.6
-  resolution: "@types/node@npm:18.18.6"
-  checksum: 50312053b0906058aa026e1c85c9125b4f0e8d6ae5e3699fb5bc8e0d5b9d1c2b12303902b2b91477c389f15ad40235d240b882819dd93a49bd6b46983f63be1c
+  version: 18.18.7
+  resolution: "@types/node@npm:18.18.7"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: f1ab9c8d318ad9b05f83664bd8a209b9a6410052b4e7124469771ee681ab080f9e65ac3ed3db8a3403976c1ee2941da1eef8008f42a7a3e2e084dc556d5494b5
   languageName: node
   linkType: hard
 
@@ -11452,8 +11473,8 @@ __metadata:
   linkType: hard
 
 "openai@npm:^4.12.4":
-  version: 4.13.0
-  resolution: "openai@npm:4.13.0"
+  version: 4.14.0
+  resolution: "openai@npm:4.14.0"
   dependencies:
     "@types/node": "npm:^18.11.18"
     "@types/node-fetch": "npm:^2.6.4"
@@ -11466,7 +11487,7 @@ __metadata:
     web-streams-polyfill: "npm:^3.2.1"
   bin:
     openai: bin/cli
-  checksum: 231bf299d190001c70b11a44d27f867dfc38808e215a8376c906eb4e9132a83ac2319468c03dbbe89cb5252213d81edc0ce19d662cdddf4a5aafab253076a011
+  checksum: 07ae2f65b576d106f111baa2abc9a723ccf3febe80c537beb7d0acc5bc28808e47ec7bef37a0fd2725bfe541ea191e9543d4bb907d05559265e54dc953dfb528
   languageName: node
   linkType: hard
 
@@ -14777,10 +14798,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~5.25.1":
-  version: 5.25.3
-  resolution: "undici-types@npm:5.25.3"
-  checksum: 60a47c6db451c00d27186d86a41fbd9677fa1f6d1a5350bff342c3985bd79fc3f5a638ebf56bbce21df46c701a687db43b3fbd588e1726e58047cea14d182fef
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: bb673d7876c2d411b6eb6c560e0c571eef4a01c1c19925175d16e3a30c4c428181fb8d7ae802a261f283e4166a0ac435e2f505743aa9e45d893f9a3df017b501
   languageName: node
   linkType: hard
 

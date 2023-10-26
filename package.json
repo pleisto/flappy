@@ -9,7 +9,7 @@
     "docs"
   ],
   "volta": {
-    "node": "20.8.1"
+    "node": "20.9.0"
   },
   "config": {
     "commitizen": {
