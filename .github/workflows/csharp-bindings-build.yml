@@ -17,6 +17,8 @@ on:
       - 'packages/rust-core/Cargo.toml'
       - 'packages/rust-core/Cargo.lock'
       - .github/workflows/csharp-bindings-build.yml
+      - '.github/workflows/codeql.yml'
+
   push:
     branches: [main]
     paths:
@@ -25,8 +27,16 @@ on:
       - 'packages/rust-core/Cargo.toml'
       - 'packages/rust-core/Cargo.lock'
       - .github/workflows/csharp-bindings-build.yml
+      - '.github/workflows/codeql.yml'
 
 jobs:
+  codeql:
+    name: csharp-bindings-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: csharp
+      working-directory: packages/rust-core/csharp
+
   build:
     strategy:
       fail-fast: false

@@ -12,6 +12,7 @@ on:
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build-common.yml'
       - '.github/workflows/nodejs-ci.yml'
+      - '.github/workflows/codeql.yml'
   push:
     branches: [main]
     paths:
@@ -19,8 +20,15 @@ on:
       - 'packages/nodejs/**'
       - '.github/workflows/nodejs-build-common.yml'
       - '.github/workflows/nodejs-ci.yml'
+      - '.github/workflows/codeql.yml'
 
 jobs:
+  codeql:
+    name: nodejs-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: javascript-typescript
+      working-directory: packages/nodejs
   build:
     name: nodejs-ci-build
     uses: ./.github/workflows/nodejs-build-common.yml

@@ -13,6 +13,7 @@ on:
       - 'packages/rust-core/Cargo.toml'
       - '.github/workflows/java-bindings-ci.yml'
       - '.github/workflows/java-bindings-build-common.yml'
+      - '.github/workflows/codeql.yml'
   push:
     branches: [main]
     paths:
@@ -21,17 +22,24 @@ on:
       - 'packages/rust-core/Cargo.toml'
       - '.github/workflows/java-bindings-ci.yml'
       - '.github/workflows/java-bindings-build-common.yml'
+      - '.github/workflows/codeql.yml'
 
 defaults:
   run:
     working-directory: packages/rust-core/java
-
 
 env:
   RUST_BACKTRACE: full
   CARGO_PROFILE_RELEASE_BUILD_OVERRIDE_DEBUG: true
 
 jobs:
+  codeql:
+    name: java-bindings-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: java-kotlin
+      working-directory: packages/rust-core/java
+
   lint:
     runs-on: ubuntu-latest
     name: java-bindings-ci-lint
@@ -82,4 +90,4 @@ jobs:
         # https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
         run: ./mvnw verify artifact:compare -D"gpg.skip"
         env:
-          MAVEN_OPTS: "-server -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=384m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:SoftRefLRUPolicyMSPerMB=50 -Djava.awt.headless=true"
+          MAVEN_OPTS: '-server -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=384m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:SoftRefLRUPolicyMSPerMB=50 -Djava.awt.headless=true'
