@@ -11,15 +11,23 @@ on:
       - 'examples/csharp/**'
       - 'packages/csharp/**'
       - '.github/workflows/csharp-ci.yml'
+      - '.github/workflows/codeql.yml'
   push:
     branches: [main]
     paths:
       - 'examples/csharp/**'
       - 'packages/csharp/**'
       - '.github/workflows/csharp-ci.yml'
-
+      - '.github/workflows/codeql.yml'
 
 jobs:
+  codeql:
+    name: csharp-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: csharp
+      working-directory: packages/csharp
+
   tests:
     name: csharp-ci-test
     runs-on: ${{ matrix.os }}

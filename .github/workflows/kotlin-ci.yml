@@ -12,6 +12,7 @@ on:
       - 'examples/kotlin/**'
       - 'examples/java/**'
       - '.github/workflows/kotlin-ci.yml'
+      - '.github/workflows/codeql.yml'
   push:
     branches: [main]
     paths:
@@ -19,6 +20,7 @@ on:
       - 'examples/kotlin/**'
       - 'examples/java/**'
       - '.github/workflows/kotlin-ci.yml'
+      - '.github/workflows/codeql.yml'
 
 defaults:
   run:
@@ -29,6 +31,13 @@ env:
   WORKING_DIRECTORY: packages/kotlin
 
 jobs:
+  codeql:
+    name: kotlin-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: java-kotlin
+      working-directory: packages/kotlin
+
   validate:
     name: kotlin-ci-validate
     runs-on: ubuntu-latest

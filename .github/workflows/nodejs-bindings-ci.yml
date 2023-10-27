@@ -30,6 +30,7 @@ on:
       - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build-common.yml'
       - '.github/workflows/nodejs-bindings-ci.yml'
+      - '.github/workflows/codeql.yml'
   push:
     branches: [main]
     paths:
@@ -41,8 +42,15 @@ on:
       - 'packages/rust-core/package.json'
       - '.github/workflows/nodejs-bindings-build-common.yml'
       - '.github/workflows/nodejs-bindings-ci.yml'
+      - '.github/workflows/codeql.yml'
 
 jobs:
+  codeql:
+    name: nodejs-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: javascript-typescript
+      working-directory: packages/rust-core/nodejs
   build:
     name: nodejs-bindings-ci-build
     uses: ./.github/workflows/nodejs-bindings-build-common.yml
