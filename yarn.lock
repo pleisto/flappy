@@ -11454,8 +11454,8 @@ __metadata:
   linkType: hard
 
 "openai@npm:^4.12.4":
-  version: 4.14.0
-  resolution: "openai@npm:4.14.0"
+  version: 4.14.1
+  resolution: "openai@npm:4.14.1"
   dependencies:
     "@types/node": "npm:^18.11.18"
     "@types/node-fetch": "npm:^2.6.4"
@@ -11468,7 +11468,7 @@ __metadata:
     web-streams-polyfill: "npm:^3.2.1"
   bin:
     openai: bin/cli
-  checksum: 07ae2f65b576d106f111baa2abc9a723ccf3febe80c537beb7d0acc5bc28808e47ec7bef37a0fd2725bfe541ea191e9543d4bb907d05559265e54dc953dfb528
+  checksum: f5b04c1e468714d6015460bd0353b6fd742c9871e219f33c142f2f1de3270a6c88bbcda74aad4fd9c23f05d83b8de22f84f12790123f897398bd9f4cd7a5eab9
   languageName: node
   linkType: hard
 

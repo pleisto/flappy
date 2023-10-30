@@ -1,15 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "commitMessage": "chore(deps): update deps",
-  "extends": [
-    "config:recommended",
-    "group:all"
-  ],
+  "extends": ["config:recommended", "group:all"],
   "commitBodyTable": true,
   "dependencyDashboardApproval": true,
   "branchConcurrentLimit": 2,
   "dependencyDashboard": true,
-  "schedule": [
-    "on monday and thursday"
-  ]
+  "schedule": ["on monday and thursday"],
+  "ignoreDeps": ["@mdx-js/react"]
 }
