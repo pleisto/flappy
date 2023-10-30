@@ -3,7 +3,9 @@ import { type SynthesizedFunctionDefinition } from './flappy-agent.interface'
 import { type FlappyAgent } from './flappy-agent'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { FlappyFunctionBase, type FlappyFunctionOptions } from './flappy-function-base'
+import { log } from './utils'
 import { omit } from 'radash'
+import { type JsonValue } from 'roarr/dist/types'
 
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
@@ -41,8 +43,8 @@ export class SynthesizedFunction<
 
     while (true) {
       try {
-        if (retry !== agent.retry) console.debug('Attempt retry: ', agent.retry - retry)
-        console.dir(requestMessage, { depth: null })
+        if (retry !== agent.retry) log.debug(`Attempt retry: ${agent.retry - retry}`)
+        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
         result = await agent.llm.chatComplete(requestMessage)
         const data = this.parseComplete(result)
         return data
@@ -79,7 +81,7 @@ export class SynthesizedFunction<
     if (!(startIdx >= 0 && endIdx > startIdx)) throw new Error('Invalid JSON response')
     const json = JSON.parse(resp.data!.slice(startIdx, endIdx + 1))
     this.define.returnType.parse(json)
-    console.debug(json)
+    log.debug({ data: json }, 'The synthesized result')
     return json
   }
 }
