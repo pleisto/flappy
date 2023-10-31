@@ -4,12 +4,12 @@
   "license": "Apache-2.0",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "files": [
     "README.md",
     "dist"
@@ -21,7 +21,8 @@
     "lint": "yarn lint:eslint && yarn lint:type",
     "lint:eslint": "yarn run -T eslint",
     "lint:type": "yarn run -T tsc",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "prepublish": "./bin/prepublish"
   },
   "dependencies": {
     "@pleisto/flappy-nodejs-bindings": "next",
