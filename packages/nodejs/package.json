@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/node-flappy",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "license": "Apache-2.0",
   "exports": {
     ".": {
@@ -22,7 +22,7 @@
     "lint:eslint": "yarn run -T eslint",
     "lint:type": "yarn run -T tsc",
     "coverage": "vitest run --coverage",
-    "prepublish": "./bin/prepublish"
+    "prepublishOnly": "./bin/prepublish"
   },
   "dependencies": {
     "@pleisto/flappy-nodejs-bindings": "next",
