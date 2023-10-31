@@ -10,8 +10,9 @@ import { type LLMBase } from './llm/llm-base'
 import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { z } from './flappy-type'
-import { convertJsonToYaml, zodToCleanJsonSchema } from './utils'
+import { convertJsonToYaml, zodToCleanJsonSchema, log } from './utils'
 import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
+import { type JsonValue } from 'roarr/dist/types'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
@@ -101,6 +102,7 @@ export class FlappyAgent<
   }
 
   public async callCodeInterpreter(prompt: string): Promise<any> {
+    log.debug('Calling code interpreter')
     const config = (this.config as FlappyAgentConfig).codeInterpreter
     if (!config) throw new Error('Code interpreter is not enabled.')
     const originalRequestMessage: ChatMLMessage[] = [
@@ -120,13 +122,17 @@ export class FlappyAgent<
 
     while (true) {
       try {
-        if (retry !== this.retry) console.debug('Attempt retry: ', this.retry - retry)
-        console.dir(requestMessage, { depth: null })
+        if (retry !== this.retry) log.debug(`Attempt retry: ${this.retry - retry}`)
+
+        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
+
         result = await this.llm.chatComplete(requestMessage)
         const data = JSON.parse(result.data!)?.code?.replace(/\\n/g, '\n')
         if (!data) throw new Error('Invalid JSON response')
         if (!data.includes('def main():')) throw new Error('Function "main" not found')
-        console.debug('Generated Code:\n', data)
+
+        log.debug({ data }, 'Generated Code:')
+
         const execResult = await evalPythonCode(
           `${data}\nprint(main())`,
           config.enableNetwork ?? false,
@@ -134,7 +140,7 @@ export class FlappyAgent<
           config.cacheDir
         )
         if (execResult.stderr) throw new Error(execResult.stderr)
-        console.debug('CodeInterpreter Output', execResult.stdout)
+        log.debug({ data: { output: execResult.stdout } }, `CodeInterpreter Output`)
         return execResult.stdout
       } catch (err) {
         console.error(err)
@@ -187,6 +193,8 @@ export class FlappyAgent<
    * @param enableCot enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.
    */
   public async executePlan(prompt: string, enableCot: boolean = true): Promise<any> {
+    log.debug('Start planing')
+
     const zodSchema = lanOutputSchema(enableCot)
     const originalRequestMessage: ChatMLMessage[] = [
       this.executePlanSystemMessage(enableCot),
@@ -200,8 +208,10 @@ export class FlappyAgent<
 
     while (true) {
       try {
-        if (retry !== this.retry) console.debug('Attempt retry: ', this.retry - retry)
-        console.dir(requestMessage, { depth: null })
+        if (retry !== this.retry) log.debug(`Attempt retry: ${this.retry - retry}`)
+
+        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
+
         result = await this.llmPlaner.chatComplete(requestMessage)
         plan = this.parseComplete(result)
 
@@ -240,7 +250,8 @@ export class FlappyAgent<
 
     zodSchema.parse(plan)
     const returnStore = new Map()
-    for (const step of plan) {
+    for (let i = 0; i < plan.length; i++) {
+      const step = plan[i]
       const fn = this.findFunction<TNames>(step.functionName)
       const args = Object.fromEntries(
         Object.entries(step.args).map(([k, v]) => {
@@ -256,9 +267,10 @@ export class FlappyAgent<
           return [k, v]
         })
       )
-      console.debug('Start function call:', step.functionName)
+      log.debug(`Start step ${i + 1}`)
+      log.debug(`Start function call: ${step.functionName}`)
       const result = await fn.call(this, args)
-      console.debug('End Function call:', step.functionName)
+      log.debug(`End Function call: ${step.functionName}`)
       returnStore.set(step.id, result)
     }
     // step id starts from 1, so plan.length is the last step id
@@ -271,7 +283,7 @@ export class FlappyAgent<
     const endIdx = resp.data!.lastIndexOf(']')
     if (!(startIdx >= 0 && endIdx > startIdx)) throw new Error('Invalid JSON response')
     const json = JSON.parse(resp.data!.slice(startIdx, endIdx + 1))
-    console.dir(json, { depth: null })
+    log.debug({ data: json }, 'The plan details')
     return json
   }
 }

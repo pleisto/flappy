@@ -1,6 +1,8 @@
 import { LLMBase } from './llm-base'
 import { type ChatMLMessage, type ChatMLResponse, type GenerateConfig } from './interface'
 import { randomUUID, createHash } from 'crypto'
+import { log } from '../utils'
+import { type JsonValue } from 'roarr/dist/types'
 
 // https://platform.baichuan-ai.com/docs/api
 type BaichuanModel = string
@@ -91,7 +93,7 @@ export class Baichuan extends LLMBase {
     }
 
     try {
-      console.debug('baichuan req', jsonBody, headers)
+      log.debug({ data: { jsonBody, headers } }, 'Request baichuan API')
       const response = await fetch('https://api.baichuan-ai.com/v1/chat', {
         method: 'POST',
         body: jsonBody,
@@ -103,7 +105,7 @@ export class Baichuan extends LLMBase {
       }
 
       const result: BaichuanResponseBody = (await response.json()) as BaichuanResponseBody
-      console.debug('baichuan resp', JSON.stringify(result, null, 2))
+      log.debug({ data: result as unknown as JsonValue }, 'baichuan API response')
 
       if (result.code !== 0) return { success: false, data: result.msg }
 

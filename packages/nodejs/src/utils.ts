@@ -2,6 +2,8 @@ import { zodToJsonSchema } from 'zod-to-json-schema'
 import { omit } from 'radash'
 import { type ZodSchema } from './flappy-type'
 import { Document } from 'yaml'
+import createSerializeErrorMiddleware from '@roarr/middleware-serialize-error'
+import { Roarr } from 'roarr'
 
 /**
  * Convert Zod schema to JSON schema and remove unused properties.
@@ -21,3 +23,5 @@ export const convertJsonToYaml = (json: string | object): string => {
   doc.contents = typeof json === 'string' ? JSON.parse(json) : json
   return doc.toString()
 }
+
+export const log = Roarr.child<{ error: Error }>(createSerializeErrorMiddleware())

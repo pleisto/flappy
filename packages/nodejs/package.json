@@ -25,12 +25,15 @@
   },
   "dependencies": {
     "@pleisto/flappy-nodejs-bindings": "next",
+    "@roarr/middleware-serialize-error": "^1.0.0",
     "radash": "^11.0.0",
+    "roarr": "^7.15.1",
     "yaml": "^2.3.3",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.21.4"
   },
   "optionalDependencies": {
+    "@roarr/cli": "^5.12.3",
     "openai": "^4.12.4"
   },
   "devDependencies": {

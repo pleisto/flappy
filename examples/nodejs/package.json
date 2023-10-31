@@ -2,13 +2,16 @@
   "name": "@pleisto/node-example",
   "license": "Apache-2.0",
   "scripts": {
-    "law": "ts-node ./src/law.ts",
-    "resume": "ts-node ./src/resume.ts",
-    "code-interpreter": "ts-node ./src/codeInterpreter.ts"
+    "law": "ROARR_LOG=true ts-node ./src/law.ts | roarr pretty-print",
+    "resume": "ROARR_LOG=true ts-node ./src/resume.ts | roarr pretty-print",
+    "code-interpreter": "ROARR_LOG=true ts-node ./src/codeInterpreter.ts | roarr pretty-print"
   },
   "dependencies": {
     "@pleisto/node-flappy": "workspace:^",
     "openai": "^4.12.4",
     "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@roarr/cli": "^5.12.3"
   }
 }

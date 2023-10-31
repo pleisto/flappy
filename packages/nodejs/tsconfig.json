@@ -1,4 +1,4 @@
 {
   "extends": "../../tools/typescript/tsconfig.cjs.json",
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "./externals.d.ts"]
 }
