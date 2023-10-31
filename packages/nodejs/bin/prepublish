@@ -1,0 +1,6 @@
+#!/bin/bash
+
+npm pkg set 'exports['.'].types'='./dist/index.d.ts'
+npm pkg set 'exports['.'].default'='./dist/index.js'
+npm pkg set 'main'='./dist/index.js'
+npm pkg set 'types'='./dist/index.d.ts'
