@@ -20,7 +20,7 @@ const MOCK_LAWSUIT_DATA =
 
 const lawAgent = createFlappyAgent({
   llm: gpt35,
-  functions: [
+  features: [
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',
@@ -54,4 +54,4 @@ const lawAgent = createFlappyAgent({
 })
 
 void lawAgent.executePlan('Find the latest case with the plaintiff being families of victims and return its metadata.')
-// void lawAgent.callFunction('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)
+void lawAgent.callFunction('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)

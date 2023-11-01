@@ -28,7 +28,6 @@ jobs:
             target: x86_64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target x86_64-apple-darwin
-              strip -x "$APP_NAME.darwin-x64.node"
 
           # target: x86_64-pc-windows-gnu
           - host: ubuntu-latest
@@ -36,7 +35,6 @@ jobs:
             command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
             build: |
               yarn build:nodejs-bindings --target x86_64-pc-windows-gnu
-              strip -x "$APP_NAME.win32-x64-gnu.node"
 
           # target: x86_64-unknown-linux-gnu
           - host: ubuntu-latest
@@ -49,7 +47,6 @@ jobs:
               sudo apt-get install perl -y
               sudo apt-get install pkg-config libssl-dev -y
               yarn build:nodejs-bindings --target x86_64-unknown-linux-gnu
-              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-gnu.node"
 
           # target: x86_64-unknown-linux-musl
           - host: ubuntu-latest
@@ -59,14 +56,12 @@ jobs:
               apk add pkgconfig openssl-dev gcc g++ make perl
               set -e
               yarn build:nodejs-bindings
-              strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-x64-musl.node"
 
           # target: aarch64-apple-darwin
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               yarn build:nodejs-bindings --target aarch64-apple-darwin
-              strip -x "$APP_NAME.darwin-arm64.node"
 
           # target: aarch64-unknown-linux-gnu
           - host: ubuntu-latest
@@ -82,14 +77,12 @@ jobs:
               export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot"
               yarn build:nodejs-bindings --target aarch64-unknown-linux-gnu
-              aarch64-unknown-linux-gnu-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-gnu.node"
 
           # target: aarch64-linux-android
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               yarn build:nodejs-bindings --target aarch64-linux-android
-              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip "$APP_NAME.android-arm64.node"
 
           # target: aarch64-unknown-linux-musl
           - host: ubuntu-latest
@@ -100,7 +93,6 @@ jobs:
               apk add pkgconfig openssl-dev gcc g++ make perl
               rustup target add aarch64-unknown-linux-musl
               yarn build:nodejs-bindings --target aarch64-unknown-linux-musl
-              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip "packages/rust-core/nodejs/flappy-nodejs-bindings.linux-arm64-musl.node"
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v4

@@ -1,18 +1,11 @@
-import {
-  type FindFlappyFunction,
-  type AnyFlappyFunction,
-  type FlappyAgentConfig,
-  type FlappyFunctionNames
-} from './flappy-agent.interface'
-import { SynthesizedFunction } from './synthesized-function'
-import { InvokeFunction } from './invoke-function'
-import { type LLMBase } from './llm/llm-base'
-import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
+import { type FlappyAgentInterface, type FlappyAgentConfig } from './flappy-agent.interface'
+import { type LLMBase } from './llms/llm-base'
+import { type ChatMLResponse, type ChatMLMessage } from './llms/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { z } from './flappy-type'
 import { convertJsonToYaml, zodToCleanJsonSchema, log } from './utils'
-import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 import { type JsonValue } from 'roarr/dist/types'
+import { type FindFlappyFeature, type FlappyFeatureNames, type AnyFlappyFeature } from './flappy-feature'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
@@ -43,14 +36,15 @@ const lanOutputSchema = (enableCoT: boolean) => {
 const DEFAULT_RETRY = 1
 
 export class FlappyAgent<
-  TFunctions extends AnyFlappyFunction[] = AnyFlappyFunction[],
-  TNames extends string = FlappyFunctionNames<TFunctions>
-> {
-  config: any
+  TFeatures extends readonly AnyFlappyFeature[] = readonly AnyFlappyFeature[],
+  TNames extends string = FlappyFeatureNames<TFeatures>
+> implements FlappyAgentInterface
+{
+  config: FlappyAgentConfig<TFeatures>
   llm: LLMBase
   llmPlaner: LLMBase
   retry: number
-  constructor(config: FlappyAgentConfig<TFunctions>) {
+  constructor(config: FlappyAgentConfig<TFeatures>) {
     this.config = config
     this.llm = config.llm
     this.llmPlaner = config.llmPlaner ?? config.llm
@@ -60,117 +54,35 @@ export class FlappyAgent<
   /**
    * Get function definitions as a JSON Schema object array.
    */
-  public functionsDefinitions(): object[] {
-    return this.config.functions.map((fn: AnyFlappyFunction) => fn.callingSchema)
+  public featuresDefinitions(): object[] {
+    return this.config.features.map((fn: AnyFlappyFeature) => fn.callingSchema)
   }
 
   /**
    * Find function by name.
    */
-  public findFunction<
-    TName extends TNames,
-    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
-  >(name: TName): TFunction {
-    const fn = this.config.functions.find((fn: AnyFlappyFunction) => fn.define.name === name)
+  public findFeature<TName extends TNames, TFunction extends AnyFlappyFeature = FindFlappyFeature<TFeatures, TName>>(
+    name: TName
+  ): TFunction {
+    const fn = this.config.features.find((fn: AnyFlappyFeature) => fn.define.name === name)
     if (!fn) throw new Error(`Function definition not found: ${name}`)
-    return fn
+    return fn as TFunction
   }
 
   /**
-   * List all synthesized functions.
-   */
-  public synthesizedFunctions(): SynthesizedFunction[] {
-    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof SynthesizedFunction)
-  }
-
-  /**
-   * List all invoke functions.
-   */
-  public invokeFunctions(): InvokeFunction[] {
-    return this.config.functions.filter((fn: AnyFlappyFunction) => fn instanceof InvokeFunction)
-  }
-
-  /**
-   * Call a function by name.
+   * Call a feature by name.
    */
   public async callFunction<
     TName extends TNames,
-    TFunction extends AnyFlappyFunction = FindFlappyFunction<TFunctions, TName>
+    TFunction extends AnyFlappyFeature = FindFlappyFeature<TFeatures, TName>
   >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {
-    const fn = this.findFunction(name)
+    const fn = this.findFeature(name)
+    // eslint-disable-next-line @typescript-eslint/return-await
     return await fn.call(this, args)
   }
 
-  public async callCodeInterpreter(prompt: string): Promise<any> {
-    log.debug('Calling code interpreter')
-    const config = (this.config as FlappyAgentConfig).codeInterpreter
-    if (!config) throw new Error('Code interpreter is not enabled.')
-    const originalRequestMessage: ChatMLMessage[] = [
-      {
-        role: 'system',
-        content: `You are an AI that writes Python code using only the built-in library. After you supply the Python code, it will be run in a safe sandbox. The execution time is limited to 120 seconds. The task is to define a function named "main" that doesn't take any parameters. The output should be a JSON object: {"code": string}.
-        Network access is ${config.enableNetwork ? 'enabled' : 'disabled'}`
-      },
-      {
-        role: 'user',
-        content: `${prompt}\n\noutput json:\n`
-      }
-    ]
-    let requestMessage = originalRequestMessage
-    let retry = this.retry
-    let result: ChatMLResponse | undefined
-
-    while (true) {
-      try {
-        if (retry !== this.retry) log.debug(`Attempt retry: ${this.retry - retry}`)
-
-        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
-
-        result = await this.llm.chatComplete(requestMessage)
-        const data = JSON.parse(result.data!)?.code?.replace(/\\n/g, '\n')
-        if (!data) throw new Error('Invalid JSON response')
-        if (!data.includes('def main():')) throw new Error('Function "main" not found')
-
-        log.debug({ data }, 'Generated Code:')
-
-        const execResult = await evalPythonCode(
-          `${data}\nprint(main())`,
-          config.enableNetwork ?? false,
-          Object.entries(config.env ?? {}),
-          config.cacheDir
-        )
-        if (execResult.stderr) throw new Error(execResult.stderr)
-        log.debug({ data: { output: execResult.stdout } }, `CodeInterpreter Output`)
-        return execResult.stdout
-      } catch (err) {
-        console.error(err)
-        if (retry <= 0) throw new Error('Interrupted, function call failed. Please refer to the error message above.')
-
-        retry -= 1
-        // if the response came from chatComplete is failed, retry it directly.
-        // Otherwise, update message for repairing
-        if (result?.success && result.data) {
-          requestMessage = [
-            ...originalRequestMessage,
-            {
-              role: 'assistant',
-              content: result?.data ?? ''
-            },
-            {
-              role: 'user',
-              content: `You response is invalid for the following reason:
-          ${(err as Error).message}
-
-          Please try again.`
-            }
-          ]
-        }
-      }
-    }
-  }
-
   public executePlanSystemMessage(enableCot: boolean = true): ChatMLMessage {
-    const functions = convertJsonToYaml(this.functionsDefinitions())
+    const functions = convertJsonToYaml(this.featuresDefinitions())
     const zodSchema = lanOutputSchema(enableCot)
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema), null, 4)
     return {
@@ -217,7 +129,7 @@ export class FlappyAgent<
 
         // check for function calling in each step
         for (const step of plan) {
-          const fn = this.findFunction(step.functionName)
+          const fn = this.findFeature(step.functionName)
           if (!fn) throw new Error(`Function definition not found: ${step.functionName}`)
         }
 
@@ -252,7 +164,7 @@ export class FlappyAgent<
     const returnStore = new Map()
     for (let i = 0; i < plan.length; i++) {
       const step = plan[i]
-      const fn = this.findFunction<TNames>(step.functionName)
+      const fn = this.findFeature<TNames>(step.functionName)
       const args = Object.fromEntries(
         Object.entries(step.args).map(([k, v]) => {
           if (typeof v === 'string' && v.startsWith(STEP_PREFIX)) {
@@ -293,6 +205,6 @@ export class FlappyAgent<
  * @param config
  * @returns
  */
-export const createFlappyAgent = <const TFunctions extends AnyFlappyFunction[]>(
-  config: FlappyAgentConfig<TFunctions>
-): FlappyAgent<TFunctions> => new FlappyAgent(config)
+export const createFlappyAgent = <const TFeatures extends readonly AnyFlappyFeature[]>(
+  config: FlappyAgentConfig<TFeatures>
+): FlappyAgent<TFeatures> => new FlappyAgent(config)

@@ -1,6 +1,7 @@
 import { LLMBase } from './llm-base'
 import { type ChatMLMessage, type ChatMLResponse, type GenerateConfig } from './interface'
 import type OpenAI from 'openai'
+import { log } from '../utils'
 
 /**
  * Calculate the default max tokens for a given model.
@@ -17,7 +18,7 @@ const calcDefaultMaxTokens = (model: string): number => {
 
 export class ChatGPT extends LLMBase {
   client: OpenAI
-  maxTokens: number
+  override maxTokens: number
   model: string
   constructor(client: OpenAI, model: string, maxTokens?: number) {
     super()
@@ -35,6 +36,11 @@ export class ChatGPT extends LLMBase {
     })
     const choice = resp.choices[0]
     if (!choice) return { success: false, data: undefined }
-    return { success: true, data: choice.message.content! }
+
+    const data = choice.message.content!
+
+    log.debug({ data }, 'openai output')
+
+    return { success: true, data }
   }
 }

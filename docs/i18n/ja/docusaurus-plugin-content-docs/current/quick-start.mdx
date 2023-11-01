@@ -132,9 +132,9 @@ Flappyのエコシステムでは、エージェントはLLMの多目的な伝�
 
 #### 関数
 
-関数はFlappyフレームワークにおけるエージェントの基盤となります。このドキュメンテーションでは、定義と利用が可能な2つの主要な関数タイプ、`InvokeFunction`と`SythesizedFunction`を紹介します。
+関数はFlappyフレームワークにおけるエージェントの基盤となります。このドキュメンテーションでは、定義と利用が可能な2つの主要な関数タイプ、`InvokeFeature`と`SythesizedFunction`を紹介します。
 
-- `InvokeFunction`はエージェントが環境と対話するための機能を提供し、LangchainのAgentsのToolsに類似しています。これは入力と出力のパラメータで定義され、その構造はLanguage Learning Model (LLM)が効率的に対話するために明確である必要があります。これらのパラメータと関数がユーザーのリクエストや世界との対話において果たす役割を理解することは、効率的なタスク計画のために重要です。
+- `InvokeFeature`はエージェントが環境と対話するための機能を提供し、LangchainのAgentsのToolsに類似しています。これは入力と出力のパラメータで定義され、その構造はLanguage Learning Model (LLM)が効率的に対話するために明確である必要があります。これらのパラメータと関数がユーザーのリクエストや世界との対話において果たす役割を理解することは、効率的なタスク計画のために重要です。
 - `SythesizedFunction`はLLMが演じる関数の一種です。その説明と入力と出力の構造を定義するだけでよく、LLMはその後、定義された形式で入力を処理し、期待される形式で出力を生成しようとします。この特徴は、LLMが構造化データの抽出タスクを実行したり、LLMが構造化データを出力することが期待されるシナリオで、特に有用です。
 
 #### コードインタープリタ
@@ -146,7 +146,7 @@ Flappyのコードインタープリタは、ChatGPTコードインタープリ�
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction,  z } from '@pleisto/node-flappy'
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreterFunction,  z } from '@pleisto/node-flappy'
 
 enum Verdict {
   Innocent = 'Innocent',
@@ -161,6 +161,7 @@ const agent = createFlappyAgent({
   llm: chatGpt,
   // Define your agent's functions.
   functions: [
+    createCodeInterpreterFunction({ name: 'pythonSandbox' }),
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',
@@ -190,12 +191,7 @@ const agent = createFlappyAgent({
         return MOCK_LAWSUIT_DATA
       }
     })
-  ],
-  // Settings for the code interpreter sandbox
-  codeInterpreter: {
-    enableNetwork: true,
-    env: env as Record<string, string>
-  }
+  ]
 })
 ```
 
@@ -249,9 +245,9 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
 </Tabs>
 
 
-### Call sythesized function directly
+### Call synthesized function directly
 
-You can also call sythesized function directly without executing a action plan.
+You can also call synthesized function directly without executing a action plan.
 
 
 <Tabs>
@@ -283,9 +279,15 @@ Code Interpreter currently needs to be called directly. We are working on a bett
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-agent.callCodeInterpreter(
+agent.executePlan(
   'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
 )
+
+// or call function directly:
+
+agent.callFunction('pythonSandbox', {
+  code: 'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?'
+})
 ```
 
   </TabItem>

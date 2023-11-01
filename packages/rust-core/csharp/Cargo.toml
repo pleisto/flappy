@@ -21,6 +21,7 @@ serde_json = "1.0"
 [profile.release]
 lto = true
 codegen-units = 1
+strip = true
 
 [profile.dev]
 incremental = true

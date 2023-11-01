@@ -35,17 +35,14 @@ Flappy 超越了 TypeChat 和 LangChain 等替代方案，提供了生产就绪�
 
 Flappy 的 Agent 函数建立在两种基础类型之上：
 
-1. **InvokeFunction**：这个函数允许 Agents 与环境交互。它由输入和输出参数定义，便于与 LLM 高效交互。
-2. **SynthesizedFunction**：这个函数由 LLM 处理，只需要定义其描述和输入输出的结构。
+1. **InvokeFeature**：这个函数允许 Agents 与环境交互。它由输入和输出参数定义，便于与 LLM 高效交互。
+2. **SynthesizedFeature**：这个函数由 LLM 处理，只需要定义其描述和输入输出的结构。
+3. **CodeInterpreterFeature** 这个函数用于执行 LLM 生成的 Python 代码。它提供了一个沙箱化的安全特性，减少了运行时错误和潜在的安全漏洞，使其适合在生产环境中部署。
 
 #### 函数实现细节Flappy 采用独特的实现机制来增强这些函数：
 
 - **独特的 JSON Schema 集成**：用户可以在他们偏好的编程语言中定义抽象类，Flappy 然后将其转换为 JSON Schema 模式。这个特性提高了机器的可读性和互操作性，管理了 LLM 的输入和输出，提供了受控的、一致的、可被机器读取的数据。
 - **AST 解析**：Flappy 对 LLM 的输出进行抽象语法树（AST）解析，以确保生成的 JSON 数据严格遵守定义的 JSON Schema 模式。
-
-### 代码解释器
-
-Flappy 的代码解释器作为一个安全的环境，执行由 LLM 生成的 Python 或 TypeScript 代码。它提供了一个沙箱化的安全特性，减少了运行时错误和潜在的安全漏洞，使其适合在生产环境中部署。
 
 ### LLM 抽象层
 

@@ -7,3 +7,10 @@ coverage:
     # Because we already have Codecov bot commenting on PRs, here we disable the status check.
     project: off
     patch: off
+flags:
+  nodejs:
+    paths:
+      - packages/nodejs/
+  kotlin:
+    paths:
+      - packages/kotlin/

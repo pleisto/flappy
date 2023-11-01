@@ -28,6 +28,7 @@ openssl = { version = "0.10", features = ["vendored"] }
 [profile.release]
 lto = true
 codegen-units = 1
+strip = true
 
 [profile.dev]
 incremental = true
