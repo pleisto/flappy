@@ -86,6 +86,7 @@ namespace Pleisto.Flappy.CodeInterpreter
       finally
       {
         Free(sendToPtr);
+        Free(result);
       }
     }
   }

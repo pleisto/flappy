@@ -14,8 +14,7 @@ namespace Pleisto.Flappy.Tests
     {
       Assert.Pass(new JObject
       {
-        ["test"] = @"12312321
-123123123123213",
+        ["test"] = @"12312321123123123123213",
         ["validate"] = new JObject
         {
           ["test"] = 123123123
@@ -32,5 +31,4 @@ namespace Pleisto.Flappy.Tests
       Assert.Pass(FlappyAgent.GetLanOutputSchema(true).ToString());
     }
   }
-
 }

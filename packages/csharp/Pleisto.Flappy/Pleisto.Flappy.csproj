@@ -12,6 +12,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>IDE1006</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <!--Nuget Package Info-->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>

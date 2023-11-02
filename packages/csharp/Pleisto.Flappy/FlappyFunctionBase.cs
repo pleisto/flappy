@@ -51,8 +51,8 @@ namespace Pleisto.Flappy
           ["type"] = "object",
           ["properties"] = new JObject
           {
-            ["args"] = JObject.FromObject(schemaGenerator.Generate(define.TypeOfArgs)),
-            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(define.TypeOfReturn))
+            ["args"] = JObject.FromObject(schemaGenerator.Generate(typeof(TArgs))),
+            ["returnType"] = JObject.FromObject(schemaGenerator.Generate(typeof(TReturn)))
           }
         }
       };

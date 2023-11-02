@@ -8,7 +8,7 @@ namespace Pleisto.Flappy.Interfaces
   /// </summary>
   /// <typeparam name="TArgs"></typeparam>
   /// <typeparam name="TReturn"></typeparam>
-  public class InvokeFunctionDefinition<TArgs, TReturn> : FunctionsDefinitionBase<TArgs, TReturn>
+  public class InvokeFunctionDefinition<TArgs, TReturn> : FunctionsDefinitionBase<TArgs, TReturn>, IFlappyFunctionDefinition<TArgs, TReturn>
     where TArgs : class
     where TReturn : class
   {

@@ -16,11 +16,34 @@ namespace Pleisto.Flappy
   /// </summary>
   public partial class FlappyAgent
   {
+    /// <summary>
+    /// Config
+    /// </summary>
     internal readonly FlappyAgentConfig config;
+
+    /// <summary>
+    /// LLM
+    /// </summary>
     internal readonly ILLMBase llm;
+
+    /// <summary>
+    /// LLM PLaner
+    /// </summary>
     internal readonly ILLMBase llmPlaner;
-    private int retry = 0;
+
+    /// <summary>
+    /// Configured of Retry Count
+    /// </summary>
+    private readonly int retry = 0;
+
+    /// <summary>
+    /// Default of Retry Count
+    /// </summary>
     private const int DEFAULT_RETRY = 1;
+
+    /// <summary>
+    /// Logger
+    /// </summary>
     private readonly ILogger<FlappyAgent> logger;
 
     /// <summary>
@@ -37,7 +60,7 @@ namespace Pleisto.Flappy
       if ((config.Functions?.Length ?? 0) <= 0)
         throw new NullReferenceException($"config.functions not be null");
       this.llm = llm ?? config.LLM;
-      this.llmPlaner = llmPlaner ?? this.llm;
+      this.llmPlaner = llmPlaner ?? config.LLMPlaner ?? this.llm;
       this.retry = config.Retry ?? DEFAULT_RETRY;
       this.logger = logger;
     }
