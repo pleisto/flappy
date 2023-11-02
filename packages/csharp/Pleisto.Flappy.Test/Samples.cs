@@ -11,7 +11,7 @@ namespace Pleisto.Flappy.Tests
   /// <summary>
   /// ChatGPT Test Case
   /// </summary>
-  public class TestCase
+  public class Samples
   {
     /// <summary>
     /// Disable GPT Test Case on environment set

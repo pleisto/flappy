@@ -10,9 +10,7 @@ namespace Pleisto.Flappy.LLM
   /// </summary>
   public class ChatGPT : ILLMBase
   {
-    /// <summary>
-    /// Max Tokens
-    /// </summary>
+    /// <inheritdoc/>
     public int MaxTokens
     {
       get; private set;
@@ -57,12 +55,7 @@ namespace Pleisto.Flappy.LLM
     private readonly OpenAIAPI client;
     private readonly ILogger<ChatGPT> logger;
 
-    /// <summary>
-    /// Run ChatGPT Complete
-    /// </summary>
-    /// <param name="message">Request Message</param>
-    /// <param name="config">Config</param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public virtual async Task<ChatMLResponse> ChatComplete(ChatMLMessage[] message, GenerateConfig config)
     {
       foreach (var i in message)
