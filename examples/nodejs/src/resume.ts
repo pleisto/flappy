@@ -1,7 +1,7 @@
 import {
   createFlappyAgent,
-  createInvokeFunction,
   createSynthesizedFunction,
+  createInvokeFunction,
   z,
   ChatGPT,
   Baichuan
@@ -54,7 +54,7 @@ I am a seasoned software engineer with over seven years of experience in front-e
 
 const resumeAgent = createFlappyAgent({
   llm: baichuan,
-  functions: [
+  features: [
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a resume full text.',

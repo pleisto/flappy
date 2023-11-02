@@ -148,7 +148,7 @@ Flappy 中的代码解释器作为 ChatGPT 代码解释器的等效替代品，�
   <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
-import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction,  z } from '@pleisto/node-flappy'
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreter,  z } from '@pleisto/node-flappy'
 
 enum Verdict {
   Innocent = 'Innocent',
@@ -163,6 +163,7 @@ const agent = createFlappyAgent({
   llm: chatGpt,
   // Define your agent's functions.
   functions: [
+    createCodeInterpreter(),
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',
@@ -192,12 +193,7 @@ const agent = createFlappyAgent({
         return MOCK_LAWSUIT_DATA
       }
     })
-  ],
-  // Settings for the code interpreter sandbox
-  codeInterpreter: {
-    enableNetwork: true,
-    env: env as Record<string, string>
-  }
+  ]
 })
 ```
 
@@ -251,7 +247,7 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
 </Tabs>
 
 
-### 直接调用 sythesized function
+### 直接调用 synthesized function
 
 你也可以直接调用sythesized function 而无需创建或执行动作计划。
 
@@ -286,9 +282,15 @@ Code Interpreter 当前需要被直接调用. We are working on a better way to 
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-agent.callCodeInterpreter(
+agent.executePlan(
   'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
 )
+
+// 也可以直接调用
+
+agent.callFunction('pythonSandbox', {
+  code: 'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?'
+})
 ```
 
   </TabItem>

@@ -79,7 +79,7 @@ const exampleAgent = createFlappyAgent({
 
 #### Create an Invoke Function
 
-In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `invokeFunction`.
+In addition to synthesized functions, developers can also add custom methods for the agent to invoke by including `InvokeFunction`.
 
 ```ts
 import { createFlappyAgent, createInvokeFunction, z } from '@pleisto/flappy-agent'

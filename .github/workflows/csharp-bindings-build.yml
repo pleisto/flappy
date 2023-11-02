@@ -100,7 +100,6 @@ jobs:
           #  artifact: target/x86_64-apple-darwin/*.so
           #  build: |
           #    cargo build --target aarch64-linux-android
-          #    ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/rust-core/nodejs/*.node
 
           #- host: ubuntu-latest
           #  target: aarch64-unknown-linux-musl

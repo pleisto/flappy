@@ -1,23 +1,32 @@
-import { type z } from './flappy-type'
-import { type SynthesizedFunctionDefinition } from './flappy-agent.interface'
-import { type FlappyAgent } from './flappy-agent'
-import { type ChatMLResponse, type ChatMLMessage } from './llm/interface'
-import { FlappyFunctionBase, type FlappyFunctionOptions } from './flappy-function-base'
-import { log } from './utils'
+import { log } from '../utils'
+import { type z } from '../flappy-type'
+import { type ChatMLResponse, type ChatMLMessage } from '../llms/interface'
 import { omit } from 'radash'
 import { type JsonValue } from 'roarr/dist/types'
+import { type FlappyFeatureMetadataBase, type CreateFunction } from '../flappy-feature.interface'
+import { FlappyFeatureBase } from './base'
+import { type FlappyAgentInterface } from '..'
 
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
 
-export class SynthesizedFunction<
-  TName extends string = string,
-  TArgs extends z.ZodType = z.ZodType,
-  TReturn extends z.ZodType = z.ZodType
-> extends FlappyFunctionBase<TName, TArgs, TReturn> {
-  declare define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
+export const synthesizedFunctionType = 'synthesized'
 
-  public async call(agent: FlappyAgent, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
+interface SynthesizedFunctionDefinition<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType>
+  extends FlappyFeatureMetadataBase<TName, TArgs, TReturn> {}
+
+declare module '../flappy-feature.interface' {
+  interface FlappyFeatureDefinitions<TName, TArgs, TReturn> {
+    [synthesizedFunctionType]: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
+  }
+}
+
+export class SynthesizedFunction<
+  TName extends string,
+  TArgs extends z.ZodType,
+  TReturn extends z.ZodType
+> extends FlappyFeatureBase<SynthesizedFunctionDefinition<TName, TArgs, TReturn>> {
+  public override async call(agent: FlappyAgentInterface, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
     const describe = this.define.description
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
@@ -75,7 +84,7 @@ export class SynthesizedFunction<
     }
   }
 
-  protected parseComplete(resp: ChatMLResponse): string {
+  private parseComplete(resp: ChatMLResponse): string {
     const startIdx = resp.data!.indexOf('{')
     const endIdx = resp.data!.lastIndexOf('}')
     if (!(startIdx >= 0 && endIdx > startIdx)) throw new Error('Invalid JSON response')
@@ -86,16 +95,5 @@ export class SynthesizedFunction<
   }
 }
 
-/**
- * Create an synthesized function.
- * @param define
- * @returns
- */
-export const createSynthesizedFunction = <
-  const TName extends string,
-  const TArgs extends z.ZodType,
-  const TReturn extends z.ZodType
->(
-  define: SynthesizedFunctionDefinition<TName, TArgs, TReturn>,
-  options?: FlappyFunctionOptions
-): SynthesizedFunction<TName, TArgs, TReturn> => new SynthesizedFunction(define, options)
+export const createSynthesizedFunction: CreateFunction<typeof synthesizedFunctionType> = (...args) =>
+  new SynthesizedFunction(synthesizedFunctionType, ...args)

@@ -1,13 +1,13 @@
 /* eslint-disable max-classes-per-file */
 import { expect, test, vi, describe, beforeEach } from 'vitest'
 import { createFlappyAgent } from './flappy-agent'
-import { LLMBase } from './llm/llm-base'
-import { type ChatMLMessage, type GenerateConfig, type ChatMLResponse } from './llm/interface'
-import { createSynthesizedFunction } from './synthesized-function'
-import { createInvokeFunction } from './invoke-function'
-import { z } from './flappy-type'
+import { LLMBase } from './llms/llm-base'
+import { type ChatMLMessage, type GenerateConfig, type ChatMLResponse } from './llms/interface'
+import { type IsNever, z } from './flappy-type'
 import { env } from 'node:process'
-import { type FlappyFunctionDefinition } from './flappy-agent.interface'
+import { createCodeInterpreter, createInvokeFunction, createSynthesizedFunction } from './features'
+import { type FindFlappyFeature } from './flappy-feature'
+import { type FlappyFeatureDefinitions } from './flappy-feature.interface'
 
 test('create flappy agent normally', async () => {
   class TestLLM extends LLMBase {
@@ -27,7 +27,9 @@ test('create flappy agent normally', async () => {
   const invokeFunction = createInvokeFunction({
     name: 'invokeFunction',
     description: 'invokeFunction',
-    args: z.object({}),
+    args: z.object({
+      lawsuit: z.string().describe('Lawsuit full text.')
+    }),
     returnType: z.string(),
     resolve: async () => invokeValue
   })
@@ -40,13 +42,11 @@ test('create flappy agent normally', async () => {
   })
   const agent = createFlappyAgent({
     llm,
-    functions: [synthesizedFunction, invokeFunction]
+    features: [synthesizedFunction, invokeFunction]
   })
 
   expect(agent.llm).toBe(llm)
   expect(agent.llmPlaner).toBe(llm)
-  expect(agent.invokeFunctions()[0]).toBe(invokeFunction)
-  expect(agent.synthesizedFunctions()[0]).toBe(synthesizedFunction)
 
   expect(agent.executePlanSystemMessage().content).toMatchInlineSnapshot(`
     "You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
@@ -71,7 +71,12 @@ test('create flappy agent normally', async () => {
         properties:
           args:
             type: object
-            properties: {}
+            properties:
+              lawsuit:
+                type: string
+                description: Lawsuit full text.
+            required:
+              - lawsuit
             description: Function arguments
           returnType:
             type: string
@@ -116,7 +121,12 @@ test('create flappy agent normally', async () => {
             Only the listed functions are allowed to be used."
   `)
 
-  expect(await agent.callFunction<'invokeFunction', typeof invokeFunction>('invokeFunction', {})).toBe(invokeValue)
+  type Features = (typeof agent)['config']['features']
+  type InvokeFunctionType = FindFlappyFeature<Features, 'invokeFunction'>
+  const ok: IsNever<InvokeFunctionType> extends true ? true : false = false
+  const foo: Parameters<InvokeFunctionType['call']>[1]['lawsuit'] = 'foo'
+  const name: InvokeFunctionType['define']['name'] = 'invokeFunction'
+  expect(await agent.callFunction('invokeFunction', { lawsuit: 'foo' })).toBe(invokeValue)
 })
 
 describe('execute plan', () => {
@@ -133,6 +143,8 @@ describe('execute plan', () => {
       judgeOptions: z.array(z.string())
     })
   }
+
+  type InvokeArguments = FlappyFeatureDefinitions['invoke']['TDefinition']
   let InvokeFunctionDefine = {
     name: 'getLatestLawsuitsByPlaintiff',
     description: 'Get the latest lawsuits by plaintiff.',
@@ -143,7 +155,7 @@ describe('execute plan', () => {
     }),
     returnType: z.string(),
     resolve: async (...args: any[]) => getLatestLawsuitsByPlaintiff(args)
-  } satisfies FlappyFunctionDefinition
+  } satisfies InvokeArguments
 
   beforeEach(() => {
     const MOCK_LAWSUIT_DATA =
@@ -178,7 +190,7 @@ describe('execute plan', () => {
     const llm = new TestLLM()
     const agent = createFlappyAgent({
       llm,
-      functions: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
+      features: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
     })
 
     await expect(async () => {
@@ -235,7 +247,7 @@ describe('execute plan', () => {
     const llm = new TestLLM()
     const agent = createFlappyAgent({
       llm,
-      functions: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
+      features: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
     })
 
     await expect(async () => {
@@ -301,7 +313,7 @@ describe('execute plan', () => {
     const llm = new TestLLM()
     const agent = createFlappyAgent({
       llm,
-      functions: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)],
+      features: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)],
       retry: 1
     })
 
@@ -368,7 +380,7 @@ describe('execute plan', () => {
     const llm = new TestLLM()
     const agent = createFlappyAgent({
       llm,
-      functions: [
+      features: [
         createSynthesizedFunction(SynthesizedFunctionDefine, { retry: 1 }),
         createInvokeFunction(InvokeFunctionDefine)
       ]
@@ -432,7 +444,7 @@ describe('execute plan', () => {
     const llm = new TestLLM()
     const agent = createFlappyAgent({
       llm,
-      functions: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
+      features: [createSynthesizedFunction(SynthesizedFunctionDefine), createInvokeFunction(InvokeFunctionDefine)]
     })
 
     await agent.executePlan(
@@ -459,34 +471,37 @@ describe('code interpreter', () => {
           config?: GenerateConfig | undefined
         ): Promise<ChatMLResponse> {
           return {
-            success: false,
-            data: JSON.stringify({
-              code: `def main():
+            success: true,
+            data: JSON.stringify([
+              {
+                thought: '',
+                id: 1,
+                functionName: 'pythonSandbox',
+                args: {
+                  code: `def main():
     for chickens in range(0, 151):
         rabbits = 150 - chickens
         if 2*chickens + 4*rabbits == 396:
             return {'chickens': chickens}
     return {'chickens': None}
         `
-            })
+                }
+              }
+            ])
           }
         }
       }
       const llm = new TestLLM()
       const agent = createFlappyAgent({
         llm,
-        functions: [],
-        codeInterpreter: {
-          enableNetwork: true,
-          env: env as Record<string, string>
-        }
+        features: [createCodeInterpreter({ name: 'pythonSandbox' })]
       })
 
-      const result = await agent.callCodeInterpreter(
+      const result = await agent.executePlan(
         'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
       )
 
-      expect(result).toMatchInlineSnapshot(`
+      expect(result.result).toMatchInlineSnapshot(`
       "{'chickens': 102}
       "
     `)
@@ -506,37 +521,40 @@ describe('code interpreter', () => {
         ): Promise<ChatMLResponse> {
           if (retry === 0) {
             retry += 1
-            return { success: true, data: 'invalid' }
+            return { success: false, data: 'invalid' }
           }
           return {
-            success: false,
-            data: JSON.stringify({
-              code: `def main():
+            success: true,
+            data: JSON.stringify([
+              {
+                thought: '',
+                id: 1,
+                functionName: 'pythonSandbox',
+                args: {
+                  code: `def main():
     for chickens in range(0, 151):
         rabbits = 150 - chickens
         if 2*chickens + 4*rabbits == 396:
             return {'chickens': chickens}
     return {'chickens': None}
         `
-            })
+                }
+              }
+            ])
           }
         }
       }
       const llm = new TestLLM()
       const agent = createFlappyAgent({
         llm,
-        functions: [],
-        codeInterpreter: {
-          enableNetwork: true,
-          env: env as Record<string, string>
-        }
+        features: [createCodeInterpreter()]
       })
 
-      const result = await agent.callCodeInterpreter(
+      const result = await agent.executePlan(
         'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
       )
 
-      expect(result).toMatchInlineSnapshot(`
+      expect(result.result).toMatchInlineSnapshot(`
       "{'chickens': 102}
       "
     `)

@@ -12,8 +12,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 flappy-common = { path = "../common" }
-mimalloc = {version = "0.1.39", default-features = false}
-napi = { version = "2", default-features = false, features = ["napi8","async"] }
+mimalloc = { version = "0.1.39", default-features = false }
+napi = { version = "2", default-features = false, features = [
+  "napi8",
+  "async",
+] }
 napi-derive = "2"
 openssl = { version = "0.10", features = ["vendored"] }
 
@@ -23,6 +26,7 @@ napi-build = "2"
 [profile.release]
 lto = true
 codegen-units = 1
+strip = true
 
 [profile.dev]
-incremental=true
+incremental = true

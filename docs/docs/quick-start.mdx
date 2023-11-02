@@ -148,7 +148,7 @@ The Code Interpreter in Flappy serves as an equivalent replacement for ChatGPT C
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction,  z } from '@pleisto/node-flappy'
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreter,  z } from '@pleisto/node-flappy'
 
 enum Verdict {
   Innocent = 'Innocent',
@@ -163,6 +163,7 @@ const agent = createFlappyAgent({
   llm: chatGpt,
   // Define your agent's functions.
   functions: [
+    createCodeInterpreter(),
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',
@@ -192,12 +193,7 @@ const agent = createFlappyAgent({
         return MOCK_LAWSUIT_DATA
       }
     })
-  ],
-  // Settings for the code interpreter sandbox
-  codeInterpreter: {
-    enableNetwork: true,
-    env: env as Record<string, string>
-  }
+  ]
 })
 ```
 
@@ -251,9 +247,9 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
 </Tabs>
 
 
-### Call sythesized function directly
+### Call synthesized function directly
 
-You can also call sythesized function directly without executing a action plan.
+You can also call synthesized function directly without executing a action plan.
 
 
 <Tabs>
@@ -285,10 +281,17 @@ Code Interpreter currently needs to be called directly. We are working on a bett
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-agent.callCodeInterpreter(
+agent.executePlan(
   'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
 )
+
+// or call function directly:
+
+agent.callFunction('pythonSandbox', {
+  code: 'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?'
+})
 ```
+
 
   </TabItem>
   <TabItem value="java" label="Java" default>
