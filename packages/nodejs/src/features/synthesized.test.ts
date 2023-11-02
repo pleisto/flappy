@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import { z } from '../flappy-type'
 import { createSynthesizedFunction } from './synthesized'
 
-test('create synthesizedFeature normally', () => {
+test('create SynthesizedFunction normally', () => {
   const define = {
     name: 'getMeta',
     description: 'Extract meta data from a lawsuit full text.',

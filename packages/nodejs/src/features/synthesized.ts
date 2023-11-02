@@ -10,22 +10,22 @@ import { type FlappyAgentInterface } from '..'
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
 
-export const synthesizedFeatureType = 'synthesized'
+export const synthesizedFunctionType = 'synthesized'
 
-interface SynthesizedFeatureDefinition<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType>
+interface SynthesizedFunctionDefinition<TName extends string, TArgs extends z.ZodType, TReturn extends z.ZodType>
   extends FlappyFeatureMetadataBase<TName, TArgs, TReturn> {}
 
 declare module '../flappy-feature.interface' {
   interface FlappyFeatureDefinitions<TName, TArgs, TReturn> {
-    [synthesizedFeatureType]: SynthesizedFeatureDefinition<TName, TArgs, TReturn>
+    [synthesizedFunctionType]: SynthesizedFunctionDefinition<TName, TArgs, TReturn>
   }
 }
 
-export class SynthesizedFeature<
+export class SynthesizedFunction<
   TName extends string,
   TArgs extends z.ZodType,
   TReturn extends z.ZodType
-> extends FlappyFeatureBase<SynthesizedFeatureDefinition<TName, TArgs, TReturn>> {
+> extends FlappyFeatureBase<SynthesizedFunctionDefinition<TName, TArgs, TReturn>> {
   public override async call(agent: FlappyAgentInterface, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
     const describe = this.define.description
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
@@ -95,5 +95,5 @@ export class SynthesizedFeature<
   }
 }
 
-export const createSynthesizedFunction: CreateFunction<typeof synthesizedFeatureType> = (...args) =>
-  new SynthesizedFeature(synthesizedFeatureType, ...args)
+export const createSynthesizedFunction: CreateFunction<typeof synthesizedFunctionType> = (...args) =>
+  new SynthesizedFunction(synthesizedFunctionType, ...args)

@@ -41,9 +41,9 @@ In Flappy's ecosystem, an agent operates as a versatile conduit for the LLM, per
 
 The agent features in Flappy are built on two foundational types:
 
-1. **InvokeFeature**: This feature allows agents to interact with the environment. It's defined by input and output parameters, facilitating efficient interaction with the LLM.
-2. **SynthesizedFeature**: This feature is processed by the LLM and only requires the definition of its description and the structure of its inputs and outputs.
-3. **CodeInterpreterFeature** This feature allows agents to eval python code produced by LLMs in a safe sandbox that reduces runtime errors and potential security vulnerabilities, making it suitable for deployment in a production environment.
+1. **InvokeFunction**: This feature allows agents to interact with the environment. It's defined by input and output parameters, facilitating efficient interaction with the LLM.
+2. **SynthesizedFunction**: This feature is processed by the LLM and only requires the definition of its description and the structure of its inputs and outputs.
+3. **CodeInterpreter** This feature allows agents to eval python code produced by LLMs in a safe sandbox that reduces runtime errors and potential security vulnerabilities, making it suitable for deployment in a production environment.
 
 #### Function Implementation Details
 

@@ -1,4 +1,4 @@
-import { createFlappyAgent, ChatGPT, createCodeInterpreterFunction } from '@pleisto/node-flappy'
+import { createFlappyAgent, ChatGPT, createCodeInterpreter } from '@pleisto/node-flappy'
 import OpenAI from 'openai'
 
 const gpt35 = new ChatGPT(
@@ -11,7 +11,7 @@ const gpt35 = new ChatGPT(
 
 const agent = createFlappyAgent({
   llm: gpt35,
-  features: [createCodeInterpreterFunction({ name: 'pythonSandbox' }, { enableNetwork: false })]
+  features: [createCodeInterpreter(undefined, { enableNetwork: false })]
 })
 
 void agent.executePlan(

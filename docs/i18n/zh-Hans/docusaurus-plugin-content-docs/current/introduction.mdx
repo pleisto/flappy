@@ -35,9 +35,9 @@ Flappy 超越了 TypeChat 和 LangChain 等替代方案，提供了生产就绪�
 
 Flappy 的 Agent 函数建立在两种基础类型之上：
 
-1. **InvokeFeature**：这个函数允许 Agents 与环境交互。它由输入和输出参数定义，便于与 LLM 高效交互。
-2. **SynthesizedFeature**：这个函数由 LLM 处理，只需要定义其描述和输入输出的结构。
-3. **CodeInterpreterFeature** 这个函数用于执行 LLM 生成的 Python 代码。它提供了一个沙箱化的安全特性，减少了运行时错误和潜在的安全漏洞，使其适合在生产环境中部署。
+1. **InvokeFunction**：这个函数允许 Agents 与环境交互。它由输入和输出参数定义，便于与 LLM 高效交互。
+2. **SynthesizedFunction**：这个函数由 LLM 处理，只需要定义其描述和输入输出的结构。
+3. **CodeInterpreter** 这个函数用于执行 LLM 生成的 Python 代码。它提供了一个沙箱化的安全特性，减少了运行时错误和潜在的安全漏洞，使其适合在生产环境中部署。
 
 #### 函数实现细节Flappy 采用独特的实现机制来增强这些函数：
 

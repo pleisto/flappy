@@ -11,10 +11,11 @@ import {
 import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 import { log } from '../utils'
 
-export const codeInterpreterFeatureType = 'codeInterpreter'
+export const codeInterpreterType = 'codeInterpreter'
 
 const CodeInterpreterInputZ = z.object({ code: z.string() })
 const CodeInterpreterOutputZ = z.object({ result: z.string() })
+export const defaultCodeInterpreterName = 'pythonSandbox'
 
 const codeInterpreterGlobalCacheDirectory = 'tmp'
 
@@ -30,7 +31,7 @@ export interface CodeInterpreterOptions extends FlappyFeatureOptions {
   env?: Record<string, string>
 }
 
-interface CodeInterpreterFeatureDefinition<TName extends string>
+interface CodeInterpreterDefinition<TName extends string>
   extends FlappyFeatureMetadataBase<TName, typeof CodeInterpreterInputZ, typeof CodeInterpreterOutputZ> {
   TOptions: CodeInterpreterOptions
   TArgs: typeof CodeInterpreterInputZ
@@ -39,15 +40,15 @@ interface CodeInterpreterFeatureDefinition<TName extends string>
 
 declare module '../flappy-feature.interface' {
   interface FlappyFeatureDefinitions<TName, TArgs, TReturn> {
-    [codeInterpreterFeatureType]: CodeInterpreterFeatureDefinition<TName>
+    [codeInterpreterType]: CodeInterpreterDefinition<TName>
   }
 }
 
-export class CodeInterpreterFeature<
+export class CodeInterpreter<
   TName extends string,
   TArgs extends typeof CodeInterpreterInputZ,
   TReturn extends typeof CodeInterpreterOutputZ
-> extends FlappyFeatureBase<CodeInterpreterFeatureDefinition<TName>> {
+> extends FlappyFeatureBase<CodeInterpreterDefinition<TName>> {
   public override buildDescription(): string {
     return `
       An safe sandbox that only support the built-in library. The execution time is limited to 120 seconds. The task is to define a function named "main" that doesn't take any parameters. The output should be a String. Network access is ${
@@ -78,22 +79,26 @@ export class CodeInterpreterFeature<
   }
 }
 
-type CodeInterpreterFunction = CreateFunction<typeof codeInterpreterFeatureType>
+type CodeInterpreterCreater = CreateFunction<typeof codeInterpreterType>
 // Ensure the function parameters only have two elements.
-type CodeInterpreterFunctionDefinition = Required<Parameters<CodeInterpreterFunction>>['length'] extends 2
-  ? Parameters<CodeInterpreterFunction>
+type CodeInterpreterFunctionParameters = Required<Parameters<CodeInterpreterCreater>>['length'] extends 2
+  ? Parameters<CodeInterpreterCreater>
   : never
 
-export const createCodeInterpreterFunction = <TName extends string>(
-  definition: Pick<FeatureDefinitionBase<TName, any, any>, 'name'>,
-  options?: CodeInterpreterFunctionDefinition[1]
+export const createCodeInterpreter = <TName extends string = typeof defaultCodeInterpreterName>(
+  definition?: Partial<Pick<FeatureDefinitionBase<TName, any, any>, 'name'>>,
+  options?: CodeInterpreterFunctionParameters[1]
 ): AllFlappyFeaturesInstance<
   TName,
   typeof CodeInterpreterInputZ,
   typeof CodeInterpreterOutputZ
->[typeof codeInterpreterFeatureType] =>
-  new CodeInterpreterFeature(
-    codeInterpreterFeatureType,
-    { ...definition, args: CodeInterpreterInputZ, returnType: CodeInterpreterOutputZ },
+>[typeof codeInterpreterType] =>
+  new CodeInterpreter(
+    codeInterpreterType,
+    {
+      name: (definition?.name ?? defaultCodeInterpreterName) as TName,
+      args: CodeInterpreterInputZ,
+      returnType: CodeInterpreterOutputZ
+    },
     options
   )

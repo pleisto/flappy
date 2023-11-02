@@ -132,10 +132,10 @@ In Flappy's ecosystem, the agent operates as a versatile conduit for the LLM. It
 
 #### Functions
 
-Functions act as the foundation for your agent in the Flappy framework. In this documentation, we will introduce `InvokeFeature` and `SythesizedFunction`, two essential function types you can define and utilize.
+Functions act as the foundation for your agent in the Flappy framework. In this documentation, we will introduce `InvokeFunction` and `SythesizedFunction`, two essential function types you can define and utilize.
 
 
-- `InvokeFeature` enables agents to interact with the environment, similar to Tools in Langchain's Agents. It's defined by input and output parameters, whose structures must be clear for the Language Learning Model (LLM) to interact efficiently. Understanding these parameters and the function's role in interacting with user requests and the world is essential. For cost-effective task planning.
+- `InvokeFunction` enables agents to interact with the environment, similar to Tools in Langchain's Agents. It's defined by input and output parameters, whose structures must be clear for the Language Learning Model (LLM) to interact efficiently. Understanding these parameters and the function's role in interacting with user requests and the world is essential. For cost-effective task planning.
 - `SythesizedFunction` is a type of function played by the LLM. You only need to define its description and the structure of its inputs and outputs. The LLM will then attempt to process inputs in the defined format and produce outputs in the expected format. This feature makes SythesizedFunction particularly useful in scenarios where structured data extraction tasks are performed by the LLM or when the LLM is expected to output structured data.
 
 #### Code Interpreter
@@ -148,7 +148,7 @@ The Code Interpreter in Flappy serves as an equivalent replacement for ChatGPT C
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreterFunction,  z } from '@pleisto/node-flappy'
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreter,  z } from '@pleisto/node-flappy'
 
 enum Verdict {
   Innocent = 'Innocent',
@@ -163,7 +163,7 @@ const agent = createFlappyAgent({
   llm: chatGpt,
   // Define your agent's functions.
   functions: [
-    createCodeInterpreterFunction({ name: 'pythonSandbox' }),
+    createCodeInterpreter(),
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',

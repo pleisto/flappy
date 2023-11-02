@@ -21,7 +21,7 @@ Our core design principle is "safety first". By default, access to the external 
   <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
-import { createFlappyAgent, ChatGPT, createCodeInterpreterFunction } from '@pleisto/node-flappy'
+import { createFlappyAgent, ChatGPT, createCodeInterpreter } from '@pleisto/node-flappy'
 import OpenAI from 'openai'
 
 const gpt35 = new ChatGPT(
@@ -34,7 +34,7 @@ const gpt35 = new ChatGPT(
 
 const agent = createFlappyAgent({
   llm: gpt35,
-  functions: [createCodeInterpreterFunction({ name: 'pythonSandbox' }, { enableNetwork: false })]
+  functions: [createCodeInterpreter({}, { enableNetwork: false })]
 })
 
 void agent.executePlan(

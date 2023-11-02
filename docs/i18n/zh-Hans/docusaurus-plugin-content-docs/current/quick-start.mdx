@@ -134,9 +134,9 @@ const chatGpt = new Baichuan(
 
 #### 函数
 
-函数作为 Flappy 框架中你的 Agent 的基础。在这个文档中，我们将介绍 `InvokeFeature` 和 `SythesizedFunction`，这两种你可以定义和使用的基础函数类型。
+函数作为 Flappy 框架中你的 Agent 的基础。在这个文档中，我们将介绍 `InvokeFunction` 和 `SythesizedFunction`，这两种你可以定义和使用的基础函数类型。
 
-- `InvokeFeature` 使 Agent 能够与环境进行交互，类似于 Langchain 的 Agent 中的工具。它由输入和输出参数定义，这些参数的结构必须清晰，以便语言学习模型（LLM）能够有效地进行交互。理解这些参数以及函数在与用户请求和世界交互中的角色是非常重要的，它对于成本效益的任务计划至关重要。
+- `InvokeFunction` 使 Agent 能够与环境进行交互，类似于 Langchain 的 Agent 中的工具。它由输入和输出参数定义，这些参数的结构必须清晰，以便语言学习模型（LLM）能够有效地进行交互。理解这些参数以及函数在与用户请求和世界交互中的角色是非常重要的，它对于成本效益的任务计划至关重要。
 - `SythesizedFunction` 是由 LLM 扮演的一种函数。你只需要定义它的描述和它的输入和输出的结构。然后，LLM 将尝试按照定义的格式处理输入并产生预期格式的输出。这使得 SythesizedFunction 在 LLM 执行结构化数据提取任务，或者预期 LLM 输出结构化数据的场景中尤其有用。
 
 #### 代码解释器
@@ -148,7 +148,7 @@ Flappy 中的代码解释器作为 ChatGPT 代码解释器的等效替代品，�
   <TabItem value="nodejs" label="NodeJS (TypeScript)" default>
 
 ```ts
-import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreterFunction,  z } from '@pleisto/node-flappy'
+import { createFlappyAgent,  createInvokeFunction,  createSynthesizedFunction, createCodeInterpreter,  z } from '@pleisto/node-flappy'
 
 enum Verdict {
   Innocent = 'Innocent',
@@ -163,7 +163,7 @@ const agent = createFlappyAgent({
   llm: chatGpt,
   // Define your agent's functions.
   functions: [
-    createCodeInterpreterFunction({ name: 'pythonSandbox' }),
+    createCodeInterpreter(),
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',

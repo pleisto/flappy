@@ -1,12 +1,12 @@
 import { type CreateFunction, type AllFlappyFeaturesClass, type FeatureKeys } from '../flappy-feature.interface'
-import { CodeInterpreterFeature, codeInterpreterFeatureType } from './codeInterpreter'
-import { InvokeFeature, invokeFeatureType } from './invoke'
-import { SynthesizedFeature, synthesizedFeatureType } from './synthesized'
+import { CodeInterpreter, codeInterpreterType } from './codeInterpreter'
+import { InvokeFunction, invokeFunctionType } from './invoke'
+import { SynthesizedFunction, synthesizedFunctionType } from './synthesized'
 
 export const FlappyFeatures: AllFlappyFeaturesClass = {
-  [invokeFeatureType]: InvokeFeature,
-  [synthesizedFeatureType]: SynthesizedFeature,
-  [codeInterpreterFeatureType]: CodeInterpreterFeature
+  [invokeFunctionType]: InvokeFunction,
+  [synthesizedFunctionType]: SynthesizedFunction,
+  [codeInterpreterType]: CodeInterpreter
 }
 
 export const createFeatureBuilder =

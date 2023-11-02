@@ -5,7 +5,7 @@ import { LLMBase } from './llms/llm-base'
 import { type ChatMLMessage, type GenerateConfig, type ChatMLResponse } from './llms/interface'
 import { type IsNever, z } from './flappy-type'
 import { env } from 'node:process'
-import { createCodeInterpreterFunction, createInvokeFunction, createSynthesizedFunction } from './features'
+import { createCodeInterpreter, createInvokeFunction, createSynthesizedFunction } from './features'
 import { type FindFlappyFeature } from './flappy-feature'
 import { type FlappyFeatureDefinitions } from './flappy-feature.interface'
 
@@ -494,7 +494,7 @@ describe('code interpreter', () => {
       const llm = new TestLLM()
       const agent = createFlappyAgent({
         llm,
-        features: [createCodeInterpreterFunction({ name: 'pythonSandbox' })]
+        features: [createCodeInterpreter({ name: 'pythonSandbox' })]
       })
 
       const result = await agent.executePlan(
@@ -547,7 +547,7 @@ describe('code interpreter', () => {
       const llm = new TestLLM()
       const agent = createFlappyAgent({
         llm,
-        features: [createCodeInterpreterFunction({ name: 'pythonSandbox' })]
+        features: [createCodeInterpreter()]
       })
 
       const result = await agent.executePlan(
