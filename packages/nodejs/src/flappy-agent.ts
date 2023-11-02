@@ -4,8 +4,8 @@ import { type ChatMLResponse, type ChatMLMessage } from './llms/interface'
 import { STEP_PREFIX } from './flappy-agent.constants'
 import { z } from './flappy-type'
 import { convertJsonToYaml, zodToCleanJsonSchema, log } from './utils'
-import { type JsonValue } from 'roarr/dist/types'
 import { type FindFlappyFeature, type FlappyFeatureNames, type AnyFlappyFeature } from './flappy-feature'
+import { type JsonObject } from 'roarr/dist/types'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
@@ -122,7 +122,7 @@ export class FlappyAgent<
       try {
         if (retry !== this.retry) log.debug(`Attempt retry: ${this.retry - retry}`)
 
-        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
+        log.debug({ data: requestMessage } as unknown as JsonObject, 'Submit the request message')
 
         result = await this.llmPlaner.chatComplete(requestMessage)
         plan = this.parseComplete(result)
