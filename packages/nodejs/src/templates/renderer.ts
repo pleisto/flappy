@@ -6,3 +6,5 @@ const TemplateFolderPath = '../../templates'
 const loader = new DefaultLoader({ dir: TemplateFolderPath })
 
 export const templateRenderer = new Renderer<TemplateMap>(loader as any)
+
+export type TemplateRenderer = typeof templateRenderer

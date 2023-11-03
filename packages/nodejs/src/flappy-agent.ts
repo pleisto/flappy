@@ -6,6 +6,7 @@ import { z } from './flappy-type'
 import { convertJsonToYaml, zodToCleanJsonSchema, log } from './utils'
 import { type FindFlappyFeature, type FlappyFeatureNames, type AnyFlappyFeature } from './flappy-feature'
 import { type JsonObject } from 'roarr/dist/types'
+import { templateRenderer } from './templates'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
@@ -150,10 +151,7 @@ export class FlappyAgent<
             },
             {
               role: 'user',
-              content: `You response is invalid for the following reason:
-          ${(err as Error).message}
-
-          Please try again.`
+              content: await templateRenderer.render('error/retry', { message: (err as Error).message })
             }
           ]
         }
