@@ -2,7 +2,7 @@ import { log } from '../utils'
 import { type z } from '../flappy-type'
 import { type ChatMLResponse, type ChatMLMessage } from '../llms/interface'
 import { omit } from 'radash'
-import { type JsonValue } from 'roarr/dist/types'
+import { type JsonObject } from 'roarr/dist/types'
 import { type FlappyFeatureMetadataBase, type CreateFunction } from '../flappy-feature.interface'
 import { FlappyFeatureBase } from './base'
 import { type FlappyAgentInterface } from '..'
@@ -53,7 +53,7 @@ export class SynthesizedFunction<
     while (true) {
       try {
         if (retry !== agent.retry) log.debug(`Attempt retry: ${agent.retry - retry}`)
-        log.debug({ data: requestMessage as unknown as JsonValue }, 'Submit the request message')
+        log.debug({ data: requestMessage } as unknown as JsonObject, 'Submit the request message')
         result = await agent.llm.chatComplete(requestMessage)
         const data = this.parseComplete(result)
         return data
