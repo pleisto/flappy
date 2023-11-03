@@ -69,7 +69,7 @@ export class SynthesizedFunction<
             ...originalRequestMessage,
             {
               role: 'assistant',
-              content: result?.data ?? ''
+              content: result.data
             },
             {
               role: 'user',
