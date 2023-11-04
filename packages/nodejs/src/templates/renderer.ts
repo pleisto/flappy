@@ -1,10 +1,27 @@
-import { DefaultLoader, Renderer } from 'ts-mustache'
 import { type TemplateMap } from './mustacheTypes'
+import { globSync } from 'glob'
+import path from 'path'
+import fs from 'fs'
+import Mustache from 'mustache'
 
 const TemplateFolderPath = '../../templates'
+const MUSTACHE_EXTENSION = '.mustache'
 
-const loader = new DefaultLoader({ dir: TemplateFolderPath })
+const files = globSync(path.join(TemplateFolderPath, `**/*${MUSTACHE_EXTENSION}`))
 
-export const templateRenderer = new Renderer<TemplateMap>(loader as any)
+if (files.length === 0) throw new Error('template not found')
 
-export type TemplateRenderer = typeof templateRenderer
+const contents = files.map(f => fs.readFileSync(f, { encoding: 'utf8' }))
+
+const templates = Object.fromEntries(
+  files.map((f, i) => [path.relative(TemplateFolderPath, f).replace(MUSTACHE_EXTENSION, ''), contents[i]])
+)
+
+export type TemplateRenderer = <K extends keyof TemplateMap>(templateName: K, params: TemplateMap[K]) => string
+
+export const templateRenderer: TemplateRenderer = (name, params) => {
+  const template = templates[name]
+  if (!template) throw new Error(`Unknown template '${String(name)}'`)
+
+  return Mustache.render(template, params)
+}

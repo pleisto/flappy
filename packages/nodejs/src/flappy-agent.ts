@@ -151,7 +151,7 @@ export class FlappyAgent<
             },
             {
               role: 'user',
-              content: await templateRenderer.render('error/retry', { message: (err as Error).message })
+              content: templateRenderer('error/retry', { message: (err as Error).message })
             }
           ]
         }
