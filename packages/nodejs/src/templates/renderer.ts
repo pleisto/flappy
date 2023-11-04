@@ -17,11 +17,13 @@ const templates = Object.fromEntries(
   files.map((f, i) => [path.relative(TemplateFolderPath, f).replace(MUSTACHE_EXTENSION, ''), contents[i]])
 )
 
+console.log('templates', templates)
+
 export type TemplateRenderer = <K extends keyof TemplateMap>(templateName: K, params: TemplateMap[K]) => string
 
 export const templateRenderer: TemplateRenderer = (name, params) => {
   const template = templates[name]
   if (!template) throw new Error(`Unknown template '${String(name)}'`)
 
-  return Mustache.render(template, params)
+  return Mustache.render(template, params, undefined, { escape: value => value })
 }

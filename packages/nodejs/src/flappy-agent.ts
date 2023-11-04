@@ -88,15 +88,7 @@ export class FlappyAgent<
     const returnSchema = JSON.stringify(zodToCleanJsonSchema(zodSchema), null, 4)
     return {
       role: 'system',
-      content: `You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
-        Make as few plans as possible if it can solve the problem.
-        The functions list is described using the following YAML schema array:
-        ${functions}
-
-        Your specified plans should be output as JSON object array and adhere to the following JSON schema:
-        ${returnSchema}
-
-        Only the listed functions are allowed to be used.`
+      content: templateRenderer('agent/systemMessage', { functions, returnSchema })
     }
   }
 
@@ -111,7 +103,7 @@ export class FlappyAgent<
     const zodSchema = lanOutputSchema(enableCot)
     const originalRequestMessage: ChatMLMessage[] = [
       this.executePlanSystemMessage(enableCot),
-      { role: 'user', content: `Prompt: ${prompt}\n\nPlan array:` }
+      { role: 'user', content: templateRenderer('agent/userMessage', { prompt }) }
     ]
     let requestMessage = originalRequestMessage
     let plan: any[] = []

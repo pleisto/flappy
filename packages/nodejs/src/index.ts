@@ -7,5 +7,3 @@ export * from './flappy-feature.interface'
 
 export * from './features'
 export * from './llms'
-
-export * from './templates'

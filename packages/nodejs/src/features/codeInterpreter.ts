@@ -10,6 +10,7 @@ import {
 } from '../flappy-feature.interface'
 import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 import { log } from '../utils'
+import { templateRenderer } from '../templates'
 
 export const codeInterpreterType = 'codeInterpreter'
 
@@ -50,11 +51,7 @@ export class CodeInterpreter<
   TReturn extends typeof CodeInterpreterOutputZ
 > extends FlappyFeatureBase<CodeInterpreterDefinition<TName>> {
   public override buildDescription(): string {
-    return `
-      An safe sandbox that only support the built-in library. The execution time is limited to 120 seconds. The task is to define a function named "main" that doesn't take any parameters. The output should be a String. Network access is ${
-        this.options?.enableNetwork ? 'enabled' : 'disabled'
-      }
-    `.trim()
+    return templateRenderer('features/codeInterpreter/description', { enabled: this.options?.enableNetwork })
   }
 
   public override async call(_agent: FlappyAgentInterface, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
@@ -66,7 +63,7 @@ export class CodeInterpreter<
     log.debug({ code }, 'Generated Code:')
 
     const result = await evalPythonCode(
-      `${code}\nprint(main())`,
+      templateRenderer('features/codeInterpreter/evalCode', { code }),
       this.options?.enableNetwork ?? false,
       Object.entries(this.options?.env ?? {}),
       codeInterpreterGlobalCacheDirectory

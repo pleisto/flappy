@@ -20,7 +20,11 @@ test('create codeInterpreter normally', async () => {
   expect(codeInterpreterFunction.buildDescription() ?? '').not.toEqual('')
 
   const result = await codeInterpreterFunction.call(null as any, { code })
-  expect(result.result.startsWith(code)).toBe(true)
+  expect(result.result).toMatchInlineSnapshot(`
+    "def main():
+      return \\"foo\\"
+    print(main())"
+  `)
 
   await expect(async () => {
     await codeInterpreterFunction.call(null as any, { code: '' })
