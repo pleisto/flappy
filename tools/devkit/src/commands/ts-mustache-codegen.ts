@@ -14,7 +14,7 @@ export const handler: CommandModule['handler'] = async (): Promise<void> => {
     dir: './templates'
   })
 
-  const TargetPath = './packages/nodejs/src/templates/mustacheTypes.ts'
+  const TargetPath = './packages/nodejs/src/renderer/mustacheTypes.ts'
 
   // Generate typedefs
   const declarer = new Declarer(loader)

@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import Mustache from 'mustache'
 
-const TemplateFolderPath = '../../templates'
+const TemplateFolderPath = './templates'
 const MUSTACHE_EXTENSION = '.mustache'
 
 const files = globSync(path.join(TemplateFolderPath, `**/*${MUSTACHE_EXTENSION}`))
