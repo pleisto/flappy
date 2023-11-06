@@ -4,7 +4,7 @@ import { env, exit } from 'node:process'
 /**
  * Returns true if the current process is running in a CI environment.
  */
-const isCI = !!(
+export const isCI = !!(
   env.CI || // Travis CI, CircleCI, AppVeyor, GitHub Actions
   env.CONTINUOUS_INTEGRATION || // Travis CI, CircleCI
   env.BUILD_NUMBER || // Jenkins, TeamCity

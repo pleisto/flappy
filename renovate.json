@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "commitMessage": "chore(deps): update deps",
+  "commitMessage": "chore(deps): upgrade dependencies",
   "extends": [
     "config:recommended",
     "group:all"
@@ -12,5 +12,7 @@
   "schedule": [
     "on monday and thursday"
   ],
-  "ignoreDeps": []
+  "ignoreDeps": [
+    "chalk"
+  ]
 }

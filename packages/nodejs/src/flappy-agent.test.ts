@@ -4,7 +4,6 @@ import { createFlappyAgent } from './flappy-agent'
 import { LLMBase } from './llms/llm-base'
 import { type ChatMLMessage, type GenerateConfig, type ChatMLResponse } from './llms/interface'
 import { type IsNever, z } from './flappy-type'
-import { env } from 'node:process'
 import { createCodeInterpreter, createInvokeFunction, createSynthesizedFunction } from './features'
 import { type FindFlappyFeature } from './flappy-feature'
 import { type FlappyFeatureDefinitions } from './flappy-feature.interface'
@@ -50,9 +49,9 @@ test('create flappy agent normally', async () => {
 
   expect(agent.executePlanSystemMessage().content).toMatchInlineSnapshot(`
     "You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
-            Make as few plans as possible if it can solve the problem.
-            The functions list is described using the following YAML schema array:
-            - name: synthesizedFunction
+    Make as few plans as possible if it can solve the problem.
+    The functions list is described using the following YAML schema array:
+    - name: synthesizedFunction
       description: synthesizedFunction
       parameters:
         type: object
@@ -83,8 +82,8 @@ test('create flappy agent normally', async () => {
             description: Function return type
 
 
-            Your specified plans should be output as JSON object array and adhere to the following JSON schema:
-            {
+    Your specified plans should be output as JSON object array and adhere to the following JSON schema:
+    {
         \\"type\\": \\"array\\",
         \\"items\\": {
             \\"type\\": \\"object\\",
@@ -118,7 +117,7 @@ test('create flappy agent normally', async () => {
         \\"description\\": \\"An array storing the steps.\\"
     }
 
-            Only the listed functions are allowed to be used."
+    Only the listed functions are allowed to be used."
   `)
 
   type Features = (typeof agent)['config']['features']

@@ -3061,8 +3061,9 @@ __metadata:
     "@swc/helpers": "npm:^0.5.3"
     "@types/node": "npm:^20.8.7"
     "@types/yargs": "npm:^17.0.29"
-    chalk: "npm:^5.0.0"
+    chalk: "npm:^4.1.2"
     jsonc: "npm:^2.0.0"
+    ts-mustache: "npm:^0.0.2"
     ts-node: "npm:^10.9.1"
     typescript: "npm:^5.2.2"
     v8-compile-cache: "npm:^2.4.0"
@@ -3213,7 +3214,10 @@ __metadata:
     "@pleisto/flappy-nodejs-bindings": "npm:next"
     "@roarr/cli": "npm:^5.12.3"
     "@roarr/middleware-serialize-error": "npm:^1.0.0"
+    "@types/mustache": "npm:^4"
     "@vitest/coverage-v8": "npm:^0.34.6"
+    glob: "npm:^10.3.3"
+    mustache: "npm:^4.2.0"
     openai: "npm:^4.12.4"
     radash: "npm:^11.0.0"
     roarr: "npm:^7.15.1"
@@ -4069,6 +4073,13 @@ __metadata:
   version: 0.7.33
   resolution: "@types/ms@npm:0.7.33"
   checksum: ef610d94ebee838243af37800cb5d1a52b2ae0fb6880675fbb9276c0c4afcefda755f16889fa597ee4e5b377998a7e67b453614aae68d3225e5f7219984284df
+  languageName: node
+  linkType: hard
+
+"@types/mustache@npm:^4":
+  version: 4.2.4
+  resolution: "@types/mustache@npm:4.2.4"
+  checksum: 11cb82b85095814df1b7ba747e4cbb8e35cf1701eff557c9d91749d6e9208a66da058a2b0ecea7e7749f5dbcd4ed31ab4996a8a51c7d8ddcb50ee04d4a865358
   languageName: node
   linkType: hard
 
@@ -5821,7 +5832,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:5.3.0, chalk@npm:^5.0.0, chalk@npm:^5.0.1, chalk@npm:^5.2.0":
+"chalk@npm:5.3.0, chalk@npm:^5.0.1, chalk@npm:^5.2.0":
   version: 5.3.0
   resolution: "chalk@npm:5.3.0"
   checksum: 8297d436b2c0f95801103ff2ef67268d362021b8210daf8ddbe349695333eb3610a71122172ff3b0272f1ef2cf7cc2c41fdaa4715f52e49ffe04c56340feed09
@@ -8939,7 +8950,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.3":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -12183,7 +12194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.7":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.7, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
@@ -12350,6 +12361,15 @@ __metadata:
   bin:
     multicast-dns: cli.js
   checksum: 5120171d4bdb1577764c5afa96e413353bff530d1b37081cb29cccc747f989eb1baf40574fe8e27060fc1aef72b59c042f72b9b208413de33bcf411343c69057
+  languageName: node
+  linkType: hard
+
+"mustache@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "mustache@npm:4.2.0"
+  bin:
+    mustache: bin/mustache
+  checksum: 1f8197e8a19e63645a786581d58c41df7853da26702dbc005193e2437c98ca49b255345c173d50c08fe4b4dbb363e53cb655ecc570791f8deb09887248dd34a2
   languageName: node
   linkType: hard
 
@@ -15966,10 +15986,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-directed-graph@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "ts-directed-graph@npm:0.0.1"
+  checksum: c4fd8be724a5e532846d15af1ed808fa7c8e3e569f06f9d87a2ee015a1c3c57a3dfb542c07533fa058af58430599d0443f8e9c0e0899fe821ba55a2ef08f1ff9
+  languageName: node
+  linkType: hard
+
 "ts-error@npm:^1.0.6":
   version: 1.0.6
   resolution: "ts-error@npm:1.0.6"
   checksum: c46994b0b88eae75d676ab18edcdb3e6c309abb39d8169c2d15286d10f4fc7bfc58c537a81f3efe24701e840247b5e79ac8e21a7335327811a07cfc33f69a72f
+  languageName: node
+  linkType: hard
+
+"ts-mustache@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "ts-mustache@npm:0.0.2"
+  dependencies:
+    glob: "npm:^10.3.3"
+    minimist: "npm:^1.2.8"
+    mustache: "npm:^4.2.0"
+    ts-directed-graph: "npm:^0.0.1"
+  bin:
+    ts-mustache: dist/cli/declarations.js
+  checksum: 92df10196c2684417eaa8a6350ebe5389a00959f62b91b128f00852471a03ca9492d0f6624fc725d33934888973cf97c3ece83d9eca8f22b696286e5d3038efc
   languageName: node
   linkType: hard
 

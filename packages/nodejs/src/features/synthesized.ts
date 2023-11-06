@@ -6,6 +6,7 @@ import { type JsonObject } from 'roarr/dist/types'
 import { type FlappyFeatureMetadataBase, type CreateFunction } from '../flappy-feature.interface'
 import { FlappyFeatureBase } from './base'
 import { type FlappyAgentInterface } from '..'
+import { templateRenderer } from '../renderer'
 
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))
@@ -27,23 +28,18 @@ export class SynthesizedFunction<
   TReturn extends z.ZodType
 > extends FlappyFeatureBase<SynthesizedFunctionDefinition<TName, TArgs, TReturn>> {
   public override async call(agent: FlappyAgentInterface, args: z.infer<TArgs>): Promise<z.infer<TReturn>> {
-    const describe = this.define.description
+    const describe = this.define.description ?? ''
     const returnTypeSchema = extractSchema(this.callingSchema, 'returnType')
     const argsSchema = extractSchema(this.callingSchema, 'args')
     const prompt = (args as any) instanceof Object ? JSON.stringify(args) : args
     const originalRequestMessage: ChatMLMessage[] = [
       {
         role: 'system',
-        content: `${describe}
-        User request according to the following JSON Schema:
-        ${argsSchema}
-
-        Translate it into JSON objects according to the following JSON Schema:
-        ${returnTypeSchema}`
+        content: templateRenderer('features/synthesized/systemMessage', { describe, argsSchema, returnTypeSchema })
       },
       {
         role: 'user',
-        content: `user request:${prompt}\n\njson object:`
+        content: templateRenderer('features/synthesized/userMessage', { prompt })
       }
     ]
     let requestMessage = originalRequestMessage
@@ -69,14 +65,11 @@ export class SynthesizedFunction<
             ...originalRequestMessage,
             {
               role: 'assistant',
-              content: result?.data ?? ''
+              content: result.data
             },
             {
               role: 'user',
-              content: `You response is invalid for the following reason:
-          ${(err as Error).message}
-
-          Please try again.`
+              content: templateRenderer('error/retry', { message: (err as Error).message })
             }
           ]
         }
