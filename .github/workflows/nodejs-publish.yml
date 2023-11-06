@@ -46,7 +46,7 @@ jobs:
         id: compare_version
         run: |
           new_version=$(node -p "require('./package.json').version")
-          versions=$(npm view @pleisto/node-flappy versions)
+          versions=$(npm view @pleisto/node-flappy versions --json | jq -r '.[]')
           echo "current version: $new_version"
           echo $versions
           if [ -z "${versions[@]}" ]; then
@@ -54,7 +54,7 @@ jobs:
             exit 1
           fi
 
-          if [[ "${versions[@]}" =~ "${new_version}" ]]; then
+          if [[ "${versions[@]} " =~ "${new_version} " ]]; then
             echo "Version is exist."
             echo "release=no" >> "$GITHUB_OUTPUT"
           else
