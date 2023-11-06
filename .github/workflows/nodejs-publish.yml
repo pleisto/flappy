@@ -29,38 +29,43 @@ jobs:
     name: nodejs-publish-version-check
     runs-on: ubuntu-latest
     outputs:
-      release: ${{ steps.compare_version.outputs.release }}
+      release: ${{ steps.compare_version.outputs.result }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: 'package.json'
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
       - name: Compare version
+        uses: actions/github-script@v6
         id: compare_version
-        run: |
-          new_version=$(node -p "require('./package.json').version")
-          versions=$(npm view @pleisto/node-flappy versions --json | jq -r '.[]')
-          echo "current version: $new_version"
-          echo $versions
-          if [ -z "${versions[@]}" ]; then
-            echo "version is empty"
-            exit 1
-          fi
+        with:
+          result-encoding: string
+          script: |
+            const execUnwrap = async (cmd, args) => {
+              let output = ""
+              const options = {
+                listeners: {
+                  stdout: (data) => {
+                    output += data.toString();
+                  }
+                }
+              }
+              const result = await exec.exec(cmd, args, options)
+              if (result !== 0) throw new Error("error")
+              return output
+            }
 
-          if [[ "${versions[@]} " =~ "${new_version} " ]]; then
-            echo "Version is exist."
-            echo "release=no" >> "$GITHUB_OUTPUT"
-          else
-            echo "Version is not exist."
-            echo "release=yes" >> "$GITHUB_OUTPUT"
-          fi
+            const versions = JSON.parse(await execUnwrap('npm', ['view', '@pleisto/node-flappy', 'versions', '--json']))
+            console.log('versions', versions)
+
+            const new_version = require('./packages/nodejs/package.json').version
+            console.log('new_version', new_version)
+
+            if (versions.includes(new_version)) {
+              console.log('version is exist')
+              return "no"
+            } else {
+              console.log('version is not exist')
+              return "yes"
+            }
   build:
     name: nodejs-publish-build
     needs: [check_if_need_release]
