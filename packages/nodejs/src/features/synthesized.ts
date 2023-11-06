@@ -6,7 +6,7 @@ import { type JsonObject } from 'roarr/dist/types'
 import { type FlappyFeatureMetadataBase, type CreateFunction } from '../flappy-feature.interface'
 import { FlappyFeatureBase } from './base'
 import { type FlappyAgentInterface } from '..'
-import { templateRenderer } from '../templates'
+import { templateRenderer } from '../renderer'
 
 const extractSchema = (schema: any, prop: string): string =>
   JSON.stringify(omit(schema.parameters.properties[prop], ['description']))

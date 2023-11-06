@@ -24,6 +24,19 @@ on:
       - '.github/workflows/codeql.yml'
       - 'templates/**'
 jobs:
+  publish-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: yarn
+
+      - run: npm publish --dry-run
+        working-directory: ./packages/nodejs
   codeql:
     name: nodejs-ci-codeql
     uses: ./.github/workflows/codeql.yml

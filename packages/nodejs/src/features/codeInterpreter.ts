@@ -10,7 +10,7 @@ import {
 } from '../flappy-feature.interface'
 import { evalPythonCode } from '@pleisto/flappy-nodejs-bindings'
 import { log } from '../utils'
-import { templateRenderer } from '../templates'
+import { templateRenderer } from '../renderer'
 
 export const codeInterpreterType = 'codeInterpreter'
 

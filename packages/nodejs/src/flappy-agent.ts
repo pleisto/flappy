@@ -6,7 +6,7 @@ import { z } from './flappy-type'
 import { convertJsonToYaml, zodToCleanJsonSchema, log } from './utils'
 import { type FindFlappyFeature, type FlappyFeatureNames, type AnyFlappyFeature } from './flappy-feature'
 import { type JsonObject } from 'roarr/dist/types'
-import { templateRenderer } from './templates'
+import { templateRenderer } from './renderer'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const lanOutputSchema = (enableCoT: boolean) => {
