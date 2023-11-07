@@ -73,7 +73,7 @@ export class FlappyAgent<
   /**
    * Call a feature by name.
    */
-  public async callFunction<
+  public async callFeature<
     TName extends TNames,
     TFunction extends AnyFlappyFeature = FindFlappyFeature<TFeatures, TName>
   >(name: TName, args: Parameters<TFunction['call']>[1]): Promise<ReturnType<TFunction['call']>> {

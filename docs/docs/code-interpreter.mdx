@@ -34,7 +34,7 @@ const gpt35 = new ChatGPT(
 
 const agent = createFlappyAgent({
   llm: gpt35,
-  functions: [createCodeInterpreter({}, { enableNetwork: false })]
+  features: [createCodeInterpreter({}, { enableNetwork: false })]
 })
 
 void agent.executePlan(

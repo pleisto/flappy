@@ -54,4 +54,4 @@ const lawAgent = createFlappyAgent({
 })
 
 void lawAgent.executePlan('Find the latest case with the plaintiff being families of victims and return its metadata.')
-void lawAgent.callFunction('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)
+void lawAgent.callFeature('getMeta', { lawsuit: MOCK_LAWSUIT_DATA }).then(console.log)
