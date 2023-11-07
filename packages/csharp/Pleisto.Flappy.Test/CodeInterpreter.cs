@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Pleisto.Flappy.CodeInterpreter;
+using Pleisto.Flappy.Examples.CodeInterpreter;
 
 namespace Pleisto.Flappy.Tests
 {
@@ -31,15 +32,7 @@ print('Hello World');
     [Test]
     public void PythonInspect()
     {
-      const string pythonInspectCode = @"
-import platform
-
-print(platform.python_version())
-";
-      var result = NativeHandler.EvalPythonCode(pythonInspectCode, false, new Dictionary<string, string>
-      {
-      });
-      Console.WriteLine(JObject.FromObject(result).ToString());
+      new NativeCall().OnExecute();
     }
 
     /// <summary>

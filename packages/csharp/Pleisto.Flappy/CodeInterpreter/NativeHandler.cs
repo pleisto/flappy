@@ -72,7 +72,7 @@ namespace Pleisto.Flappy.CodeInterpreter
         Code = code,
         Network = enableNetwork,
         Envs = env,
-        CachePath = cacheDir ?? "code-interpreter"
+        CachePath = cacheDir ?? "tmp"
       }).ToString();
 
       IntPtr sendToPtr = Marshal.StringToHGlobalAnsi(sendTo);
@@ -86,7 +86,7 @@ namespace Pleisto.Flappy.CodeInterpreter
       finally
       {
         Free(sendToPtr);
-        Free(result);
+        //Free(result);
       }
     }
   }

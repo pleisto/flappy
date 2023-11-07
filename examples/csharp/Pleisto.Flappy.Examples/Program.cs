@@ -11,6 +11,7 @@ namespace Pleisto.Flappy.Examples
   [Subcommand(typeof(LawCase))]
   [Subcommand(typeof(ResumeCase))]
   [Subcommand(typeof(CodeInterpreterCase))]
+  [Subcommand(typeof(NativeCall))]
   public class Program
   {
     public static int Main(string[] args)
