@@ -51,6 +51,17 @@
     <url>https://github.com/pleisto/flappy</url>
   </scm>
 
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/pleisto/flappy/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://github.com/pleisto/flappy/actions/workflows/java-bindings-ci.yml</url>
+  </ciManagement>
+
+
   <url>https://github.com/pleisto/flappy</url>
 
   <properties>

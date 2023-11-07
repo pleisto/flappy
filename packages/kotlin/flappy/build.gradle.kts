@@ -71,6 +71,7 @@ dependencies {
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3")
   implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+  implementation("com.github.spullara.mustache.java:compiler:0.9.11")
   implementation("com.pleisto:flappy-java-bindings:0.0.8")
   implementation("com.pleisto:flappy-java-bindings:0.0.8:${osdetector.classifier}")
 }
@@ -106,6 +107,16 @@ mavenPublishing {
     scm {
       url.set("https://github.com/pleisto/flappy")
       connection.set("scm:git:https://git@github.com/pleisto/flappy.git")
+    }
+
+    issueManagement {
+      system.set("Github")
+      url.set("https://github.com/pleisto/flappy/issues")
+    }
+
+    ciManagement {
+      system.set("Github Actions")
+      url.set("https://github.com/pleisto/flappy/actions/workflows/kotlin-ci.yml")
     }
   }
 }
@@ -156,6 +167,13 @@ tasks.jacocoTestReport {
     html.required = true
   }
 }
+
+tasks.withType<Sign>().configureEach {
+  onlyIf("skip local") {
+    !System.getenv().contains("SKIP_SIGN")
+  }
+}
+
 
 //https://kotlinlang.org/docs/dokka-gradle.html#package-options
 tasks.withType<DokkaTask>().configureEach {

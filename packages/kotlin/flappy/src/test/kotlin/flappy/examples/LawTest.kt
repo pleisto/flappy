@@ -56,7 +56,7 @@ class LawTest {
     val lawAgent = FlappyBaseAgent(
       maxRetry = 2,
       inferenceLLM = lawDummy,
-      functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
+      features = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
     )
 
     runBlocking {

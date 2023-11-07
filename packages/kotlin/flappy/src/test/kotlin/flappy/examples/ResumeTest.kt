@@ -133,7 +133,7 @@ class ResumeTest {
     val resumeAgent = FlappyBaseAgent(
       maxRetry = 2,
       inferenceLLM = resumeDummy,
-      functions = listOf(resumeGetMeta, getFrontendEngineerResumes)
+      features = listOf(resumeGetMeta, getFrontendEngineerResumes)
     )
 
     runBlocking {

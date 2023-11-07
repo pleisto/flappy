@@ -11,14 +11,14 @@ import java.util.logging.Logger
 
 class FlappyBaseAgent @JvmOverloads constructor(
   val inferenceLLM: FlappyLLMBase,
-  private val functions: List<AnyFlappyFunction>,
+  private val features: List<AnyFlappyFeature>,
   maxRetry: Int? = null,
 ) : AutoCloseable {
 
   override fun close() {
     inferenceLLM.close()
 
-    functions.map { it.close() }
+    features.map { it.close() }
   }
 
   companion object {
@@ -29,7 +29,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
   private val logger = Logger.getLogger(this.javaClass.name)
   internal val finalMaxRetry = maxRetry ?: 1
 
-  private val functionsDefinition = functions.map { it.definition() }
+  private val functionsDefinition = features.map { it.definition() }
 
   private data class BaseStep(
     @FlappyField(description = "Increment id starting from 1")
@@ -58,41 +58,30 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
   init {
     if (finalMaxRetry <= 0) throw FlappyException.CompileException("retry should be positive")
-    if (functions.isEmpty()) throw FlappyException.CompileException("functions is blank")
+    if (features.isEmpty()) throw FlappyException.CompileException("features is blank")
 
-    val names = functions.map { it.name }
-    if (names.size != names.toSet().size) throw FlappyException.CompileException("functions is not unique")
+    val names = features.map { it.name }
+    if (names.size != names.toSet().size) throw FlappyException.CompileException("features is not unique")
   }
 
 
-  private fun findFunction(name: String) =
-    functions.find { it.name == name }
-      ?: throw FlappyException.FatalException("function `$name` not found, supported: ${functions.map { it.name }}")
+  private fun findFeature(name: String) =
+    features.find { it.name == name }
+      ?: throw FlappyException.FatalException("feature `$name` not found, supported: ${features.map { it.name }}")
 
   private fun buildUserMessage(prompt: String) = UserMessage(
-    """
-            Prompt: $prompt
-
-            Plan array:
-        """.trimIndent()
+    Template.render("agent/userMessage.mustache", mapOf("prompt" to prompt)),
   )
 
 
   private fun buildSystemMessage() = SystemMessage(
-    """
-        You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
-        Make as few plans as possible if it can solve the problem.
-        The functions list is described using the following YAML schema array:
-        $functionDefinitionString
-
-        Your specified plans should be output as JSON object array and adhere to the following JSON schema:
-        $lanOutputSchemaString
-
-        Only the listed functions are allowed to be used.
-    """.trimIndent()
+    Template.render(
+      "agent/systemMessage.mustache",
+      mapOf("functions" to functionDefinitionString, "returnSchema" to lanOutputSchemaString)
+    ),
   )
 
-  private fun buildExecuteMessage(prompt: String) = listOf(buildSystemMessage(), buildUserMessage(prompt))
+  internal fun buildExecuteMessage(prompt: String) = listOf(buildSystemMessage(), buildUserMessage(prompt))
 
 
   suspend fun <R> executePlan(prompt: String): R {
@@ -113,7 +102,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
       logger.info("before call $id $functionName $newArgsString")
 
-      val result = callFunction<Any>(functionName, newArgsString)
+      val result = callFeature<Any>(functionName, newArgsString)
 
       logger.info("after call $id $functionName ${jacksonMapper.writeValueAsString(result)}")
 
@@ -162,15 +151,15 @@ class FlappyBaseAgent @JvmOverloads constructor(
     return castSteps(body)
   }
 
-  private suspend fun <R> callFunction(name: String, args: String): R {
-    val f = this.findFunction(name)
+  suspend fun <R> callFeature(name: String, args: String): R {
+    val f = this.findFeature(name)
     @Suppress("UNCHECKED_CAST")
     return f.call(args, this) as R
   }
 
   @OptIn(DelicateCoroutinesApi::class)
-  fun <R> callFunctionAsync(name: String, args: String): CompletableFuture<R> =
-    GlobalScope.future { callFunction(name, args) }
+  fun <R> callFeatureAsync(name: String, args: String): CompletableFuture<R> =
+    GlobalScope.future { callFeature(name, args) }
 }
 
 

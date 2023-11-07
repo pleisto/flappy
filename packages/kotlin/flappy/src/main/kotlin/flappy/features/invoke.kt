@@ -1,7 +1,7 @@
-package flappy.functions
+package flappy.features
 
 import flappy.FlappyBaseAgent
-import flappy.FlappyFunctionBase
+import flappy.FlappyFeatureBase
 import flappy.LLMGenerateConfig
 
 
@@ -11,7 +11,7 @@ class FlappyInvokeFunction<Args : Any, Ret : Any>(
   args: Class<Args>,
   returnType: Class<Ret>,
   val invoker: suspend (args: Args, agent: FlappyBaseAgent) -> Ret,
-) : FlappyFunctionBase<Args, Ret>(
+) : FlappyFeatureBase<Args, Ret>(
   name = name,
   argsType = args,
   returnType = returnType

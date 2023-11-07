@@ -199,10 +199,218 @@ const agent = createFlappyAgent({
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+public class Law {
+  public static final String LAW_EXECUTE_PLAN_PROMPT = "Find the latest case with the plaintiff being families of victims and return its metadata.";
+  static final String MOCK_LAWSUIT_DATA =
+    "As Alex Jones continues telling his Infowars audience about his money problems and pleads for them to buy his products, his own documents show life is not all that bad — his net worth is around $14 million and his personal spending topped $93,000 in July alone, including thousands of dollars on meals and entertainment. The conspiracy theorist and his lawyers file monthly financial reports in his personal bankruptcy case, and the latest one has struck a nerve with the families of victims of Sandy Hook Elementary School shooting. They're still seeking the $1.5 billion they won last year in lawsuits against Jones and his media company for repeatedly calling the 2012 massacre a hoax on his shows. “It is disturbing that Alex Jones continues to spend money on excessive household expenditures and his extravagant lifestyle when that money rightfully belongs to the families he spent years tormenting,” said Christopher Mattei, a Connecticut lawyer for the families. “The families are increasingly concerned and will continue to contest these matters in court.” In an Aug. 29 court filing, lawyers for the families said that if Jones doesn’t reduce his personal expenses to a “reasonable” level, they will ask the bankruptcy judge to bar him from “further waste of estate assets,” appoint a trustee to oversee his spending, or dismiss the bankruptcy case. On his Infowars show Tuesday, Jones said he’s not doing anything wrong.";
+  public static FlappyFeatureBase<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
+    "getLatestLawsuitsByPlaintiff",
+    "Get the latest lawsuits by plaintiff.",
+    GetLatestLawsuitsArguments.class,
+    String.class,
+    (a, agent, $completion) -> MOCK_LAWSUIT_DATA
+  );
+  public static FlappyFeatureBase<?, ?> lawGetMeta = new FlappySynthesizedFunction(
+    "getMeta",
+    "Extract meta data from a lawsuit full text.",
+    LawMetaArguments.class,
+    LawMetaReturn.class
+  );
+
+  public static void main(String[] args) throws ExecutionException, InterruptedException {
+    Dotenv dotenv = Dotenv.load();
+    ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+
+    FlappyBaseAgent agent = new FlappyBaseAgent(
+      llm, Arrays.asList(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
+    );
+  }
+
+  public enum Verdict {
+    Innocent, Guilty, Unknown
+  }
+
+  public static class LawMetaReturn {
+    @FlappyField
+    Verdict verdict;
+
+    @FlappyField
+    String plaintiff;
+
+    @FlappyField
+    String defendant;
+
+    @FlappyField
+    List<String> judgeOptions;
+
+    public Verdict getVerdict() {
+      return verdict;
+    }
+
+    public void setVerdict(Verdict verdict) {
+      this.verdict = verdict;
+    }
+
+    public String getPlaintiff() {
+      return plaintiff;
+    }
+
+    public void setPlaintiff(String plaintiff) {
+      this.plaintiff = plaintiff;
+    }
+
+    public String getDefendant() {
+      return defendant;
+    }
+
+    public void setDefendant(String defendant) {
+      this.defendant = defendant;
+    }
+
+    public List<String> getJudgeOptions() {
+      return judgeOptions;
+    }
+
+    public void setJudgeOptions(List<String> judgeOptions) {
+      this.judgeOptions = judgeOptions;
+    }
+  }
+
+  static class GetLatestLawsuitsArguments {
+    @FlappyField
+    String plaintiff;
+
+    @FlappyField(description = "For demo purpose. set to False")
+    Boolean arg1;
+
+    @FlappyField(description = "ignore it", optional = true)
+    List<String> arg2 = null;
+
+    public String getPlaintiff() {
+      return plaintiff;
+    }
+
+    public void setPlaintiff(String plaintiff) {
+      this.plaintiff = plaintiff;
+    }
+
+    public Boolean getArg1() {
+      return arg1;
+    }
+
+    public void setArg1(Boolean arg1) {
+      this.arg1 = arg1;
+    }
+
+    public List<String> getArg2() {
+      return arg2;
+    }
+
+    public void setArg2(List<String> arg2) {
+      this.arg2 = arg2;
+    }
+  }
+
+  static class LawMetaArguments {
+    @FlappyField(description = "Lawsuit full text.")
+    String lawsuit;
+
+    public String getLawsuit() {
+      return lawsuit;
+    }
+
+    public void setLawsuit(String lawsuit) {
+      this.lawsuit = lawsuit;
+    }
+  }
+}
+```
+
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
-    Coming soon
+
+```kotlin
+import flappy.FlappyBaseAgent
+import flappy.annotations.FlappyField
+import flappy.features.FlappyInvokeFunction
+import flappy.features.FlappySynthesizedFunction
+import flappy.llms.ChatGPT
+import io.github.cdimascio.dotenv.dotenv
+
+enum class Verdict {
+  Innocent, Guilty, Unknown
+}
+
+const val MOCK_LAWSUIT_DATA =
+  """As Alex Jones continues telling his Infowars audience about his money problems and pleads for them to buy his products, his own documents show life is not all that bad — his net worth is around $14 million and his personal spending topped $93,000 in July alone, including thousands of dollars on meals and entertainment. The conspiracy theorist and his lawyers file monthly financial reports in his personal bankruptcy case, and the latest one has struck a nerve with the families of victims of Sandy Hook Elementary School shooting. They're still seeking the $1.5 billion they won last year in lawsuits against Jones and his media company for repeatedly calling the 2012 massacre a hoax on his shows. “It is disturbing that Alex Jones continues to spend money on excessive household expenditures and his extravagant lifestyle when that money rightfully belongs to the families he spent years tormenting,” said Christopher Mattei, a Connecticut lawyer for the families. “The families are increasingly concerned and will continue to contest these matters in court.” In an Aug. 29 court filing, lawyers for the families said that if Jones doesn’t reduce his personal expenses to a “reasonable” level, they will ask the bankruptcy judge to bar him from “further waste of estate assets,” appoint a trustee to oversee his spending, or dismiss the bankruptcy case. On his Infowars show Tuesday, Jones said he’s not doing anything wrong."""
+
+class LawMetaArguments(
+  @FlappyField(description = "Lawsuit full text.")
+  val lawsuit: String
+)
+
+class LawMetaReturn(
+  @FlappyField
+  val verdict: Verdict,
+
+  @FlappyField
+  val plaintiff: String,
+
+  @FlappyField
+  val defendant: String,
+
+  @FlappyField
+  val judgeOptions: List<String>
+)
+
+val lawGetMeta = FlappySynthesizedFunction(
+  name = "getMeta",
+  description = "Extract meta data from a lawsuit full text.",
+  args = LawMetaArguments::class.java,
+  returnType = LawMetaReturn::class.java,
+)
+
+class GetLatestLawsuitsArguments(
+  @FlappyField
+  val plaintiff: String,
+
+  @FlappyField(description = "For demo purpose. set to False")
+  val arg1: Boolean,
+
+  @FlappyField(description = "ignore it", optional = true)
+  val arg2: List<String>?
+)
+
+
+val lawGetLatestLawsuitsByPlaintiff = FlappyInvokeFunction(
+  name = "getLatestLawsuitsByPlaintiff",
+  description = "Get the latest lawsuits by plaintiff.",
+  args = GetLatestLawsuitsArguments::class.java,
+  returnType = String::class.java,
+  invoker = { _, _ -> MOCK_LAWSUIT_DATA }
+)
+
+const val LAW_EXECUTE_PLAN_PROMPT =
+  "Find the latest case with the plaintiff being families of victims and return its metadata."
+
+
+suspend fun main(args: Array<String>) {
+  val dotenv = dotenv()
+
+  val chatGPT = ChatGPT(
+    ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  )
+
+  val agent = FlappyBaseAgent(
+    maxRetry = 2,
+    inferenceLLM = chatGPT,
+    features = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
+  )
+}
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
@@ -228,16 +436,16 @@ agent.executePlan('Find the latest case with the plaintiff being families of vic
   <TabItem value="java" label="Java" default>
 
 ```java
-  Future<LawMetaReturn> future = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+Future<LawMetaReturn> future = agent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
 ```
 
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
 
 ```kotlin
-  lawAgent.use {
-    it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
-  }
+agent.use {
+  it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+}
 ```
 
   </TabItem>
@@ -261,10 +469,20 @@ agent.callFeature('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+Future<String> future = agent.callFeatureAsync("getMeta", LAW_EXECUTE_PLAN_PROMPT);
+```
+
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
-    Coming soon
+
+```kotlin
+agent.use {
+  val future = it.callFeature<String>("getMeta", LAW_EXECUTE_PLAN_PROMPT)
+}
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
@@ -295,10 +513,20 @@ agent.callFeature('pythonSandbox', {
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+Future<String> future = agent.executePlanAsync("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?");
+```
+
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
-    Coming soon
+
+```kotlin
+agent.use {
+  it.executePlan<String>("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?")
+}
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
