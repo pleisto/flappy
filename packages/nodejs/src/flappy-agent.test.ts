@@ -125,7 +125,7 @@ test('create flappy agent normally', async () => {
   const ok: IsNever<InvokeFunctionType> extends true ? true : false = false
   const foo: Parameters<InvokeFunctionType['call']>[1]['lawsuit'] = 'foo'
   const name: InvokeFunctionType['define']['name'] = 'invokeFunction'
-  expect(await agent.callFunction('invokeFunction', { lawsuit: 'foo' })).toBe(invokeValue)
+  expect(await agent.callFeature('invokeFunction', { lawsuit: 'foo' })).toBe(invokeValue)
 })
 
 describe('execute plan', () => {

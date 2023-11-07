@@ -18,7 +18,7 @@ void agent.executePlan(
   'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?'
 )
 
-// void agent.callFunction('pythonSandbox', {
+// void agent.callFeature('pythonSandbox', {
 //   code: `There are some rabbits and chickens in a barn.
 //   What is the number of chickens if there are 396 legs and 150 heads in the barn?`
 // })

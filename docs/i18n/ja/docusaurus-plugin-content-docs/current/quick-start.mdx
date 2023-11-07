@@ -159,8 +159,8 @@ const MOCK_LAWSUIT_DATA =
 
 const agent = createFlappyAgent({
   llm: chatGpt,
-  // Define your agent's functions.
-  functions: [
+  // Define your agent's features.
+  features: [
     createCodeInterpreter(),
     createSynthesizedFunction({
       name: 'getMeta',
@@ -254,7 +254,7 @@ You can also call synthesized function directly without executing a action plan.
   <TabItem value="nodejs" label="NodeJS (TypeScript) with ChatGPT" default>
 
 ```ts
-agent.callFunction('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
+agent.callFeature('getMeta', {lawsuit: MOCK_LAWSUIT_DATA})
 ```
 
   </TabItem>
@@ -283,9 +283,9 @@ agent.executePlan(
   'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?'
 )
 
-// or call function directly:
+// or call feature directly:
 
-agent.callFunction('pythonSandbox', {
+agent.callFeature('pythonSandbox', {
   code: 'There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?'
 })
 ```

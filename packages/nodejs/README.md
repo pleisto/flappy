@@ -40,7 +40,7 @@ const gpt35 = new ChatGPT(
 
 const exampleAgent = createFlappyAgent({
   llm: gpt35,
-  functions: []
+  features: []
 })
 ```
 
@@ -59,7 +59,7 @@ import { createFlappyAgent, createSynthesizedFunction, z } from '@pleisto/node-a
 
 const exampleAgent = createFlappyAgent({
   llm: gpt35,
-  functions: [
+  features: [
     createSynthesizedFunction({
       name: 'getMeta',
       description: 'Extract meta data from a lawsuit full text.',
@@ -91,7 +91,7 @@ const MOCK_LAWSUIT_DATA =
 
 const exampleAgent = createFlappyAgent({
   llm: gpt35,
-  functions: [
+  features: [
     // ...
     createInvokeFunction({
       name: 'getLatestLawsuitsByPlaintiff',
