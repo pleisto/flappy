@@ -157,6 +157,13 @@ tasks.jacocoTestReport {
   }
 }
 
+tasks.withType<Sign>().configureEach {
+  onlyIf("skip local") {
+    !System.getenv().contains("SKIP_SIGN")
+  }
+}
+
+
 //https://kotlinlang.org/docs/dokka-gradle.html#package-options
 tasks.withType<DokkaTask>().configureEach {
   moduleName.set(project.name)

@@ -56,6 +56,9 @@ jobs:
       - name: Install
         run: ./mvnw clean compile spotless:check -DskipTests -D"gpg.skip"
 
+      - name: Package
+        run: ./mvnw package
+
   build:
     name: java-bindings-ci-build
     uses: ./.github/workflows/java-bindings-build-common.yml

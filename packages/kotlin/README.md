@@ -1,5 +1,7 @@
 # Module flappy
 
+This package is the Kotlin version of the flappy implementation.
+
 <div align="center">
 
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
@@ -7,8 +9,6 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v.svg?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fpleisto%2Fflappy%2Fmaven-metadata.xml&color=blue)](https://central.sonatype.com/artifact/com.pleisto/flappy)
 [![Documentation](https://javadoc.io/badge/com.pleisto/flappy.svg)](https://javadoc.io/doc/com.pleisto/flappy)
 [![codecov](https://codecov.io/gh/pleisto/flappy/graph/badge.svg?token=8C94YY3KBD)](https://codecov.io/gh/pleisto/flappy)
-
-This package is the Kotlin version of the flappy implementation.
 
 [Install](#installation) •
 [Usage](#usage) •
