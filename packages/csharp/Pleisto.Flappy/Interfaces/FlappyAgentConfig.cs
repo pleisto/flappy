@@ -27,7 +27,6 @@ namespace Pleisto.Flappy.Interfaces
     /// <summary>
     /// Maximum number of retries when language model generation failed.
     /// </summary>
-    //[AllowNull]
     public int? Retry { get; set; }
 
     /// <summary>

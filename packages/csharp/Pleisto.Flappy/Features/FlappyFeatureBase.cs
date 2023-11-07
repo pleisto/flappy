@@ -4,7 +4,7 @@ using Pleisto.Flappy.Features.Invoke;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.Utils;
 
-namespace Pleisto.Flappy
+namespace Pleisto.Flappy.Features
 {
   /// <summary>
   /// Basic of flappy fature
