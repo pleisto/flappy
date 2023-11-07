@@ -1,5 +1,4 @@
 using Newtonsoft.Json.Schema.Generation;
-using System.Text.RegularExpressions;
 
 namespace Pleisto.Flappy
 {

@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Pleisto.Flappy.LLM;
-using System;
 
 namespace Pleisto.Flappy.Tests.LLM
 {

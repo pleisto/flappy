@@ -76,7 +76,6 @@ namespace Pleisto.Flappy.LLM
       client.DefaultRequestHeaders.Add("X-BC-Timestamp", ts);
       client.DefaultRequestHeaders.Add("X-BC-Sign-Algo", "MD5");
 
-
       client.DefaultRequestHeaders.Add("X-BC-Signature", sign);
       using var response = await client.PostAsync("https://api.baichuan-ai.com/v1/chat", new StringContent(content, Encoding.UTF8, "application/json"));
       responseJson = JObject.Parse(await response.Content.ReadAsStringAsync());

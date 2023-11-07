@@ -1,14 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OpenAI_API;
+using Pleisto.Flappy.Features.Invoke;
+using Pleisto.Flappy.Features.Syntehesized;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Law;
-using System;
-using System.Threading.Tasks;
-using Pleisto.Flappy.Features;
-using Pleisto.Flappy.Features.Invoke;
-using Pleisto.Flappy.Features.Syntehesized;
 
 namespace Pleisto.Flappy.Examples.Law
 {

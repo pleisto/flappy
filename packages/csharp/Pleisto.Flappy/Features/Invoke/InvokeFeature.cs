@@ -29,7 +29,7 @@ namespace Pleisto.Flappy.Features.Invoke
     /// <returns></returns>
     public override async Task<TReturn> Call(FlappyAgent agent, TArgs args)
     {
-      return await Define.Resolve(args);
+      return await (Define as InvokeFeatureDefinition<TArgs, TReturn>).Resolve(args);
     }
   }
 }

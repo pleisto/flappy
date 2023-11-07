@@ -21,6 +21,5 @@ namespace Pleisto.Flappy.Tests
         }
       }.JsonToString());
     }
-
   }
 }

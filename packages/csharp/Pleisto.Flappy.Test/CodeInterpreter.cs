@@ -1,8 +1,6 @@
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Pleisto.Flappy.CodeInterpreter;
-using System;
-using System.Collections.Generic;
 
 namespace Pleisto.Flappy.Tests
 {

@@ -9,5 +9,14 @@ namespace Pleisto.Flappy.Interfaces
     where TArgs : class
     where TReturn : class
   {
+    /// <summary>
+    /// Name of feature
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// Description of feature
+    /// </summary>
+    public string Description { get; }
   }
 }

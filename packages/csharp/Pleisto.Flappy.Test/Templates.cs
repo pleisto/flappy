@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Pleisto.Flappy.Utils;
-using System;
 
 namespace Pleisto.Flappy.Tests
 {
@@ -17,6 +16,7 @@ namespace Pleisto.Flappy.Tests
     {
       Assert.Pass(TemplateRenderer.GetTemplate("features.synthesized.systemMessage"));
     }
+
     [Test]
     public void ReadResourceWithExtension()
     {
@@ -26,7 +26,7 @@ namespace Pleisto.Flappy.Tests
     [Test]
     public void RenderResource()
     {
-      Assert.Pass(TemplateRenderer.Render("features.synthesized.systemMessage.mustache",new System.Collections.Generic.Dictionary<string, object>
+      Assert.Pass(TemplateRenderer.Render("features.synthesized.systemMessage.mustache", new System.Collections.Generic.Dictionary<string, object>
       {
         ["argsSchema"] = "argsSchemaReplaced",
         ["returnTypeSchema"] = "returnTypeSchemaReplaced",

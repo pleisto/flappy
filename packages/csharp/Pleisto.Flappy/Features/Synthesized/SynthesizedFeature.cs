@@ -67,7 +67,7 @@ namespace Pleisto.Flappy.Features.Syntehesized
           if (retry <= 0)
             throw new TooMoreRetryException(retry, ex);
           retry -= 1;
-          if (result?.Success == true && (result.Data?.Length ?? 0) >0)
+          if (result?.Success == true && (result.Data?.Length ?? 0) > 0)
           {
             requestMessage = originalRequestMessage.Union(new ChatMLMessage[]
             {

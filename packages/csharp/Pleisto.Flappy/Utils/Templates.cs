@@ -1,11 +1,5 @@
-using Microsoft.Extensions.FileProviders;
 using Mustache;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Utils
 {
@@ -53,7 +47,7 @@ namespace Pleisto.Flappy.Utils
     /// </param>
     /// <param name="argument">render argument</param>
     /// <returns></returns>
-    public static string Render(string name, Dictionary<string,object> argument)
+    public static string Render(string name, Dictionary<string, object> argument)
     {
       FormatCompiler compiler = new FormatCompiler();
       Generator generator = compiler.Compile(GetTemplate(name));

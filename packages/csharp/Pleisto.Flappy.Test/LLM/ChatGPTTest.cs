@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using OpenAI_API;
 using Pleisto.Flappy.LLM;
-using System;
 
 namespace Pleisto.Flappy.Tests.LLM
 {

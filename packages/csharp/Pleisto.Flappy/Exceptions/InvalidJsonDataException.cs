@@ -1,6 +1,5 @@
 namespace Pleisto.Flappy.Exceptions
 {
-
   /// <summary>
   /// Invalid Json data exception
   /// </summary>

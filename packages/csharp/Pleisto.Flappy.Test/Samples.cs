@@ -3,8 +3,6 @@ using Pleisto.Flappy.Examples;
 using Pleisto.Flappy.Examples.CodeInterpreter;
 using Pleisto.Flappy.Examples.Law;
 using Pleisto.Flappy.Examples.Resume;
-using System;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Tests
 {

@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace Pleisto.Flappy.Test.Resume
 {
   public class MetaReturnEducation
