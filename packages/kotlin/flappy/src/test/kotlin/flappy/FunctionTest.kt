@@ -93,6 +93,16 @@ class FunctionTest {
       sampleFunction.definition().asJSON(),
       """{"name":"getMeta","description":"Extract meta data from a lawsuit full text.","parameters":{"properties":{"args":{"properties":{"argsString":{"type":"string","description":"Lawsuit full text."},"argsLong":{"type":"long","description":"Long foo bar"}},"required":["argsString","argsLong"],"description":"Function arguments","type":"object"},"returnType":{"properties":{"enum":{"type":"string","enum":["Innocent","Guilty","Unknown"]},"optionalString":{"type":"string"},"string":{"type":"string"},"int":{"type":"int"},"long":{"type":"long"},"bool":{"type":"boolean"},"double":{"type":"double"},"float":{"type":"float"},"any":{"type":"object"},"map":{"type":"object"},"listString":{"type":"array","items":{"type":"string"}},"arrayString":{"type":"array","items":{"type":"string"}},"arrayInteger":{"type":"array","items":{"type":"int"}},"arrayEnum":{"type":"array","items":{"type":"string","enum":["Innocent","Guilty","Unknown"]}}},"required":["enum","optionalString","string","int","long","bool","double","float","any","map","listString","arrayString","arrayInteger","arrayEnum"],"description":"Function return type","type":"object"}},"type":"object"}}"""
     )
+
+    assertEquals(
+      sampleFunction.buildRepairMessages("content", "reason").asJSON(),
+      """[{"content":"content","role":"ASSISTANT"},{"content":"Your response is invalid for the following reason:\n\n\nPlease try again.","role":"USER"}]"""
+    )
+
+    assertEquals(
+      sampleFunction.buildChatMessages(SampleArguments("input1", 1)).asJSON(),
+      """[{"content":"Extract meta data from a lawsuit full text.\nUser request according to the following JSON Schema:\n{\"properties\":{\"argsString\":{\"type\":\"string\",\"description\":\"Lawsuit full text.\"},\"argsLong\":{\"type\":\"long\",\"description\":\"Long foo bar\"}},\"required\":[\"argsString\",\"argsLong\"],\"description\":\"Function arguments\",\"type\":\"object\"}\n\nTranslate it into JSON objects according to the following JSON Schema:\n{\"properties\":{\"enum\":{\"type\":\"string\",\"enum\":[\"Innocent\",\"Guilty\",\"Unknown\"]},\"optionalString\":{\"type\":\"string\"},\"string\":{\"type\":\"string\"},\"int\":{\"type\":\"int\"},\"long\":{\"type\":\"long\"},\"bool\":{\"type\":\"boolean\"},\"double\":{\"type\":\"double\"},\"float\":{\"type\":\"float\"},\"any\":{\"type\":\"object\"},\"map\":{\"type\":\"object\"},\"listString\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"arrayString\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"arrayInteger\":{\"type\":\"array\",\"items\":{\"type\":\"int\"}},\"arrayEnum\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"enum\":[\"Innocent\",\"Guilty\",\"Unknown\"]}}},\"required\":[\"enum\",\"optionalString\",\"string\",\"int\",\"long\",\"bool\",\"double\",\"float\",\"any\",\"map\",\"listString\",\"arrayString\",\"arrayInteger\",\"arrayEnum\"],\"description\":\"Function return type\",\"type\":\"object\"}","role":"SYSTEM"},{"content":"user request:{\"argsString\":\"input1\",\"argsLong\":1}\n\njson object:","role":"USER"}]"""
+    )
   }
 
 

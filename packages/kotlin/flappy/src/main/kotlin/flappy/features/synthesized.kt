@@ -14,6 +14,27 @@ class FlappySynthesizedFunction<Args : Any, Ret : Any>(
 ) {
   override fun buildDescription(): String = description
 
+  private fun buildSystemMessage() = SystemMessage(
+    Template.render(
+      "features/synthesized/systemMessage.mustache",
+      mapOf(
+        "describe" to buildDescription(),
+        "argsSchema" to argsTypeSchemaPropertiesString,
+        "returnTypeSchema" to returnTypeSchemaPropertiesString
+      )
+    )
+  )
+
+  private fun buildUserMessage(args: Args) = UserMessage(
+    Template.render(
+      "features/synthesized/userMessage.mustache",
+      mapOf("prompt" to dumpArgs(args))
+    )
+  )
+
+  internal fun buildChatMessages(args: Args) = listOf(buildSystemMessage(), buildUserMessage(args))
+
+
   override suspend fun invoke(args: Args, agent: FlappyBaseAgent, config: LLMGenerateConfig?): Ret {
     val chatMessages = this.buildChatMessages(args)
 

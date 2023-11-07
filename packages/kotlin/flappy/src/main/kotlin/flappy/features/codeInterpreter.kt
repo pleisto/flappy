@@ -11,23 +11,24 @@ class FlappyCodeInterpreter(private val network: Boolean = false) : FlappyFeatur
   argsType = String::class.java,
   returnType = String::class.java
 ) {
-  override fun buildDescription(): String {
-    return """
-      An safe sandbox that only support the built-in library. The execution time is limited to 120 seconds. The task is to define a function named "main" that doesn't take any parameters. The output should be a String.
-              Network access is ${
-      if (network) {
-        "enabled"
-      } else {
-        "disabled"
-      }
-    }
-    """.trimIndent()
-  }
+  override fun buildDescription() =
+    Template.render(
+      "features/codeInterpreter/description.mustache",
+      mapOf("enabled" to network)
+    )
+
 
   private val sandbox = FlappySandbox()
 
   override suspend fun invoke(args: ArgsType, agent: FlappyBaseAgent, config: LLMGenerateConfig?): RetType {
-    val result = sandbox.evalPython(FlappySandbox.Input(code = args, network = network))
+    this.logger.info("eval $args")
+    if (!args.startsWith("def main():")) throw FlappyException.EvalException("Function \"main\" not found")
+
+    val code = Template.render(
+      "features/codeInterpreter/evalCode.mustache",
+      mapOf("code" to args)
+    )
+    val result = sandbox.evalPython(FlappySandbox.Input(code = code, network = network))
 
     if (result.stderr.isNotEmpty()) {
       throw FlappyException.EvalException(result.stderr)

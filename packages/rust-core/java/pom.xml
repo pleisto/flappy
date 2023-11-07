@@ -28,7 +28,6 @@
   <artifactId>flappy-java-bindings</artifactId>
   <version>0.0.8</version>
   <name>flappy-java-bindings</name>
-  <url>https://github.com/pleisto/flappy</url>
   <description>Java bindings of flappy</description>
   <inceptionYear>2023</inceptionYear>
   <licenses>

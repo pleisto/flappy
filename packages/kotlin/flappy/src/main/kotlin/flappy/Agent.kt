@@ -70,29 +70,18 @@ class FlappyBaseAgent @JvmOverloads constructor(
       ?: throw FlappyException.FatalException("feature `$name` not found, supported: ${features.map { it.name }}")
 
   private fun buildUserMessage(prompt: String) = UserMessage(
-    """
-            Prompt: $prompt
-
-            Plan array:
-        """.trimIndent()
+    Template.render("agent/userMessage.mustache", mapOf("prompt" to prompt)),
   )
 
 
   private fun buildSystemMessage() = SystemMessage(
-    """
-        You are an AI assistant that makes step-by-step plans to solve problems, utilizing external features. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
-        Make as few plans as possible if it can solve the problem.
-        The features list is described using the following YAML schema array:
-        $functionDefinitionString
-
-        Your specified plans should be output as JSON object array and adhere to the following JSON schema:
-        $lanOutputSchemaString
-
-        Only the listed features are allowed to be used.
-    """.trimIndent()
+    Template.render(
+      "agent/systemMessage.mustache",
+      mapOf("functions" to functionDefinitionString, "returnSchema" to lanOutputSchemaString)
+    ),
   )
 
-  private fun buildExecuteMessage(prompt: String) = listOf(buildSystemMessage(), buildUserMessage(prompt))
+  internal fun buildExecuteMessage(prompt: String) = listOf(buildSystemMessage(), buildUserMessage(prompt))
 
 
   suspend fun <R> executePlan(prompt: String): R {

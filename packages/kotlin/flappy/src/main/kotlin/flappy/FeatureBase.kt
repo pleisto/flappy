@@ -34,35 +34,13 @@ abstract class FlappyFeatureBase<Args : Any, Ret : Any>(
     )
   )
 
-
-  private fun buildSystemMessage() = SystemMessage(
-    """
-            ${buildDescription()}
-            User request according to the following JSON Schema:
-            $argsTypeSchemaPropertiesString
-
-            Translate it into JSON objects according to the following JSON Schema: $returnTypeSchemaPropertiesString
-        """.trimIndent()
-  )
-
-  private fun buildUserMessage(args: Args) = UserMessage(
-    """
-        User request:${dumpArgs(args)}
-
-        json object:
-    """.trimIndent()
-  )
-
-  protected fun buildChatMessages(args: Args) = listOf(buildSystemMessage(), buildUserMessage(args))
-
-  protected fun buildRepairMessages(content: String, reason: String) = listOf(
+  internal fun buildRepairMessages(content: String, reason: String) = listOf(
     AssistantMessage(content),
     UserMessage(
-      """
-            You response is invalid for the following reason:
-            $reason
-            Please try again.
-        """.trimIndent()
+      Template.render(
+        "error/retry.mustache",
+        mapOf("reason" to reason)
+      ),
     )
   )
 
