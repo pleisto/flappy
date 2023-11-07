@@ -3,12 +3,12 @@ namespace Pleisto.Flappy.Exceptions
   /// <summary>
   /// Codeinterpreter too more retry exception
   /// </summary>
-  public class CodeInterpreterRetryException : Exception
+  public class TooMoreRetryException : Exception
   {
-    internal CodeInterpreterRetryException(int retryCount, Exception inner)
-      : base($"retried count={retryCount}", inner)
+    internal TooMoreRetryException(int count, Exception inner)
+      : base($"retried count={count}", inner)
     {
-      RetryCount = retryCount;
+      this.RetryCount = count;
     }
 
     /// <summary>

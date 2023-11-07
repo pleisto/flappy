@@ -10,6 +10,8 @@ using Pleisto.Flappy.Utils;
 using System.ComponentModel;
 using Pleisto.Flappy.Features.Invoke;
 using Pleisto.Flappy.Features.Syntehesized;
+using System.Net.Http.Headers;
+using System.Numerics;
 
 namespace Pleisto.Flappy
 {
@@ -36,7 +38,7 @@ namespace Pleisto.Flappy
     /// <summary>
     /// Configured of Retry Count
     /// </summary>
-    private readonly int retry = 0;
+    internal readonly int retry = 0;
 
     /// <summary>
     /// Default of Retry Count
@@ -60,7 +62,7 @@ namespace Pleisto.Flappy
     {
       this.config = config;
       if ((config.Features?.Length ?? 0) <= 0)
-        throw new NullReferenceException($"config.Features not be null");
+        throw new NullReferenceException($"{nameof(Features)} not be null");
       this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? config.LLMPlaner ?? this.llm;
       this.retry = config.Retry ?? DEFAULT_RETRY;
@@ -110,55 +112,94 @@ namespace Pleisto.Flappy
     /// <exception cref="InvalidProgramException"></exception>
     public async Task<object> CallFeature(string name, object args)
     {
-      var fn = FindFeature(name) ?? throw new InvalidProgramException($"no function found: {name}");
+      var fn = FindFeature(name) ?? throw new InvalidProgramException($"no feature found: {name}");
       return await fn.SharpSystemCall(this, JObject.FromObject(args));
     }
 
     /// <summary>
-    ///
+    /// Create and Execute Plan
     /// </summary>
     /// <param name="prompt">user input prompt</param>
     /// <param name="enableCot">enable CoT to improve the plan quality, but it will be generally more tokens. Default is true.</param>
     /// <returns></returns>
-    public async Task<object> CreateExecutePlan(string prompt, bool enableCot = true)
+    public async Task<object> ExecutePlan(string prompt, bool enableCot = true)
     {
-      var features = new JArray(from i in FeatureDefinitions()
-                                select JObject.FromObject(i)).JsonToString();
+      JSchema zodSchema;
+      var schema = GetSchemaGenerator();
+      if (enableCot)
+        zodSchema = schema.Generate(typeof(List<LanOutputSchemaCot>));
+      else
+        zodSchema = schema.Generate(typeof(List<LanOutputSchema>));
 
-      var zodSchema = GetLanOutputSchema(enableCot);
-
-      var returnSchema = zodSchema.JsonToString();
-
-      var requestMessage = new ChatMLMessage[]
+      var originalRequestMesasge = new ChatMLMessage[]
       {
         new ChatMLMessage
         {
           Role = ChatMLMessageRole.System,
-          Content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
-Make as few plans as possible if it can solve the problem.
-The functions list is described using the following JSON schema array:
-{features}
-
-Your specified plans should be output as JSON object array and adhere to the following JSON schema:
-{returnSchema}
-
-Only the listed functions are allowed to be used."
+          Content = TemplateRenderer.Render("agent.systemMessage",new Dictionary<string, object>
+          {
+            ["functions"] = new JArray(from i in FeatureDefinitions()
+                                select JObject.FromObject(i)).JsonToString(),
+            ["returnSchema"] = zodSchema.JsonToString()
+          })
         },
         new ChatMLMessage
         {
           Role = ChatMLMessageRole.User,
-          Content = $"Prompt: {prompt}\n\nPlan array:"
+          Content = TemplateRenderer.Render("agent.userMessage",new Dictionary<string, object>
+          {
+            ["prompt"] = prompt
+          })
         }
       };
-      var result = await llmPlaner.ChatComplete(requestMessage, null);
-      if (result.Success == false)
-      {
-        throw new LLMNotSuccessException();
-      }
-      var plan = ParseComplete(result);
+      var requestMessage = originalRequestMesasge;
+      int retryCount = retry;
+      JArray plan = null;
+      ChatMLResponse result = null;
+      while (true)
+        try
+        {
+          if (retryCount != retry)
+          {
+            logger.LogWarning("Plan retry {retryCount}/{retry}", retryCount, retry);
+          }
+          result = await llmPlaner.ChatComplete(requestMessage, null);
+          if (result.Success == false)
+          {
+            throw new LLMNotSuccessException();
+          }
+          plan = ParseComplete(result);
 
-      if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
-        throw new InvalidJsonWithSchemaValidationException(errorList);
+          if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
+            throw new InvalidJsonWithSchemaValidationException(errorList);
+          break;
+        }
+        catch (Exception ex)
+        {
+          logger.LogError(ex, "Retry {retry} of {retryCount}", retryCount, retry);
+          if (retryCount <= 0)
+            throw new TooMoreRetryException(retryCount, ex);
+          retryCount -= 1;
+          if (result?.Success == true && (result.Data?.Length ?? 0) > 0)
+          {
+            requestMessage = originalRequestMesasge.Union(new ChatMLMessage[]
+            {
+              new ChatMLMessage
+              {
+                  Role = ChatMLMessageRole.System,
+                  Content = result?.Data ?? ""
+              },
+              new ChatMLMessage
+              {
+                Role = ChatMLMessageRole.User,
+                Content = TemplateRenderer.Render("error.retry",new Dictionary<string, object>
+                {
+                  ["message"]= ex.Message
+                })
+              }
+            }).ToArray();
+          }
+        }
 
       LanOutputSchema[] plans;
       if (enableCot)
@@ -228,7 +269,7 @@ Only the listed functions are allowed to be used."
     /// <param name="prompt"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public async Task<object> CallCodeInterpreter(string prompt)
+   /* public async Task<object> CallCodeInterpreter(string prompt)
     {
       if (config.CodeInterpreter == null)
         throw new CodeInterpreterNotEnabledException();
@@ -275,7 +316,7 @@ Only the listed functions are allowed to be used."
         {
           logger?.LogError("Error: {exString}", ex.ToString());
           if (retry <= 0)
-            throw new CodeInterpreterRetryException(retry, ex);
+            throw new TooMoreRetryException(retry, ex);
           retry -= 1;
           if (result?.Success == true && result.Data != null)
           {
@@ -298,16 +339,7 @@ Only the listed functions are allowed to be used."
           }
         }
       }
-    }
-
-    internal static JSchema GetLanOutputSchema(bool enableCot)
-    {
-      var schema = GetSchemaGenerator();
-      if (enableCot)
-        return schema.Generate(typeof(List<LanOutputSchemaCot>));
-      else
-        return schema.Generate(typeof(List<LanOutputSchema>));
-    }
+    }*/
 
     private class LanOutputSchemaCot : LanOutputSchema
     {

@@ -42,7 +42,6 @@ print(platform.python_version())
       {
       });
       Console.WriteLine(JObject.FromObject(result).ToString());
-
     }
 
     /// <summary>

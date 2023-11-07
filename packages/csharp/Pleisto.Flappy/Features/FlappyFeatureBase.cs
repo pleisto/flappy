@@ -38,6 +38,11 @@ namespace Pleisto.Flappy.Features
     public string Name => Define.Name;
 
     /// <summary>
+    /// Description of feature
+    /// </summary>
+    public virtual string Description { get; set; }
+
+    /// <summary>
     /// Create Flappy Fature Base
     /// </summary>
     /// <param name="define">Feature Definition</param>

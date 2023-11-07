@@ -22,13 +22,5 @@ namespace Pleisto.Flappy.Tests
       }.JsonToString());
     }
 
-    /// <summary>
-    /// Test jsonschema format
-    /// </summary>
-    [Test]
-    public void GenerateJsonSchema()
-    {
-      Assert.Pass(FlappyAgent.GetLanOutputSchema(true).ToString());
-    }
   }
 }

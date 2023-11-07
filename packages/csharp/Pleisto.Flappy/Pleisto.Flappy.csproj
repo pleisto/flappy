@@ -47,7 +47,9 @@
       <Pack>True</Pack>
       <PackagePath>runtimes</PackagePath>
     </None>
+    <!-- Include template by embedded resources -->
     <EmbeddedResource Include="../../../templates/**/*.mustache">
+      <Visible>false</Visible>
     </EmbeddedResource>
   </ItemGroup>
 

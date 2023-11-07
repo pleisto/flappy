@@ -2,6 +2,7 @@ using Newtonsoft.Json.Linq;
 using Pleisto.Flappy.Exceptions;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM.Interfaces;
+using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Features.Syntehesized
 {
@@ -29,46 +30,62 @@ namespace Pleisto.Flappy.Features.Syntehesized
       var returnTypeSchema = schema.Generate(typeof(TReturn)); //extractSchema(callingSchema, "returnType");
       var argsSchema = schema.Generate(typeof(TArgs)); ;
       var prompt = JObject.FromObject(args); //(args as object) is string ? args as string : JObject.FromObject(args).ToString();
-      var requestMessage = new ChatMLMessage[]{
+      var originalRequestMessage = new ChatMLMessage[]{
                   new ChatMLMessage
                   {
                     Role = ChatMLMessageRole.System,
-                    Content = $@"{describe}
-User reqeust according to the following JSON Schema:
-${argsSchema}
-
-Translate it into JSON objecvts according to the following JSON Schema:
-{returnTypeSchema}"
+                    Content = TemplateRenderer.Render("features.synthesized.systemMessage",new Dictionary<string, object>
+                    {
+                      ["describe"] = describe,
+                      ["argsSchema"] = argsSchema.JsonToString(),
+                      ["returnTypeSchema"] = returnTypeSchema.JsonToString(),
+                    })
                   },
                   new ChatMLMessage
                   {
                     Role = ChatMLMessageRole.User,
-                    Content = $"user request:{prompt}\n\njson object:"
+                    Content = TemplateRenderer.Render("features.synthesized.userMessage",new Dictionary<string, object>
+                    {
+                      ["prompt"] = prompt,
+                    })
                   }
               };
-      var result = await agent.llm.ChatComplete(requestMessage);
-      try
-      {
-        var data = ParseComplete(result);
+      var requestMessage = originalRequestMessage;
+      ChatMLResponse result = null;
+      int retry = Options?.Retry ?? agent.retry;
 
-        return data;
-      }
-      catch (Exception ex)
-      {
-        var repaired = await agent.llm.ChatComplete(requestMessage.Union(new ChatMLMessage[]
+      while (true)
+        try
         {
-                    new ChatMLMessage{
-                        Role = ChatMLMessageRole.Assistant,
-                        Content= result.Data ?? ""
-                    },
-                    new ChatMLMessage{
-                        Role = ChatMLMessageRole.User,Content=@$"Your response is invalid for the following reason:
-${ex.Message}
+          result = await agent.llm.ChatComplete(requestMessage);
+          var data = ParseComplete(result);
 
-Please try again."}
-        }).ToArray(), null);
-        return ParseComplete(repaired);
-      }
+          return data;
+        }
+        catch (Exception ex)
+        {
+          if (retry <= 0)
+            throw new TooMoreRetryException(retry, ex);
+          retry -= 1;
+          if (result?.Success == true && (result.Data?.Length ?? 0) >0)
+          {
+            requestMessage = originalRequestMessage.Union(new ChatMLMessage[]
+            {
+              new ChatMLMessage{
+                Role = ChatMLMessageRole.Assistant,
+                Content = result?.Data ?? ""
+              },
+              new ChatMLMessage
+              {
+                Role= ChatMLMessageRole.User,
+                Content = TemplateRenderer.Render("error.retry",new Dictionary<string, object>
+                {
+                  ["message"] = ex.Message
+                })
+              }
+            }).ToArray();
+          }
+        }
     }
 
     private static TReturn ParseComplete(ChatMLResponse msg)

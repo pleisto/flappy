@@ -1,6 +1,7 @@
 using Pleisto.Flappy.CodeInterpreter;
 using Pleisto.Flappy.Features.Invoke;
 using Pleisto.Flappy.Interfaces;
+using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Features.CodeInterpreter
 {
@@ -23,6 +24,17 @@ namespace Pleisto.Flappy.Features.CodeInterpreter
     {
     }
 
+
+    /// <summary>
+    /// Description of codeinterpreter feature
+    /// </summary>
+    public override string Description
+    {
+      get => TemplateRenderer.Render("features.codeInterpreter.description", new Dictionary<string, object>
+      {
+        ["enabled"] = Options?.EnableNetwork ?? false
+      });
+    }
     /// <summary>
     /// CodeInterpreter call entry
     /// </summary>
@@ -32,6 +44,12 @@ namespace Pleisto.Flappy.Features.CodeInterpreter
     /// <exception cref="NotImplementedException"></exception>
     public override Task<TReturn> Call(FlappyAgent agent, TArgs args)
     {
+      if (string.IsNullOrWhiteSpace(args?.Code))
+        throw new InvalidProgramException($"null or whitespace codeinterpreter code");
+      if (args.Code.Contains("def main():"))
+        throw new InvalidProgramException("Function \"main\" not found");
+
+
       var result = NativeHandler.EvalPythonCode(args.Code, Options?.EnableNetwork ?? false, Options?.Env ?? new Dictionary<string, string>(), Options?.CacheDir);
       if (string.IsNullOrWhiteSpace(result.StdErr) == false)
         throw new Exception(result.StdErr);
