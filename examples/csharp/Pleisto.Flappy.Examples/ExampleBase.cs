@@ -1,7 +1,5 @@
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples
 {

@@ -1,14 +1,16 @@
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OpenAI_API;
+using Pleisto.Flappy.Features.Invoke;
+using Pleisto.Flappy.Features.Syntehesized;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Law;
-using System;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples.Law
 {
+  [Command("law-sample")]
   internal class LawCase : ExampleBase
   {
     public override async Task OnExecuteAsync()
@@ -23,16 +25,16 @@ namespace Pleisto.Flappy.Examples.Law
       var lawAgent = new FlappyAgent(new FlappyAgentConfig
       {
         LLM = gpt35,
-        Functions = new IFlappyFunction[]
+        Features = new IFlappyFeature[]
            {
-               new SynthesizedFunction<getMeta_Args,getMeta_Return>(new SynthesizedFunctionDefinition<getMeta_Args,getMeta_Return>
+               new SynthesizedFeature<getMeta_Args,getMeta_Return,FlappyFeatureOption>(new SynthesizedFeatureDefinition<getMeta_Args,getMeta_Return>
                {
                    Name = "getMeta",
                    Description = "Extract meta data from a lawsuit full text.",
                    Args = new getMeta_Args(),
                    ReturnType = new getMeta_Return()
                }),
-               new InvokeFunction<getLatestLawsuits_Args,getMeta_Args>(new InvokeFunctionDefinition<getLatestLawsuits_Args, getMeta_Args>
+               new InvokeFeature<getLatestLawsuits_Args,getMeta_Args,FlappyFeatureOption>(new InvokeFeatureDefinition<getLatestLawsuits_Args, getMeta_Args>
                {
                    Name = "getLatestLawsuitsByPlaintiff",
                    Description= "Get the latest lawsuits by plaintiff.",
@@ -52,7 +54,7 @@ namespace Pleisto.Flappy.Examples.Law
                })
            },
       }, null, null, Logger.CreateLogger<FlappyAgent>());
-      var data = await lawAgent.CreateExecutePlan("Find the resume of a frontend engineer and return their metadata.");
+      var data = await lawAgent.ExecutePlan("Find the resume of a frontend engineer and return their metadata.");
       Console.WriteLine($"====================== Final Result =========================");
       Console.WriteLine(data.ToString());
       Console.WriteLine($"====================== Final Result Of Data =========================");

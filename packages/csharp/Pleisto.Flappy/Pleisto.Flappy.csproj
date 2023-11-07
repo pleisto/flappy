@@ -1,24 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Authors>Pleisto</Authors>
 		<ProductName>Pleisto.Flappy</ProductName>
-		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1;net48;net472</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<LangVersion>11.0</LangVersion>
-		<AnalysisLevel>latest</AnalysisLevel>
-    <DebugType>embedded</DebugType>
-		<Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <WarningsAsErrors>IDE1006</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <!--Nuget Package Info-->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.4-alpha</Version>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
     
 	</PropertyGroup>
@@ -30,11 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="7.0.13" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Mustache" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageReference Include="OpenAI" Version="1.7.2" />
@@ -44,6 +37,10 @@
       <Pack>True</Pack>
       <PackagePath>runtimes</PackagePath>
     </None>
+    <!-- Include template by embedded resources -->
+    <EmbeddedResource Include="../../../templates/**/*.mustache">
+      <Visible>false</Visible>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

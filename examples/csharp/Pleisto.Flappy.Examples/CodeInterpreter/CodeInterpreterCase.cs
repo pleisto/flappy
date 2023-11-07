@@ -1,12 +1,13 @@
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using OpenAI_API;
+using Pleisto.Flappy.Features.CodeInterpreter;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples.CodeInterpreter
 {
+  [Command("code-interpreter-sample")]
   internal class CodeInterpreterCase : ExampleBase
   {
     public override async Task OnExecuteAsync()
@@ -20,16 +21,19 @@ namespace Pleisto.Flappy.Examples.CodeInterpreter
 
       var agent = new FlappyAgent(new FlappyAgentConfig
       {
-        CodeInterpreter = new CodeInterpreterOptions
-        {
-          Env = new Dictionary<string, string>
-          {
-          },
-          EnableNetwork = true,
-        }
+        LLM = gpt35,
+        Features = new IFlappyFeature[]
+         {
+           new CodeInterpreterFeature(null,new CodeInterpreterOptions
+           {
+              EnableNetwork=false,
+           })
+         }
       }, null, null, Logger.CreateLogger<FlappyAgent>());
-
-      await agent.CallCodeInterpreter("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs  and 150 heads in the barn?");
+      var data = await agent.ExecutePlan("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?");
+      Console.WriteLine($"====================== Final Result =========================");
+      Console.WriteLine(data.ToString());
+      Console.WriteLine($"====================== Final Result Of Data =========================");
     }
   }
 }

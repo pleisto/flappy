@@ -1,59 +1,17 @@
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using OpenAI_API;
+using Pleisto.Flappy.Features.Invoke;
+using Pleisto.Flappy.Features.Syntehesized;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Resume;
-using System;
-using System.Threading.Tasks;
 
 namespace Pleisto.Flappy.Examples.Resume
 {
+  [Command("resume-sample")]
   internal class ResumeCase : ExampleBase
   {
-    async public override Task OnExecuteAsync()
-    {
-      var gpt35 = new ChatGPT(new OpenAIAPI
-      {
-        Auth = new APIAuthentication(apiKey: OpenAIApiKey),
-        ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
-        ApiVersion = "v1",
-      }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
-
-      var lawAgent = new FlappyAgent(new FlappyAgentConfig
-      {
-        LLM = gpt35,
-        Functions = new IFlappyFunction[]
-           {
-               new SynthesizedFunction<GetMetaArgs,GetMetaReturn>(new SynthesizedFunctionDefinition<GetMetaArgs, GetMetaReturn>
-               {
-                 Name = "getMeta",
-                 Description = "Extract meta data from a resume full text.",
-                 Args = new GetMetaArgs(),
-                 ReturnType = new GetMetaReturn(),
-               }),
-               new InvokeFunction<GetInvokeArgs,GetMetaArgs>(new InvokeFunctionDefinition<GetInvokeArgs, GetMetaArgs>
-               {
-                  Name = "getFrontendEngineerResumes",
-                  Description = "Get all frontend engineer resumes.",
-                  Args = new GetInvokeArgs(),
-                  ReturnType = new GetMetaArgs(),
-                  Resolve = new FlappyAgent.ResolveFunction<GetInvokeArgs, GetMetaArgs>(arg =>
-                  {
-                    return Task.FromResult(new GetMetaArgs
-                    {
-                       lawsuit = MOCK_LAWSUIT_DATA
-                    });
-                  })
-               })
-           },
-      }, null, null, new LoggerFactory().CreateLogger<FlappyAgent>());
-      var data = (await lawAgent.CreateExecutePlan("找到前端工程师的简历并返回他的元数据"));
-      Console.WriteLine($"====================== Final Result =========================");
-      Console.WriteLine(data.ToString());
-      Console.WriteLine($"====================== Final Result Of Data =========================");
-      //    Console.WriteLine(JArray.Parse(data["data"].ToString()));
-    }
-
     private const string MOCK_LAWSUIT_DATA =
 @"
 I am a seasoned software engineer with over seven years of experience in front-end development. I am passionate about building excellent user interfaces, proficient in HTML, CSS, and JavaScript, and have a deep understanding of front-end frameworks such as React, Vue, and Angular. I have participated in several large-scale projects, responsible for designing and implementing front-end architecture, ensuring high performance and user-friendliness of websites. In addition, I also have project management experience, capable of leading teams to deliver high-quality outputs on time.
@@ -88,5 +46,48 @@ I am a seasoned software engineer with over seven years of experience in front-e
 
 - Bachelor's Degree, Computer Science, Peking University, 2012
 ";
+
+    public override async Task OnExecuteAsync()
+    {
+      var gpt35 = new ChatGPT(new OpenAIAPI
+      {
+        Auth = new APIAuthentication(apiKey: OpenAIApiKey),
+        ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+        ApiVersion = "v1",
+      }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
+
+      var lawAgent = new FlappyAgent(new FlappyAgentConfig
+      {
+        LLM = gpt35,
+        Features = new IFlappyFeature[]
+           {
+               new SynthesizedFeature<GetMetaArgs,GetMetaReturn,FlappyFeatureOption>(new SynthesizedFeatureDefinition<GetMetaArgs, GetMetaReturn>
+               {
+                 Name = "getMeta",
+                 Description = "Extract meta data from a resume full text.",
+                 Args = new GetMetaArgs(),
+                 ReturnType = new GetMetaReturn(),
+               }),
+               new InvokeFeature<GetInvokeArgs,GetMetaArgs,FlappyFeatureOption>(new InvokeFeatureDefinition<GetInvokeArgs, GetMetaArgs>
+               {
+                  Name = "getFrontendEngineerResumes",
+                  Description = "Get all frontend engineer resumes.",
+                  Args = new GetInvokeArgs(),
+                  ReturnType = new GetMetaArgs(),
+                  Resolve = new FlappyAgent.ResolveFeature<GetInvokeArgs, GetMetaArgs>(arg =>
+                  {
+                    return Task.FromResult(new GetMetaArgs
+                    {
+                       lawsuit = MOCK_LAWSUIT_DATA
+                    });
+                  })
+               })
+           },
+      }, null, null, new LoggerFactory().CreateLogger<FlappyAgent>());
+      var data = (await lawAgent.ExecutePlan("找到前端工程师的简历并返回他的元数据"));
+      Console.WriteLine($"====================== Final Result =========================");
+      Console.WriteLine(data.ToString());
+      Console.WriteLine($"====================== Final Result Of Data =========================");
+    }
   }
 }

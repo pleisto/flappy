@@ -1,0 +1,28 @@
+<Project>
+  <!-- Generated Info -->
+  <PropertyGroup>
+    <Authors>Pleisto</Authors>
+    <Company>Pleisto.LTD</Company>
+    <RepositoryUrl>https://github.com/pleisto/flappy</RepositoryUrl>
+    <Version>0.0.0.4-alpha</Version>
+    
+  </PropertyGroup>
+
+  <!-- Debug Symbols Configure -->
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- C# Language Configure -->
+  <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <WarningsAsErrors>IDE1006</WarningsAsErrors>
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1;net48;net472</TargetFrameworks>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+</Project>

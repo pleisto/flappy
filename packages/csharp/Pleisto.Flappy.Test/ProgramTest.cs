@@ -4,33 +4,22 @@ using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Tests
 {
-  public class ProgramTest
-  {
-    /// <summary>
-    /// Test json convert format
-    /// </summary>
-    [Test]
-    public void JsonConvert()
+    public class ProgramTest
     {
-      Assert.Pass(new JObject
-      {
-        ["test"] = @"12312321
-123123123123213",
-        ["validate"] = new JObject
+        /// <summary>
+        /// Test json convert format
+        /// </summary>
+        [Test]
+        public void JsonConvert()
         {
-          ["test"] = 123123123
+            Assert.Pass(new JObject
+            {
+                ["test"] = @"12312321123123123123213",
+                ["validate"] = new JObject
+                {
+                    ["test"] = 123123123
+                }
+            }.JsonToString());
         }
-      }.JsonToString());
     }
-
-    /// <summary>
-    /// Test jsonschema format
-    /// </summary>
-    [Test]
-    public void GenerateJsonSchema()
-    {
-      Assert.Pass(FlappyAgent.GetLanOutputSchema(true).ToString());
-    }
-  }
-
 }

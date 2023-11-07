@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="../../../packages/csharp/Directory.Build.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1;net48;net472</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

@@ -88,4 +88,7 @@ jobs:
           cd packages/csharp
           mkdir -p ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
           cp ../rust-core/target/debug/*csharp* ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
-          dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
+          dotnet tool install --global dotnet-coverage
+          dotnet coverage collect \
+            --output-format=xml --output=coverage.xml \
+            dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
