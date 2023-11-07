@@ -3,7 +3,7 @@ namespace Pleisto.Flappy.Interfaces
   /// <summary>
   /// Core Interpreter Options
   /// </summary>
-  public class CodeInterpreterOptions
+  public class CodeInterpreterOptions : FlappyFeatureOption
   {
     /// <summary>
     /// Enable network access in sandbox. Default is false.

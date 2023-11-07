@@ -3,12 +3,12 @@ using Newtonsoft.Json.Linq;
 namespace Pleisto.Flappy.Interfaces
 {
   /// <summary>
-  /// Flappy Function
+  /// Flappy Feature
   /// </summary>
-  public interface IFlappyFunction
+  public interface IFlappyFeature
   {
     /// <summary>
-    /// Name of cuntion
+    /// Name of Feature
     /// </summary>
     string Name { get; }
 
@@ -18,6 +18,6 @@ namespace Pleisto.Flappy.Interfaces
     /// <param name="agent"></param>
     /// <param name="args"></param>
     /// <returns></returns>
-    Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args);
+    internal Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args);
   }
 }

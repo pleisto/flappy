@@ -1,34 +1,34 @@
 using Newtonsoft.Json;
 
-namespace Pleisto.Flappy.Interfaces
+namespace Pleisto.Flappy.Features
 {
   /// <summary>
-  /// Base Definition of Function
+  /// Base Definition of Features
   /// </summary>
-  /// <typeparam name="TArgs">Function call Args</typeparam>
-  /// <typeparam name="TReturns">Function Return</typeparam>
-  public class FunctionsDefinitionBase<TArgs, TReturns>
+  /// <typeparam name="TArgs">Features call Args</typeparam>
+  /// <typeparam name="TReturns">Features Return</typeparam>
+  public class FeaturesDefinitionBase<TArgs, TReturns>
     where TArgs : class
     where TReturns : class
   {
     /// <summary>
-    /// Function Name
+    /// Feature Name
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Function Description
+    /// Feature Description
     /// </summary>
     public string Description { get; set; } = null;
 
     /// <summary>
-    /// Function Argument
+    /// Feature Argument
     /// </summary>
     [JsonRequired]
     public TArgs Args { get; set; }
 
     /// <summary>
-    /// Function ReturnType
+    /// Feature ReturnType
     /// </summary>
     [JsonRequired]
     public TReturns ReturnType { get; set; }

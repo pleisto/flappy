@@ -11,13 +11,13 @@ namespace Pleisto.Flappy
     public const string STEP_PREFIX = "%@_";
 
     /// <summary>
-    /// Resolve function delegate
+    /// Resolve feature delegate
     /// </summary>
     /// <typeparam name="TArgs"></typeparam>
     /// <typeparam name="TReturn"></typeparam>
     /// <param name="args"></param>
     /// <returns></returns>
-    public delegate Task<TReturn> ResolveFunction<TArgs, TReturn>(TArgs args)
+    public delegate Task<TReturn> ResolveFeature<TArgs, TReturn>(TArgs args)
       where TArgs : class
       where TReturn : class;
 

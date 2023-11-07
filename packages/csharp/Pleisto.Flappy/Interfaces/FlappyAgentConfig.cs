@@ -31,8 +31,8 @@ namespace Pleisto.Flappy.Interfaces
     public int? Retry { get; set; }
 
     /// <summary>
-    /// Functions
+    /// Features
     /// </summary>
-    public IFlappyFunction[] Functions { get; set; }
+    public IFlappyFeature[] Features { get; set; }
   }
 }

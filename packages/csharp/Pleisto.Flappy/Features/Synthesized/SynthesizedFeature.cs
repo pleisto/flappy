@@ -3,19 +3,21 @@ using Pleisto.Flappy.Exceptions;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM.Interfaces;
 
-namespace Pleisto.Flappy
+namespace Pleisto.Flappy.Features.Syntehesized
 {
   /// <summary>
-  /// SynthesizedFunction
+  /// Synthesized Feature
   /// </summary>
-  /// <typeparam name="TArgs">Argument of functions</typeparam>
-  /// <typeparam name="TReturn">Return of functions</typeparam>
-  public class SynthesizedFunction<TArgs, TReturn> : FlappyFunctionBase<TArgs, TReturn>, IFlappyFunction
+  /// <typeparam name="TArgs">Argument of feature</typeparam>
+  /// <typeparam name="TReturn">Return of feature</typeparam>
+  /// <typeparam name="TOptions">Options of feature</typeparam>
+  public class SynthesizedFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature
     where TArgs : class
     where TReturn : class
+    where TOptions : FlappyFeatureOption
   {
     /// <summary>
-    /// Function Call
+    /// Feature Call
     /// </summary>
     /// <param name="agent"></param>
     /// <param name="args"></param>
@@ -69,7 +71,7 @@ Please try again."}
       }
     }
 
-    private TReturn ParseComplete(ChatMLResponse msg)
+    private static TReturn ParseComplete(ChatMLResponse msg)
     {
       var startIdx = msg.Data?.IndexOf('{') ?? -1;
       var endIdx = msg.Data?.LastIndexOf('}') ?? -1;
@@ -89,10 +91,10 @@ Please try again."}
     }
 
     /// <summary>
-    /// Create Synthesized Function
+    /// Create Synthesized Feature
     /// </summary>
     /// <param name="define">Synthesized Definition</param>
-    public SynthesizedFunction(SynthesizedFunctionDefinition<TArgs, TReturn> define) : base(define)
+    public SynthesizedFeature(SynthesizedFeatureDefinition<TArgs, TReturn> define) : base(define)
     {
     }
   }

@@ -8,6 +8,8 @@ using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.LLM.Interfaces;
 using Pleisto.Flappy.Utils;
 using System.ComponentModel;
+using Pleisto.Flappy.Features.Invoke;
+using Pleisto.Flappy.Features.Syntehesized;
 
 namespace Pleisto.Flappy
 {
@@ -57,8 +59,8 @@ namespace Pleisto.Flappy
     public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner, ILogger<FlappyAgent> logger)
     {
       this.config = config;
-      if ((config.Functions?.Length ?? 0) <= 0)
-        throw new NullReferenceException($"config.functions not be null");
+      if ((config.Features?.Length ?? 0) <= 0)
+        throw new NullReferenceException($"config.Features not be null");
       this.llm = llm ?? config.LLM;
       this.llmPlaner = llmPlaner ?? config.LLMPlaner ?? this.llm;
       this.retry = config.Retry ?? DEFAULT_RETRY;
@@ -66,49 +68,49 @@ namespace Pleisto.Flappy
     }
 
     /// <summary>
-    /// Get function definitions as a JSON Schema object array.
+    /// Get feature definitions as a JSON Schema object array.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IFlappyFunction> FunctionsDefinitions() => from i in config.Functions
-                                                                  select i;
+    public IEnumerable<IFlappyFeature> FeatureDefinitions() => from i in config.Features
+                                                               select i;
 
     /// <summary>
-    /// Find function by name.
+    /// Find feature by name.
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public IFlappyFunction FindFunction(string name) => (from i in config.Functions
-                                                         where i.Name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
-                                                         select i).FirstOrDefault();
+    public IFlappyFeature FindFeature(string name) => (from i in config.Features
+                                                       where i.Name.Equals(name?.Trim(), StringComparison.OrdinalIgnoreCase)
+                                                       select i).FirstOrDefault();
 
     /// <summary>
-    ///  List all synthesized functions.
+    ///  List all synthesized features.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IFlappyFunction> SynthesizedFunctions() => from i in config.Functions
-                                                                  let type = i.GetType()
-                                                                  where type.BaseType == typeof(SynthesizedFunction<,>)
-                                                                  select i;
+    public IEnumerable<IFlappyFeature> SynthesizedFeatures() => from i in config.Features
+                                                                let type = i.GetType()
+                                                                where type.BaseType == typeof(SynthesizedFeature<,,>)
+                                                                select i;
 
     /// <summary>
-    /// List all invoke functions.
+    /// List all invoke features.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IFlappyFunction> InvokeFunctions() => from i in config.Functions
-                                                             let type = i.GetType()
-                                                             where type.BaseType == typeof(InvokeFunction<,>)
-                                                             select i;
+    public IEnumerable<IFlappyFeature> InvokeFeatures() => from i in config.Features
+                                                           let type = i.GetType()
+                                                           where type.BaseType == typeof(InvokeFeature<,,>)
+                                                           select i;
 
     /// <summary>
-    /// Call a function by name.
+    /// Call a feature by name.
     /// </summary>
     /// <param name="name"></param>
     /// <param name="args"></param>
     /// <returns></returns>
     /// <exception cref="InvalidProgramException"></exception>
-    public async Task<object> CallFunction(string name, object args)
+    public async Task<object> CallFeature(string name, object args)
     {
-      var fn = FindFunction(name) ?? throw new InvalidProgramException($"no function found: {name}");
+      var fn = FindFeature(name) ?? throw new InvalidProgramException($"no function found: {name}");
       return await fn.SharpSystemCall(this, JObject.FromObject(args));
     }
 
@@ -120,8 +122,8 @@ namespace Pleisto.Flappy
     /// <returns></returns>
     public async Task<object> CreateExecutePlan(string prompt, bool enableCot = true)
     {
-      var functions = new JArray(from i in FunctionsDefinitions()
-                                 select JObject.FromObject(i)).JsonToString();
+      var features = new JArray(from i in FeatureDefinitions()
+                                select JObject.FromObject(i)).JsonToString();
 
       var zodSchema = GetLanOutputSchema(enableCot);
 
@@ -135,7 +137,7 @@ namespace Pleisto.Flappy
           Content = @$"You are an AI assistant that makes step-by-step plans to solve problems, utilizing external functions. Each step entails one plan followed by a function-call, which will later be executed to gather args for that step.
 Make as few plans as possible if it can solve the problem.
 The functions list is described using the following JSON schema array:
-{functions}
+{features}
 
 Your specified plans should be output as JSON object array and adhere to the following JSON schema:
 {returnSchema}
@@ -173,7 +175,7 @@ Only the listed functions are allowed to be used."
       foreach (var step in plans)
         try
         {
-          var fn = FindFunction(step.FunctionName) ?? throw new InvalidDataException($"Function definition not found: {step.FunctionName};");
+          var fn = FindFeature(step.FeatureName) ?? throw new InvalidDataException($"Feature definition not found: {step.FeatureName};");
           JObject arg = new JObject();
           foreach (var b in step.Args)
           {
@@ -261,7 +263,7 @@ Only the listed functions are allowed to be used."
           if (data == null)
             throw new Exception("Invalid JSON response");
           if (data.Contains("def main():"))
-            throw new Exception("Function \"main\" not found");
+            throw new Exception("Feature \"main\" not found");
           logger?.LogDebug("Generated Code: {}", data);
           var pythonResult = NativeHandler.EvalPythonCode($"{data}\nprint(main())", config.CodeInterpreter.EnableNetwork == true, config.CodeInterpreter.Env ?? new Dictionary<string, string>(), config.CodeInterpreter.CacheDir);
           if (string.IsNullOrWhiteSpace(pythonResult.StdErr))
@@ -271,7 +273,7 @@ Only the listed functions are allowed to be used."
         }
         catch (Exception ex)
         {
-          logger?.LogError(ex.ToString());
+          logger?.LogError("Error: {exString}", ex.ToString());
           if (retry <= 0)
             throw new CodeInterpreterRetryException(retry, ex);
           retry -= 1;
@@ -316,7 +318,7 @@ Only the listed functions are allowed to be used."
     {
       public int Id { get; set; }
 
-      public string FunctionName { get; set; }
+      public string FeatureName { get; set; }
 
       [Description($"an object encapsulating all arguments for a function call. If an argument's value is derived from the return of a previous step, it should be as '{STEP_PREFIX}' + the ID of the previous step (e.g. '{STEP_PREFIX}1'). If an 'returnType' in **previous** step's function's json schema is object, '.' should be used to access its properties, else just use id with prefix. This approach should remain compatible with the 'args' attribute in the function's JSON schema.")]
       public JObject Args { get; set; }

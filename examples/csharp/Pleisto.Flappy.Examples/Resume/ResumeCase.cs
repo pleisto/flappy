@@ -5,6 +5,9 @@ using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.Test.Resume;
 using System;
 using System.Threading.Tasks;
+using Pleisto.Flappy.Features;
+using Pleisto.Flappy.Features.Invoke;
+using Pleisto.Flappy.Features.Syntehesized;
 
 namespace Pleisto.Flappy.Examples.Resume
 {
@@ -22,22 +25,22 @@ namespace Pleisto.Flappy.Examples.Resume
       var lawAgent = new FlappyAgent(new FlappyAgentConfig
       {
         LLM = gpt35,
-        Functions = new IFlappyFunction[]
+        Features = new IFlappyFeature[]
            {
-               new SynthesizedFunction<GetMetaArgs,GetMetaReturn>(new SynthesizedFunctionDefinition<GetMetaArgs, GetMetaReturn>
+               new SynthesizedFeature<GetMetaArgs,GetMetaReturn,FlappyFeatureOption>(new SynthesizedFeatureDefinition<GetMetaArgs, GetMetaReturn>
                {
                  Name = "getMeta",
                  Description = "Extract meta data from a resume full text.",
                  Args = new GetMetaArgs(),
                  ReturnType = new GetMetaReturn(),
                }),
-               new InvokeFunction<GetInvokeArgs,GetMetaArgs>(new InvokeFunctionDefinition<GetInvokeArgs, GetMetaArgs>
+               new InvokeFeature<GetInvokeArgs,GetMetaArgs,FlappyFeatureOption>(new InvokeFeatureDefinition<GetInvokeArgs, GetMetaArgs>
                {
                   Name = "getFrontendEngineerResumes",
                   Description = "Get all frontend engineer resumes.",
                   Args = new GetInvokeArgs(),
                   ReturnType = new GetMetaArgs(),
-                  Resolve = new FlappyAgent.ResolveFunction<GetInvokeArgs, GetMetaArgs>(arg =>
+                  Resolve = new FlappyAgent.ResolveFeature<GetInvokeArgs, GetMetaArgs>(arg =>
                   {
                     return Task.FromResult(new GetMetaArgs
                     {
@@ -51,7 +54,6 @@ namespace Pleisto.Flappy.Examples.Resume
       Console.WriteLine($"====================== Final Result =========================");
       Console.WriteLine(data.ToString());
       Console.WriteLine($"====================== Final Result Of Data =========================");
-      //    Console.WriteLine(JArray.Parse(data["data"].ToString()));
     }
 
     private const string MOCK_LAWSUIT_DATA =

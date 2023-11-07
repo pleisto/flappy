@@ -1,45 +1,53 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema.Generation;
+using Pleisto.Flappy.Features.Invoke;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy
 {
   /// <summary>
-  /// Basic of flappy function
+  /// Basic of flappy fature
   /// </summary>
   /// <typeparam name="TArgs"></typeparam>
   /// <typeparam name="TReturn"></typeparam>
-  public abstract class FlappyFunctionBase<TArgs, TReturn> : IFlappyFunction
+  /// <typeparam name="TOptions"></typeparam>
+  public abstract class FlappyFeatureBase<TArgs, TReturn, TOptions> : IFlappyFeature
       where TArgs : class
       where TReturn : class
+    where TOptions : FlappyFeatureOption
   {
     /// <summary>
-    /// Function define
+    /// Feature definition
     /// </summary>
-    public InvokeFunctionDefinition<TArgs, TReturn> Define;
+    public InvokeFeatureDefinition<TArgs, TReturn> Define;
 
     /// <summary>
-    /// Function calling schema
+    /// Feature options
+    /// </summary>
+    public TOptions Options { get; set; }
+
+    /// <summary>
+    /// Fature calling schema
     /// </summary>
     public JObject CallingSchema { get; private set; }
 
     /// <summary>
-    /// Name of function
+    /// Name of fature
     /// </summary>
     public string Name => Define.Name;
 
     /// <summary>
-    /// Create Flappy Function Base
+    /// Create Flappy Fature Base
     /// </summary>
-    /// <param name="define">Function Definition</param>
-    public FlappyFunctionBase(InvokeFunctionDefinition<TArgs, TReturn> define)
+    /// <param name="define">Feature Definition</param>
+    public FlappyFeatureBase(InvokeFeatureDefinition<TArgs, TReturn> define)
     {
       Define = define;
       CallingSchema = BuildJsonSchema(define);
     }
 
-    private static JObject BuildJsonSchema(InvokeFunctionDefinition<TArgs, TReturn> define)
+    private static JObject BuildJsonSchema(InvokeFeatureDefinition<TArgs, TReturn> define)
     {
       var schemaGenerator = new JSchemaGenerator();
       return new JObject
@@ -59,7 +67,7 @@ namespace Pleisto.Flappy
     }
 
     /// <summary>
-    /// Function call abstract
+    /// Fature call abstract
     /// </summary>
     /// <param name="agent">FlappyAgent caller</param>
     /// <param name="args">Calling argument</param>
@@ -70,8 +78,8 @@ namespace Pleisto.Flappy
     /// System call method
     /// </summary>
     /// <param name="agent">FlappyAgent</param>
-    /// <param name="args">Calling argument (JsonObject)</param>
-    /// <returns>Functions return (JsonObject)</returns>
+    /// <param name="args">Calling argument (JObject)</param>
+    /// <returns>Feature return (JObject)</returns>
     public async Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args)
     {
       return (await Call(agent, args.JsonToObject<TArgs>())).ObjectToJson();

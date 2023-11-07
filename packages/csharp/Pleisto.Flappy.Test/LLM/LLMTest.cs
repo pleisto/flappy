@@ -13,7 +13,7 @@ namespace Pleisto.Flappy.Tests.LLM
     where T : ILLMBase
   {
     /// <summary>
-    /// function to create ILLMBase
+    /// feature to create ILLMBase
     /// </summary>
     /// <returns></returns>
     protected abstract T OnLLMCreate();
