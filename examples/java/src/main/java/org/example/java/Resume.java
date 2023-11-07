@@ -67,12 +67,12 @@ public class Resume {
     Dotenv dotenv = Dotenv.load();
     ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
-    FlappyBaseAgent resumeAgent = new FlappyBaseAgent(
+    FlappyBaseAgent agent = new FlappyBaseAgent(
       llm, Arrays.asList(resumeGetMeta, getFrontendEngineerResumes)
     );
 
 
-    Future<ResumeMetaReturn> future = resumeAgent.executePlanAsync(RESUME_EXECUTE_PLAN_PROMPT);
+    Future<ResumeMetaReturn> future = agent.executePlanAsync(RESUME_EXECUTE_PLAN_PROMPT);
     ResumeMetaReturn ret = future.get();
 
     System.out.println("################# RESULT ################");

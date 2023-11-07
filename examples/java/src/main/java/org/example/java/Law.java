@@ -37,12 +37,12 @@ public class Law {
     ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 
 
-    FlappyBaseAgent lawAgent = new FlappyBaseAgent(
+    FlappyBaseAgent agent = new FlappyBaseAgent(
       llm, Arrays.asList(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
     );
 
 
-    Future<LawMetaReturn> future = lawAgent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
+    Future<LawMetaReturn> future = agent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
     LawMetaReturn ret = future.get();
 
     System.out.println("################# RESULT ################");

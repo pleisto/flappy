@@ -5,7 +5,6 @@ import flappy.FlappyClass
 import flappy.annotations.FlappyField
 import flappy.features.FlappyInvokeFunction
 import flappy.features.FlappySynthesizedFunction
-import flappy.llms.Baichuan
 import flappy.llms.ChatGPT
 import io.github.cdimascio.dotenv.dotenv
 
@@ -130,20 +129,13 @@ suspend fun main(args: Array<String>) {
     chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
   )
 
-  val baichuan = Baichuan(
-    baichuanConfig = Baichuan.BaichuanConfig(
-      apiKey = dotenv["BAICHUAN_API_KEY"],
-      secretKey = dotenv["BAICHUAN_SECRET_KEY"]
-    )
-  )
-
-  val resumeAgent = FlappyBaseAgent(
+  val agent = FlappyBaseAgent(
     inferenceLLM = chatGPT,
     features = listOf(resumeGetMeta, getFrontendEngineerResumes),
     maxRetry = 2
   )
 
-  resumeAgent.use {
+  agent.use {
     it.executePlan<ResumeMetaReturn>(RESUME_EXECUTE_PLAN_PROMPT)
   }
 }
