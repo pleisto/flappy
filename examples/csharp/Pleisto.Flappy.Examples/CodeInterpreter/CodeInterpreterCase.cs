@@ -1,14 +1,13 @@
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using OpenAI_API;
-using Pleisto.Flappy.CodeInterpreter;
 using Pleisto.Flappy.Features.CodeInterpreter;
 using Pleisto.Flappy.Interfaces;
 using Pleisto.Flappy.LLM;
-using System.Diagnostics;
 
 namespace Pleisto.Flappy.Examples.CodeInterpreter
 {
+  [Command("code-interpreter-sample")]
   internal class CodeInterpreterCase : ExampleBase
   {
     public override async Task OnExecuteAsync()
@@ -35,35 +34,6 @@ namespace Pleisto.Flappy.Examples.CodeInterpreter
       Console.WriteLine($"====================== Final Result =========================");
       Console.WriteLine(data.ToString());
       Console.WriteLine($"====================== Final Result Of Data =========================");
-    }
-  }
-
-  internal class NativeCall
-  {
-    private const string pythonInspectCode = @"
-print('Hello World');
-";
-
-    public void OnExecute()
-    {
-      if (NativeHandler.NativeCall())
-      {
-        Console.WriteLine("Native call success!");
-        Stopwatch timer = new Stopwatch();
-        timer.Start();
-        var result = NativeHandler.EvalPythonCode(pythonInspectCode, false, new Dictionary<string, string>
-        {
-        });
-        timer.Stop();
-        Console.WriteLine($"Result of Execute:");
-        Console.WriteLine(JObject.FromObject(result).ToString());
-        Console.WriteLine("Elasped ms:" + timer.ElapsedMilliseconds);
-      }
-      else
-      {
-        Console.WriteLine("Native call faild!");
-        return;
-      }
     }
   }
 }

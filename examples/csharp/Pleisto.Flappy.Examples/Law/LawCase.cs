@@ -1,3 +1,4 @@
+using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using OpenAI_API;
@@ -9,6 +10,7 @@ using Pleisto.Flappy.Test.Law;
 
 namespace Pleisto.Flappy.Examples.Law
 {
+  [Command("law-sample")]
   internal class LawCase : ExampleBase
   {
     public override async Task OnExecuteAsync()

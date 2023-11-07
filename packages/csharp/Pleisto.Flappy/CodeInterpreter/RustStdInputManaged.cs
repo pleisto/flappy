@@ -2,33 +2,33 @@ using Newtonsoft.Json;
 
 namespace Pleisto.Flappy.CodeInterpreter
 {
-  /// <summary>
-  /// CodeInterpreter Input Argument
-  /// </summary>
-  internal sealed class RustStdInputManaged
-  {
     /// <summary>
-    /// Python Code
+    /// CodeInterpreter Input Argument
     /// </summary>
-    [JsonProperty("code")]
-    public string Code { get; set; }
+    internal sealed class RustStdInputManaged
+    {
+        /// <summary>
+        /// Python Code
+        /// </summary>
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
-    /// <summary>
-    /// Allow network
-    /// </summary>
-    [JsonProperty("network")]
-    public bool Network { get; set; }
+        /// <summary>
+        /// Allow network
+        /// </summary>
+        [JsonProperty("network")]
+        public bool Network { get; set; }
 
-    /// <summary>
-    /// Environments
-    /// </summary>
-    [JsonProperty("envs")]
-    public Dictionary<string, string> Envs { get; set; } = new Dictionary<string, string>();
+        /// <summary>
+        /// Environments
+        /// </summary>
+        [JsonProperty("envs")]
+        public Dictionary<string, string> Envs { get; set; } = new Dictionary<string, string>();
 
-    /// <summary>
-    /// Cache of WASI
-    /// </summary>
-    [JsonProperty("cache_path")]
-    public string CachePath { get; set; }
-  }
+        /// <summary>
+        /// Cache of WASI
+        /// </summary>
+        [JsonProperty("cache_path")]
+        public string CachePath { get; set; }
+    }
 }

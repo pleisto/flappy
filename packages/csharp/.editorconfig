@@ -73,6 +73,8 @@ csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_prefer_static_local_function = true:suggestion
+csharp_space_around_binary_operators = before_and_after
+csharp_indent_labels = one_less_than_current
 
 [*.vb]
 #### 命名样式 ####
@@ -132,3 +134,6 @@ dotnet_style_qualification_for_event = false:silent
 # Default severity for analyzer diagnostics with category 'Style'
 dotnet_analyzer_diagnostic.category-Style.severity = silent
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
+tab_width = 4
+indent_size = 4
+dotnet_style_operator_placement_when_wrapping = beginning_of_line

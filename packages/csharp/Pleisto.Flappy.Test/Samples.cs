@@ -6,45 +6,45 @@ using Pleisto.Flappy.Examples.Resume;
 
 namespace Pleisto.Flappy.Tests
 {
-  /// <summary>
-  /// ChatGPT Test Case
-  /// </summary>
-  public class Samples
-  {
     /// <summary>
-    /// Disable GPT Test Case on environment set
+    /// ChatGPT Test Case
     /// </summary>
-    private static bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
-
-    private async Task TestCaseBase<T>()
-      where T : ExampleBase, new()
+    public class Samples
     {
-      if (NoGptTest == false)
-        await new T().OnExecuteAsync();
+        /// <summary>
+        /// Disable GPT Test Case on environment set
+        /// </summary>
+        private static bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
+
+        private async Task TestCaseBase<T>()
+          where T : ExampleBase, new()
+        {
+            if (NoGptTest == false)
+                await new T().OnExecuteAsync();
+        }
+
+        /// <summary>
+        /// Case test of Law
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task LawTestAsync()
+          => await TestCaseBase<LawCase>();
+
+        /// <summary>
+        /// Case test of Law
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task ResumeTestAsync()
+          => await TestCaseBase<ResumeCase>();
+
+        /// <summary>
+        /// Case test of Code Interpreter
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task CodeInterpreterTaskAsync()
+          => await TestCaseBase<CodeInterpreterCase>();
     }
-
-    /// <summary>
-    /// Case test of Law
-    /// </summary>
-    /// <returns></returns>
-    [Test]
-    public async Task LawTestAsync()
-      => await TestCaseBase<LawCase>();
-
-    /// <summary>
-    /// Case test of Law
-    /// </summary>
-    /// <returns></returns>
-    [Test]
-    public async Task ResumeTestAsync()
-      => await TestCaseBase<ResumeCase>();
-
-    /// <summary>
-    /// Case test of Code Interpreter
-    /// </summary>
-    /// <returns></returns>
-    [Test]
-    public async Task CodeInterpreterTaskAsync()
-      => await TestCaseBase<CodeInterpreterCase>();
-  }
 }
