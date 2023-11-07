@@ -1,4 +1,4 @@
-package flappy.functions
+package flappy.features
 
 import flappy.*
 
@@ -7,7 +7,7 @@ class FlappySynthesizedFunction<Args : Any, Ret : Any>(
   val description: String,
   args: Class<Args>,
   returnType: Class<Ret>
-) : FlappyFunctionBase<Args, Ret>(
+) : FlappyFeatureBase<Args, Ret>(
   name = name,
   argsType = args,
   returnType = returnType

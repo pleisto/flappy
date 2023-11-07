@@ -2,8 +2,8 @@ package org.example.kotlin
 
 import flappy.FlappyBaseAgent
 import flappy.annotations.FlappyField
-import flappy.functions.FlappyInvokeFunction
-import flappy.functions.FlappySynthesizedFunction
+import flappy.features.FlappyInvokeFunction
+import flappy.features.FlappySynthesizedFunction
 import flappy.llms.Baichuan
 import flappy.llms.ChatGPT
 import io.github.cdimascio.dotenv.dotenv
@@ -83,7 +83,7 @@ suspend fun main(args: Array<String>) {
   val lawAgent = FlappyBaseAgent(
     maxRetry = 2,
     inferenceLLM = chatGPT,
-    functions = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
+    features = listOf(lawGetMeta, lawGetLatestLawsuitsByPlaintiff)
   )
 
   lawAgent.use {

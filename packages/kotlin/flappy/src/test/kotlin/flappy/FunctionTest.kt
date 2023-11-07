@@ -2,8 +2,8 @@ package flappy
 
 import flappy.annotations.FlappyField
 import flappy.annotations.flappyFieldMetadataList
-import flappy.functions.FlappyInvokeFunction
-import flappy.functions.FlappySynthesizedFunction
+import flappy.features.FlappyInvokeFunction
+import flappy.features.FlappySynthesizedFunction
 import flappy.llms.Dummy
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -151,7 +151,7 @@ class FunctionTest {
     val lawAgent = FlappyBaseAgent(
       maxRetry = 3,
       inferenceLLM = Dummy(),
-      functions = listOf(lawGetLatestLawsuitsByPlaintiff)
+      features = listOf(lawGetLatestLawsuitsByPlaintiff)
     )
 
     runBlocking {

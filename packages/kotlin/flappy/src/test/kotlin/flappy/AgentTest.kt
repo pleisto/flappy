@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class AgentTest {
   private val resumeAgent = FlappyBaseAgent(
     inferenceLLM = Dummy(),
-    functions = listOf(resumeGetMeta, getFrontendEngineerResumes),
+    features = listOf(resumeGetMeta, getFrontendEngineerResumes),
     maxRetry = 2
   )
 

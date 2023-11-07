@@ -1,7 +1,7 @@
 package flappy
 
 import com.pleisto.FlappyJniException
-import flappy.functions.FlappyEvalFunction
+import flappy.features.FlappyCodeInterpreter
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,7 +11,7 @@ import kotlin.test.assertFailsWith
 class JniTest {
   @Test
   fun schema() {
-    val sandboxFunction = FlappyEvalFunction()
+    val sandboxFunction = FlappyCodeInterpreter()
     sandboxFunction.use {
       assertEquals(
         sandboxFunction.argsTypeSchemaPropertiesString,

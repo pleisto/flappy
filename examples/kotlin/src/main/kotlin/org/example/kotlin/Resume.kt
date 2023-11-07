@@ -3,8 +3,8 @@ package org.example.kotlin
 import flappy.FlappyBaseAgent
 import flappy.FlappyClass
 import flappy.annotations.FlappyField
-import flappy.functions.FlappyInvokeFunction
-import flappy.functions.FlappySynthesizedFunction
+import flappy.features.FlappyInvokeFunction
+import flappy.features.FlappySynthesizedFunction
 import flappy.llms.Baichuan
 import flappy.llms.ChatGPT
 import io.github.cdimascio.dotenv.dotenv
@@ -139,7 +139,7 @@ suspend fun main(args: Array<String>) {
 
   val resumeAgent = FlappyBaseAgent(
     inferenceLLM = chatGPT,
-    functions = listOf(resumeGetMeta, getFrontendEngineerResumes),
+    features = listOf(resumeGetMeta, getFrontendEngineerResumes),
     maxRetry = 2
   )
 

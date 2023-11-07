@@ -1,7 +1,7 @@
 package flappy;
 
 import flappy.annotations.FlappyField;
-import flappy.functions.FlappySynthesizedFunction;
+import flappy.features.FlappySynthesizedFunction;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

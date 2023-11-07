@@ -1,4 +1,4 @@
-package flappy.functions
+package flappy.features
 
 import flappy.*
 
@@ -6,7 +6,7 @@ internal typealias ArgsType = String
 internal typealias RetType = String
 
 
-class FlappyEvalFunction(private val network: Boolean = false) : FlappyFunctionBase<ArgsType, RetType>(
+class FlappyCodeInterpreter(private val network: Boolean = false) : FlappyFeatureBase<ArgsType, RetType>(
   name = "sandbox",
   argsType = String::class.java,
   returnType = String::class.java

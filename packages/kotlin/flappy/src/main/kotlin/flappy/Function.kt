@@ -2,18 +2,18 @@ package flappy
 
 import java.util.logging.Logger
 
-internal typealias AnyFlappyFunction = FlappyFunctionBase<*, *>
+internal typealias AnyFlappyFeature = FlappyFeatureBase<*, *>
 
 internal typealias AnyClass = Class<*>
 
-abstract class FlappyFunctionBase<Args : Any, Ret : Any>(
+abstract class FlappyFeatureBase<Args : Any, Ret : Any>(
   val name: String,
   val argsType: Class<Args>,
   val returnType: Class<Ret>,
 ) : AutoCloseable {
   protected val logger: Logger = Logger.getLogger(this.javaClass.name)
 
-  val source = "#function#$name"
+  val source = "#feature#$name"
 
   private val argsTypeSchemaProperties = this.argsType.buildFieldProperties("Function arguments")
   private val returnTypeSchemaProperties = this.returnType.buildFieldProperties("Function return type")

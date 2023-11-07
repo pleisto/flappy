@@ -2,10 +2,10 @@ package org.example.java;
 
 
 import flappy.FlappyBaseAgent;
-import flappy.FlappyFunctionBase;
+import flappy.FlappyFeatureBase;
 import flappy.annotations.FlappyField;
-import flappy.functions.FlappyInvokeFunction;
-import flappy.functions.FlappySynthesizedFunction;
+import flappy.features.FlappyInvokeFunction;
+import flappy.features.FlappySynthesizedFunction;
 import flappy.llms.ChatGPT;
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -18,14 +18,14 @@ public class Law {
   public static final String LAW_EXECUTE_PLAN_PROMPT = "Find the latest case with the plaintiff being families of victims and return its metadata.";
   static final String MOCK_LAWSUIT_DATA =
     "As Alex Jones continues telling his Infowars audience about his money problems and pleads for them to buy his products, his own documents show life is not all that bad — his net worth is around $14 million and his personal spending topped $93,000 in July alone, including thousands of dollars on meals and entertainment. The conspiracy theorist and his lawyers file monthly financial reports in his personal bankruptcy case, and the latest one has struck a nerve with the families of victims of Sandy Hook Elementary School shooting. They're still seeking the $1.5 billion they won last year in lawsuits against Jones and his media company for repeatedly calling the 2012 massacre a hoax on his shows. “It is disturbing that Alex Jones continues to spend money on excessive household expenditures and his extravagant lifestyle when that money rightfully belongs to the families he spent years tormenting,” said Christopher Mattei, a Connecticut lawyer for the families. “The families are increasingly concerned and will continue to contest these matters in court.” In an Aug. 29 court filing, lawyers for the families said that if Jones doesn’t reduce his personal expenses to a “reasonable” level, they will ask the bankruptcy judge to bar him from “further waste of estate assets,” appoint a trustee to oversee his spending, or dismiss the bankruptcy case. On his Infowars show Tuesday, Jones said he’s not doing anything wrong.";
-  public static FlappyFunctionBase<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
+  public static FlappyFeatureBase<?, ?> lawGetLatestLawsuitsByPlaintiff = new FlappyInvokeFunction(
     "getLatestLawsuitsByPlaintiff",
     "Get the latest lawsuits by plaintiff.",
     GetLatestLawsuitsArguments.class,
     String.class,
     (a, agent, $completion) -> MOCK_LAWSUIT_DATA
   );
-  public static FlappyFunctionBase<?, ?> lawGetMeta = new FlappySynthesizedFunction(
+  public static FlappyFeatureBase<?, ?> lawGetMeta = new FlappySynthesizedFunction(
     "getMeta",
     "Extract meta data from a lawsuit full text.",
     LawMetaArguments.class,
