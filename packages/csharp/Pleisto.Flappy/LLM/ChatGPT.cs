@@ -60,7 +60,7 @@ namespace Pleisto.Flappy.LLM
         {
             foreach (var i in message)
             {
-                logger.LogDebug("Role: {} Content: {}", i.Role, i.Content);
+                logger?.LogDebug("Role: {} Content: {}", i.Role, i.Content);
             }
             var resp = await client.Chat.CreateChatCompletionAsync(new ChatRequest
             {

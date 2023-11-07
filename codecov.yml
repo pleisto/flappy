@@ -14,3 +14,6 @@ flags:
   kotlin:
     paths:
       - packages/kotlin/
+  csharp:
+    paths:
+      - package/csharp/

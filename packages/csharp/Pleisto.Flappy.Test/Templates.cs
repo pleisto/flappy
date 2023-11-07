@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Pleisto.Flappy.Utils;
-
 namespace Pleisto.Flappy.Tests
 {
     public class Templates
