@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 
 
 public class CodeInterpreter {
-  
+
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     Dotenv dotenv = Dotenv.load();
     ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
@@ -23,5 +23,10 @@ public class CodeInterpreter {
 
     Future<String> future = agent.executePlanAsync("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?");
     String ret = future.get();
+
+//    Future<String> future2 = agent.callFeatureAsync(
+//      FlappyCodeInterpreter.DEFAULT_NAME,
+//      "There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?"
+//    );
   }
 }

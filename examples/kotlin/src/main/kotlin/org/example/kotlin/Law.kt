@@ -81,5 +81,7 @@ suspend fun main(args: Array<String>) {
 
   agent.use {
     it.executePlan<LawMetaReturn>(LAW_EXECUTE_PLAN_PROMPT)
+
+//    val future = it.callFeature<String>("getMeta", LAW_EXECUTE_PLAN_PROMPT)
   }
 }

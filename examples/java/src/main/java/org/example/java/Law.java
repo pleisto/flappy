@@ -45,6 +45,8 @@ public class Law {
     Future<LawMetaReturn> future = agent.executePlanAsync(LAW_EXECUTE_PLAN_PROMPT);
     LawMetaReturn ret = future.get();
 
+//    Future<String> future2 = agent.callFeatureAsync("getMeta", LAW_EXECUTE_PLAN_PROMPT);
+
     System.out.println("################# RESULT ################");
     System.out.println(ret.getDefendant());
     System.out.println("################# RESULT ################");

@@ -102,7 +102,7 @@ class FlappyBaseAgent @JvmOverloads constructor(
 
       logger.info("before call $id $functionName $newArgsString")
 
-      val result = callFunction<Any>(functionName, newArgsString)
+      val result = callFeature<Any>(functionName, newArgsString)
 
       logger.info("after call $id $functionName ${jacksonMapper.writeValueAsString(result)}")
 
@@ -151,15 +151,15 @@ class FlappyBaseAgent @JvmOverloads constructor(
     return castSteps(body)
   }
 
-  private suspend fun <R> callFunction(name: String, args: String): R {
+  suspend fun <R> callFeature(name: String, args: String): R {
     val f = this.findFeature(name)
     @Suppress("UNCHECKED_CAST")
     return f.call(args, this) as R
   }
 
   @OptIn(DelicateCoroutinesApi::class)
-  fun <R> callFunctionAsync(name: String, args: String): CompletableFuture<R> =
-    GlobalScope.future { callFunction(name, args) }
+  fun <R> callFeatureAsync(name: String, args: String): CompletableFuture<R> =
+    GlobalScope.future { callFeature(name, args) }
 }
 
 

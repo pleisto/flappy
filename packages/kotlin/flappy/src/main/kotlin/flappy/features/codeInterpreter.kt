@@ -7,7 +7,7 @@ internal typealias RetType = String
 
 
 class FlappyCodeInterpreter(private val network: Boolean = false) : FlappyFeatureBase<ArgsType, RetType>(
-  name = "sandbox",
+  name = DEFAULT_NAME,
   argsType = String::class.java,
   returnType = String::class.java
 ) {
@@ -17,6 +17,10 @@ class FlappyCodeInterpreter(private val network: Boolean = false) : FlappyFeatur
       mapOf("enabled" to network)
     )
 
+
+  companion object {
+    const val DEFAULT_NAME = "pythonSandbox"
+  }
 
   private val sandbox = FlappySandbox()
 

@@ -44,10 +44,45 @@ void agent.executePlan(
 
   </TabItem>
   <TabItem value="java" label="Java" default>
-    Coming soon
+
+```java
+public class CodeInterpreter {
+
+  public static void main(String[] args) throws ExecutionException, InterruptedException {
+    Dotenv dotenv = Dotenv.load();
+    ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+
+    FlappyBaseAgent agent = new FlappyBaseAgent(
+      llm, Collections.singletonList(new FlappyCodeInterpreter())
+    );
+
+    Future<String> future = agent.executePlanAsync("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?");
+    String ret = future.get();
+  }
+}
+```
+
+
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
-    Coming soon
+
+```kotlin
+  val dotenv = dotenv()
+  val chatGPT = ChatGPT(
+    ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  )
+
+  val agent = FlappyBaseAgent(
+    maxRetry = 2,
+    inferenceLLM = chatGPT,
+    features = listOf(FlappyCodeInterpreter())
+  )
+
+  agent.use {
+    it.executePlan<String>("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?")
+  }
+```
+
   </TabItem>
   <TabItem value="csharp" label="C#" default>
     Coming soon
