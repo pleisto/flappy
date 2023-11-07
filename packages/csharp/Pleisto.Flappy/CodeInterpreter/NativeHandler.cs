@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Pleisto.Flappy.CodeInterpreter
@@ -19,6 +20,7 @@ namespace Pleisto.Flappy.CodeInterpreter
         /// </summary>
         /// <returns></returns>
         [DllImport("flappy_csharp_bindings", EntryPoint = "eval_native_call")]
+        [SuppressMessage("Interoperability", "SYSLIB1054:使用 “LibraryImportAttribute” 而不是 “DllImportAttribute” 在编译时生成 P/Invoke 封送代码", Justification = "<挂起>")]
         private static extern bool EvalNativeCall();
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace Pleisto.Flappy.CodeInterpreter
         /// <param name="jsonIn"></param>
         /// <returns></returns>
         [DllImport("flappy_csharp_bindings", EntryPoint = "eval_python_code_by_json")]
+        [SuppressMessage("Interoperability", "SYSLIB1054:使用 “LibraryImportAttribute” 而不是 “DllImportAttribute” 在编译时生成 P/Invoke 封送代码", Justification = "<挂起>")]
         private static extern IntPtr EvalPythonCodeResultJson(IntPtr jsonIn);
 
         #endregion Import of native

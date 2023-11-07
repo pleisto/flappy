@@ -3,6 +3,7 @@ using Pleisto.Flappy.Examples;
 using Pleisto.Flappy.Examples.CodeInterpreter;
 using Pleisto.Flappy.Examples.Law;
 using Pleisto.Flappy.Examples.Resume;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pleisto.Flappy.Tests
 {
@@ -16,6 +17,7 @@ namespace Pleisto.Flappy.Tests
         /// </summary>
         private static bool NoGptTest => Environment.GetEnvironmentVariable("NO_GPT_TEST") == "true";
 
+        [SuppressMessage("Performance", "CA1822:将成员标记为 static", Justification = "<挂起>")]
         private async Task TestCaseBase<T>()
           where T : ExampleBase, new()
         {
