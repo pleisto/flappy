@@ -53,7 +53,7 @@ dependencies {
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
   // Use the JUnit 5 integration.
-  testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+  testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 
   testImplementation(kotlin("test"))
   testImplementation(project(mapOf("path" to ":kotlin-example")))
@@ -64,9 +64,9 @@ dependencies {
   implementation(kotlin("reflect"))
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
 
-  implementation("io.ktor:ktor-client-java-jvm:2.3.5")
-  implementation("io.ktor:ktor-client-core:2.3.5")
-  implementation("io.ktor:ktor-client-okhttp:2.3.5")
+  implementation("io.ktor:ktor-client-java-jvm:2.3.6")
+  implementation("io.ktor:ktor-client-core:2.3.6")
+  implementation("io.ktor:ktor-client-okhttp:2.3.6")
   implementation("com.theokanning.openai-gpt3-java:service:0.16.1")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
   implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.3")
