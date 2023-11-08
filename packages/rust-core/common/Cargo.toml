@@ -1,13 +1,24 @@
 [package]
 name = "flappy-common"
 version = "0.1.0"
-edition = "2021"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
 
 [package.metadata.workspaces]
 independent = true
 
 
 [dependencies]
+anyhow.workspace = true
+reqwest.workspace = true
+tokio.workspace = true
+once_cell.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+tracing.workspace = true
+derivative.workspace = true
+
 wasmer = "4.2.3"
 wasmer-registry = "5.9.0"
 wasmer-vm = "4.2.3"
@@ -24,24 +35,8 @@ wasmer-wasix = { version = "0.16.0", features = [
   "sys-thread",
 ] }
 virtual-mio = { version = "0.3.0" }
-anyhow = "1.0"
 dirs = "5.0.1"
-reqwest = { version = "^0.11.22", default-features = false, features = [
-  "native-tls",
-  "json",
-  "multipart",
-] }
+
 webc = "5.8.0"
 virtual-fs = { version = "0.9.0", features = ["host-fs"] }
 virtual-net = { version = "0.6.1", features = ["host-net"] }
-tokio = { version = "1.33.0", features = [
-  "sync",
-  "macros",
-  "time",
-  "rt-multi-thread",
-] }
-once_cell = "1.18.0"
-async-trait = "0.1.74"
-futures = "0.3.29"
-tracing = "0.1.40"
-derivative = "2.2.0"
