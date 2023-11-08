@@ -28,27 +28,52 @@ npm install @plesito/node-flappy@next
   </TabItem>
   <TabItem value="java" label="Java" default>
 
-Maven
+Plugin
+
+```xml
+<build>
+  <extensions>
+    <extension>
+      <groupId>kr.motd.maven</groupId>
+      <artifactId>os-maven-plugin</artifactId>
+      <version>1.7.0</version>
+    </extension>
+  </extensions>
+</build>
+```
+
+Dependency
 
 ```xml
 <dependency>
     <groupId>com.pleisto</groupId>
     <artifactId>flappy</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
 </dependency>
-```
-
-Gradle
-
-```sh
-implementation 'com.pleisto:flappy:0.0.7'
+<dependency>
+    <groupId>com.pleisto</groupId>
+    <artifactId>flappy-java-bindings</artifactId>
+    <version>0.0.8</version>
+</dependency>
+<dependency>
+    <groupId>com.pleisto</groupId>
+    <artifactId>flappy-java-bindings</artifactId>
+    <version>0.0.8</version>
+    <classifier>${os.detected.classifier}</classifier>
+</dependency>
 ```
 
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
 
 ```kotlin
-implementation("com.pleisto:flappy:0.0.7")
+// plugins
+id("com.google.osdetector") version "1.7.3"
+
+// dependencies
+implementation("com.pleisto:flappy:0.0.8")
+implementation("com.pleisto:flappy-java-bindings:0.0.8")
+implementation("com.pleisto:flappy-java-bindings:0.0.8:${osdetector.classifier}")
 ```
 
   </TabItem>

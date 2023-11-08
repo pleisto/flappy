@@ -3,10 +3,21 @@ flag_management:
     carryforward: true
 coverage:
   status:
-    # It's noisey to have failed checks on PRs.
-    # Because we already have Codecov bot commenting on PRs, here we disable the status check.
-    project: off
-    patch: off
+    project:
+      default:
+        target: auto
+      nodejs:
+        target: auto
+        flags:
+          - nodejs
+      kotlin:
+        target: auto
+        flags:
+          - kotlin
+      csharp:
+        target: auto
+        flags:
+          - csharp
 flags:
   nodejs:
     paths:
@@ -17,3 +28,15 @@ flags:
   csharp:
     paths:
       - packages/csharp/
+
+github_checks:
+    annotations: true
+
+comment:
+  layout: "header, diff, flags, files, reach, footer"
+  require_changes: false  # if true: only post the comment if coverage changes
+  require_base: false        # [yes :: must have a base report to post]
+  require_head: true       # [yes :: must have a head report to post]
+  show_carryforward_flags: true
+  show_critical_paths: true #new option to labeled critical files
+  hide_comment_details: false #collapse all the "detailed info" for the PR comment
