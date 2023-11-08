@@ -12,18 +12,18 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - .github/workflows/csharp-bindings-build.yml
+      - .github/workflows/csharp-build.yml
       - '.github/workflows/codeql.yml'
 
   push:
     branches: [main]
     paths:
-      - .github/workflows/csharp-bindings-build.yml
+      - .github/workflows/csharp-build.yml
       - '.github/workflows/codeql.yml'
 
 jobs:
   codeql:
-    name: csharp-bindings-ci-codeql
+    name: csharp-ci-codeql
     uses: ./.github/workflows/codeql.yml
     with:
       language: csharp
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Nuget
-    name: csharp-bindings-publish-release
+    name: csharp-publish-release
 
     steps:
       - uses: actions/checkout@v4
