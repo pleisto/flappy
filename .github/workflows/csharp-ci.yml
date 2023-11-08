@@ -95,3 +95,13 @@ jobs:
           dotnet coverage collect \
             --output-format=xml --output=coverage.xml \
             dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ./packages/csharp
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: nodejs
+          fail_ci_if_error: true
+          verbose: true
