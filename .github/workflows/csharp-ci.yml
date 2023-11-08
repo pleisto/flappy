@@ -102,6 +102,6 @@ jobs:
           working-directory: ./packages/csharp
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          flags: nodejs
+          flags: csharp
           fail_ci_if_error: true
           verbose: true
