@@ -1,0 +1,67 @@
+name: CSharp Bindings Build
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: write
+  id-token: write
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/csharp-bindings-build.yml
+      - '.github/workflows/codeql.yml'
+
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/csharp-bindings-build.yml
+      - '.github/workflows/codeql.yml'
+
+jobs:
+  codeql:
+    name: csharp-bindings-ci-codeql
+    uses: ./.github/workflows/codeql.yml
+    with:
+      language: csharp
+      working-directory: packages/rust-core/csharp
+
+  package-nuget:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: Nuget
+    name: csharp-bindings-publish-release
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build nupkg
+        run: |
+          dotnet build -c Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings
+          path: |
+            packages/csharp/**/*.nupkg
+          if-no-files-found: error
+
+      - name: publish nuget pkg
+        run: |
+          cd packages/csharp
+          find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
+            echo "Pulish: $line"
+            nuget push $line \
+              -Source https://api.nuget.org/v3/index.json \
+              -ApiKey ${{ secrets.NUGET_TOKEN }} \
+              -SkipDuplicate
+          done

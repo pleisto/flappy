@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\csharp\Directory.Build.props" />
+    <PropertyGroup>
+        <Version>0.0.0.5</Version>
+      <AnalysisMode>none</AnalysisMode>
+      <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="runtimes/**/*">
+            <Pack>True</Pack>
+            <PackagePath>runtimes</PackagePath>
+        </None>
+    </ItemGroup>
+</Project>

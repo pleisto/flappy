@@ -31,12 +31,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageReference Include="OpenAI" Version="1.7.2" />
+    <PackageReference Include="Pleisto.Flappy.Native" Version="0.0.0.4-alpha" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <None Include="runtimes/**/*">
-      <Pack>True</Pack>
-      <PackagePath>runtimes</PackagePath>
-    </None>
     <!-- Include template by embedded resources -->
     <EmbeddedResource Include="../../../templates/**/*.mustache">
       <Visible>false</Visible>

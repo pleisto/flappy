@@ -246,7 +246,7 @@ jobs:
 
       - name: build nupkg
         run: |
-          cd packages/csharp
+          cd packages/rust-core/csharp/
           cp -vr ~/nuget/runtimes ./runtimes
 
           dotnet build -c Release
