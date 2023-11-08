@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/node-flappy",
-  "version": "0.0.2-beta.0",
+  "version": "0.0.2-beta.1",
   "license": "Apache-2.0",
   "exports": {
     ".": {
