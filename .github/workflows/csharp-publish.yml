@@ -1,4 +1,4 @@
-name: CSharp Bindings Build
+name: CSharp Publish
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -10,33 +10,14 @@ permissions:
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - .github/workflows/csharp-build.yml
-      - '.github/workflows/codeql.yml'
-      - 'packages/csharp/**'
-      - 'examples/csharp/**'
-      - 'templates/**'
-
   push:
     branches: [main]
     paths:
-      - .github/workflows/csharp-build.yml
-      - '.github/workflows/codeql.yml'
-      - 'packages/csharp/**'
-      - 'examples/csharp/**'
-      - 'templates/**'
+      - .github/workflows/csharp-publish.yml
+      - 'packages/csharp/Directory.Build.props'
 
 jobs:
-  codeql:
-    name: csharp-ci-codeql
-    uses: ./.github/workflows/codeql.yml
-    with:
-      language: csharp
-      working-directory: packages/rust-core/csharp
-
   package-nuget:
-    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: Nuget
@@ -44,6 +25,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            3.1
+            6.0
+            7.0
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: nuget/setup-nuget@v1
         with:
