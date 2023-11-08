@@ -12,6 +12,8 @@ on:
       - 'packages/csharp/**'
       - '.github/workflows/csharp-ci.yml'
       - '.github/workflows/codeql.yml'
+      - 'templates/**'
+
   push:
     branches: [main]
     paths:
@@ -19,6 +21,7 @@ on:
       - 'packages/csharp/**'
       - '.github/workflows/csharp-ci.yml'
       - '.github/workflows/codeql.yml'
+      - 'templates/**'
 
 jobs:
   codeql:

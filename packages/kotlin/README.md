@@ -28,7 +28,13 @@ This package is the Kotlin version of the flappy implementation.
 In Gradle(Kotlin), add the following dependency to your `build.gradle.kts` file:
 
 ```kotlin
-implementation("com.pleisto:flappy:0.0.7")
+// plugins
+id("com.google.osdetector") version "1.7.3"
+
+// dependencies
+implementation("com.pleisto:flappy:0.0.8")
+implementation("com.pleisto:flappy-java-bindings:0.0.8")
+implementation("com.pleisto:flappy-java-bindings:0.0.8:${osdetector.classifier}")
 ```
 
 In other build system, please refer to [here](https://central.sonatype.com/artifact/com.pleisto/flappy)
