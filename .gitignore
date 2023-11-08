@@ -63,3 +63,4 @@ tmp/
 var/**
 !var/.gitkeep
 .i18n-temp.json
+.rollup.cache

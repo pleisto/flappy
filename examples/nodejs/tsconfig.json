@@ -1,3 +1,6 @@
 {
-  "extends": "../../tools/typescript/tsconfig.cjs.json"
+  "extends": "../../tools/typescript/tsconfig.cjs.json",
+  "ts-node": {
+    "require": ["tsconfig-paths/register", "./raw-loader.js"]
+  }
 }
