@@ -78,7 +78,7 @@ jobs:
         with:
           name: bindings
           path: |
-            coverage.xml
+            packages/csharp/coverage.xml
           if-no-files-found: error
 
       - name: Upload coverage reports to Codecov
