@@ -110,7 +110,8 @@ namespace Pleisto.Flappy
         public async Task<object> CallFeature(string name, object args)
         {
             var fn = FindFeature(name) ?? throw new InvalidProgramException($"no feature found: {name}");
-            return await fn.SharpSystemCall(this, JObject.FromObject(args));
+            //   return (await fn.SharpSystemCall(this, JObject.FromObject(args))).ToObject<T>();
+            return await fn.SystemCall(this, args);
         }
 
         /// <summary>
@@ -181,31 +182,38 @@ namespace Pleisto.Flappy
                     {
                         requestMessage = originalRequestMesasge.Union(new ChatMLMessage[]
                         {
-              new ChatMLMessage
-              {
-                  Role = ChatMLMessageRole.System,
-                  Content = result?.Data ?? ""
-              },
-              new ChatMLMessage
-              {
-                Role = ChatMLMessageRole.User,
-                Content = TemplateRenderer.Render("error.retry",new Dictionary<string, object>
-                {
-                  ["message"]= ex.Message
-                })
-              }
+                            new ChatMLMessage
+                            {
+                                Role = ChatMLMessageRole.System,
+                                Content = result?.Data ?? ""
+                            },
+                            new ChatMLMessage
+                            {
+                                Role = ChatMLMessageRole.User,
+                                Content = TemplateRenderer.Render("error.retry",new Dictionary<string, object>
+                                {
+                                    ["message"]= ex.Message
+                                })
+                            }
                         }).ToArray();
                     }
                 }
 
             LanOutputSchema[] plans;
-            if (enableCot)
+            try
             {
-                plans = (from b in plan select b.ToObject<LanOutputSchemaCot>()).ToArray();
+                if (enableCot)
+                {
+                    plans = (from b in plan select b.ToObject<LanOutputSchemaCot>()).ToArray();
+                }
+                else
+                {
+                    plans = (from b in plan select b.ToObject<LanOutputSchema>()).ToArray();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                plans = (from b in plan select b.ToObject<LanOutputSchema>()).ToArray();
+                throw new StepPlainException(new JObject { ["plan"] = plan }, ex);
             }
 
             Dictionary<int, JObject> returnStore = new Dictionary<int, JObject>();
@@ -232,8 +240,14 @@ namespace Pleisto.Flappy
                             arg[b.Key] = b.Value;
                         }
                     }
-                    JObject functionresult = await fn.SharpSystemCall(this, arg);
-                    returnStore[step.Id] = functionresult;
+                    try
+                    {
+                        returnStore[step.Id] = JObject.FromObject(await fn.SystemCall(this, fn.JsonToArgs(arg)));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidProgramException($"feature unhandled exception! name={fn.Name}", ex);
+                    }
                 }
                 catch (Exception ex)
                 {

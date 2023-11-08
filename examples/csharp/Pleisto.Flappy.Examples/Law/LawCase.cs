@@ -27,28 +27,28 @@ namespace Pleisto.Flappy.Examples.Law
         LLM = gpt35,
         Features = new IFlappyFeature[]
            {
-               new SynthesizedFeature<getMeta_Args,getMeta_Return,FlappyFeatureOption>(new SynthesizedFeatureDefinition<getMeta_Args,getMeta_Return>
+               new SynthesizedFeature<GetMeta_Args,GetMeta_Return,FlappyFeatureOption>(new SynthesizedFeatureDefinition<GetMeta_Args,GetMeta_Return>
                {
                    Name = "getMeta",
                    Description = "Extract meta data from a lawsuit full text.",
-                   Args = new getMeta_Args(),
-                   ReturnType = new getMeta_Return()
+                   Args = new GetMeta_Args(),
+                   ReturnType = new GetMeta_Return()
                }),
-               new InvokeFeature<getLatestLawsuits_Args,getMeta_Args,FlappyFeatureOption>(new InvokeFeatureDefinition<getLatestLawsuits_Args, getMeta_Args>
+               new InvokeFeature<GetLatestLawsuits_Args,GetMeta_Args,FlappyFeatureOption>(new InvokeFeatureDefinition<GetLatestLawsuits_Args, GetMeta_Args>
                {
                    Name = "getLatestLawsuitsByPlaintiff",
                    Description= "Get the latest lawsuits by plaintiff.",
-                   Args = new getLatestLawsuits_Args(),
-                   ReturnType = new getMeta_Args(),
+                   Args = new GetLatestLawsuits_Args(),
+                   ReturnType = new GetMeta_Args(),
                    Resolve = (args) =>
                    {
                       Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
                       Console.WriteLine($"getLatestLawsuitsByPlaintiff called");
                       Console.WriteLine(JObject.FromObject(args).ToString());
                       Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
-                      return Task.FromResult(new getMeta_Args
+                      return Task.FromResult(new GetMeta_Args
                       {
-                        lawsuit =MOCK_LAWSUIT_DATA
+                        Lawsuit =  MOCK_LAWSUIT_DATA
                       });
                    }
                })

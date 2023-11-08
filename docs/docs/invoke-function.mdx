@@ -120,7 +120,6 @@ createInvokeFunction({
     }
   }
 ```
-
   </TabItem>
   <TabItem value="kotlin" label="Kotlin" default>
 
@@ -146,6 +145,57 @@ class GetLatestLawsuitsArguments(
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
-    Coming soon
+
+```csharp
+new InvokeFeature<GetLatestLawsuits_Args,GetMeta_Args,FlappyFeatureOption>(new InvokeFeatureDefinition<GetLatestLawsuits_Args, GetMeta_Args>
+{
+    Name = "getLatestLawsuitsByPlaintiff",
+    Description= "Get the latest lawsuits by plaintiff.",
+    Args = new GetLatestLawsuits_Args(),
+    ReturnType = new GetMeta_Args(),
+    Resolve = (args) =>
+    {
+       Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
+       Console.WriteLine($"getLatestLawsuitsByPlaintiff called");
+       Console.WriteLine(JObject.FromObject(args).ToString());
+       Console.WriteLine($"====================== getLatestLawsuitsByPlaintiff call =========================");
+       return Task.FromResult(new GetMeta_Args
+       {
+         Lawsuit =  MOCK_LAWSUIT_DATA
+       });
+    }
+})
+
+internal class GetMeta_Args
+{
+  [Description("Lawsuit full text.")]
+  public string Lawsuit { get; set; }
+
+  public override string ToString()
+  {
+    return JObject.FromObject(this).ToString();
+  }
+}
+
+[JsonObject(ItemRequired = Required.Always)]
+public class GetMeta_Return
+{
+  [JsonConverter(typeof(StringEnumConverter))]
+  [DefaultValue(Verdict.Unknow)]
+  public Verdict Verdict { get; set; } = Verdict.Unknow;
+
+  public string Plaintiff { get; set; } = string.Empty;
+
+  public string Defendant { get; set; } = string.Empty;
+
+  public string[] JudgeOptions { get; set; } = Array.Empty<string>();
+
+  public override string ToString()
+  {
+    return JObject.FromObject(this).ToString();
+  }
+}
+```
+
   </TabItem>
 </Tabs>

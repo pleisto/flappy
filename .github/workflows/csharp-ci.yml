@@ -63,35 +63,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
 
-      - name: Cache cargo
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            .cargo-cache
-            target/
-          key: ${{ matrix.os }}-cargo
-
-      - name: Install
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
       - uses: actions/checkout@v4
-
-      - name: build binding native
-        run: |
-          cd packages/rust-core/csharp
-          cargo build
 
       - name: dotnet test
         run: |
           cd packages/csharp
-          mkdir -p ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
-          cp ../rust-core/target/debug/*csharp* ./Pleisto.Flappy.Test/bin/Debug/${{ matrix.dotnet-version.framework }}/
           dotnet tool install --global dotnet-coverage
           dotnet coverage collect \
             --output-format=xml --output=coverage.xml \
             dotnet test -e NO_GPT_TEST=true --framework ${{ matrix.dotnet-version.framework }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings
+          path: |
+            packages/csharp/coverage.xml
+          if-no-files-found: error
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ./packages/csharp
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: csharp
+          fail_ci_if_error: true
+          verbose: true

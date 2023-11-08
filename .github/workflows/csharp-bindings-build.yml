@@ -225,8 +225,8 @@ jobs:
           dcp() {
             local target=$2
             local src=$1
-            mkdir -p ~/nuget/runtimes/$target
-            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target
+            mkdir -p ~/nuget/runtimes/$target/native
+            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target/native/
           }
 
           mkdir -p ~/nuget
@@ -246,7 +246,7 @@ jobs:
 
       - name: build nupkg
         run: |
-          cd packages/csharp
+          cd packages/rust-core/csharp/
           cp -vr ~/nuget/runtimes ./runtimes
 
           dotnet build -c Release

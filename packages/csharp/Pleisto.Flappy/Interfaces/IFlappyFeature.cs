@@ -13,11 +13,18 @@ namespace Pleisto.Flappy.Interfaces
         string Name { get; }
 
         /// <summary>
-        /// System call method by CSharp Type
+        /// System convert json to argument
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        internal object JsonToArgs(JObject json);
+
+        /// <summary>
+        /// System call
         /// </summary>
         /// <param name="agent"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        internal Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args);
+        internal Task<object> SystemCall(FlappyAgent agent, object args);
     }
 }

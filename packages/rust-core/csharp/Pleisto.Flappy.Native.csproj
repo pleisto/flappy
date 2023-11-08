@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\csharp\Directory.Build.props" />
+    <PropertyGroup>
+        <Version>0.0.0.7</Version>
+      <AnalysisMode>none</AnalysisMode>
+      <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PackageTags>native</PackageTags>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+      <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="runtimes/**/*">
+            <Pack>True</Pack>
+            <PackagePath>runtimes</PackagePath>
+        </None>
+        <None Include="../../../LICENSE" PackagePath="" Pack="True" Visible="False" />
+        <None Include="../../../README.md" PackagePath="" Pack="True" Visible="False" />
+    </ItemGroup>
+</Project>

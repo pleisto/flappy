@@ -141,7 +141,48 @@ class LawMetaReturn(
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
-    Coming soon
+  
+```csharp
+new SynthesizedFeature<GetMeta_Args,GetMeta_Return,FlappyFeatureOption>(new SynthesizedFeatureDefinition<GetMeta_Args,GetMeta_Return>
+{
+    Name = "getMeta",
+    Description = "Extract meta data from a lawsuit full text.",
+    Args = new GetMeta_Args(),
+    ReturnType = new GetMeta_Return()
+}),
+
+internal class GetMeta_Args
+{
+  [Description("Lawsuit full text.")]
+  public string Lawsuit { get; set; }
+
+  public override string ToString()
+  {
+    return JObject.FromObject(this).ToString();
+  }
+}
+
+[JsonObject(ItemRequired = Required.Always)]
+public class GetMeta_Return
+{
+  [JsonConverter(typeof(StringEnumConverter))]
+  [DefaultValue(Verdict.Unknow)]
+  public Verdict Verdict { get; set; } = Verdict.Unknow;
+
+  public string Plaintiff { get; set; } = string.Empty;
+
+  public string Defendant { get; set; } = string.Empty;
+
+  public string[] JudgeOptions { get; set; } = Array.Empty<string>();
+
+  public override string ToString()
+  {
+    return JObject.FromObject(this).ToString();
+  }
+}
+
+```
+
   </TabItem>
 </Tabs>
 

@@ -14,7 +14,7 @@ namespace Pleisto.Flappy.Exceptions
         /// <param name="splitted"></param>
         /// <param name="innerException"></param>
         internal InvalidJsonDataException(int startIdx, int endIdx, string raw, string splitted, Exception innerException)
-          : base($"unable to parse json array, from:{startIdx} to:{endIdx} raw={raw} splitted={splitted}")
+          : base($"unable to parse json, from:{startIdx} to:{endIdx}{Environment.NewLine}raw={Environment.NewLine}{raw}{Environment.NewLine}splitted={Environment.NewLine}{splitted}",innerException)
         {
             StartIndex = startIdx;
             EndIndex = endIdx;
@@ -30,7 +30,7 @@ namespace Pleisto.Flappy.Exceptions
         /// <param name="raw"></param>
         /// <param name="innerException"></param>
         internal InvalidJsonDataException(int startIdx, int endIdx, string raw, Exception innerException = null)
-          : base($"unable to locate json data, startIndex={startIdx} endIndex={endIdx} raw={raw}", innerException)
+          : base($"unable to locate json, startIndex={startIdx} endIndex={endIdx} raw={raw}", innerException)
         {
             StartIndex = startIdx;
             EndIndex = endIdx;
