@@ -8,6 +8,10 @@ permissions:
   contents: write
   id-token: write
 
+defaults:
+  run:
+    working-directory: packages/csharp
+
 on:
   workflow_dispatch:
   push:
@@ -46,13 +50,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings
-          path: |
-            packages/csharp/**/*.nupkg
+          path: packages/csharp/**/*.nupkg
           if-no-files-found: error
 
       - name: publish nuget pkg
         run: |
-          cd packages/csharp
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"
             nuget push $line \
