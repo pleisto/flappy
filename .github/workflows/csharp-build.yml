@@ -14,12 +14,16 @@ on:
     paths:
       - .github/workflows/csharp-build.yml
       - '.github/workflows/codeql.yml'
+      - packages/csharp/**
+      - examples/csharp/**
 
   push:
     branches: [main]
     paths:
       - .github/workflows/csharp-build.yml
       - '.github/workflows/codeql.yml'
+      - packages/csharp/**
+      - examples/csharp/**
 
 jobs:
   codeql:
