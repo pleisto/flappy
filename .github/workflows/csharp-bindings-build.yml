@@ -225,8 +225,8 @@ jobs:
           dcp() {
             local target=$2
             local src=$1
-            mkdir -p ~/nuget/runtimes/$target/lib
-            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target/lib/
+            mkdir -p ~/nuget/runtimes/$target/native
+            cp -v ~/artifacts/packages/rust-core/target/$src ~/nuget/runtimes/$target/native/
           }
 
           mkdir -p ~/nuget
