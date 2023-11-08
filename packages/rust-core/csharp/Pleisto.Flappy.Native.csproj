@@ -4,6 +4,7 @@
         <Version>0.0.0.5</Version>
       <AnalysisMode>none</AnalysisMode>
       <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
