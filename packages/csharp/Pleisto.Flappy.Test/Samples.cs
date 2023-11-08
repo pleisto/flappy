@@ -30,8 +30,7 @@ namespace Pleisto.Flappy.Tests
         /// </summary>
         /// <returns></returns>
         [Test]
-        public async Task LawTestAsync()
-          => await TestCaseBase<LawCase>();
+        public async Task LawTestAsync() => await TestCaseBase<LawCase>();
 
         /// <summary>
         /// Case test of Law

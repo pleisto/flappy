@@ -31,6 +31,7 @@ fn ptr2str(c_char_ptr: *const std::os::raw::c_char) -> String {
 
 /// Just of Native Call Test
 #[no_mangle]
+#[allow(dead_code)]
 pub extern "C" fn eval_native_call() -> bool {
   true
 }
@@ -52,6 +53,7 @@ struct OutputStruct {
 
 /// Call python code by json in json out
 #[no_mangle]
+#[allow(dead_code)]
 pub extern "C" fn eval_python_code_by_json(input_str: *const c_char) -> *const c_char {
   let input_string = ptr2str(input_str);
   let input: InputStruct = serde_json::from_str(&input_string).unwrap();
