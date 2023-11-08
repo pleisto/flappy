@@ -39,6 +39,7 @@ jobs:
           # queries: security-extended,security-and-quality
 
       - name: Install Dotnet Environment when CSharp
+        if: ${{ inputs.language == 'csharp' }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
