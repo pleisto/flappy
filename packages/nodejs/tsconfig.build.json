@@ -1,10 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "target": "ESNext",
+    "module": "ESNext",
     "declaration": true,
     "noEmit": false,
     "outDir": "dist",
-    "importHelpers": false
+    "importHelpers": false,
+    "incremental": false
   }
 }

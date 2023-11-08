@@ -18,8 +18,8 @@ export const handler: CommandModule['handler'] = async (): Promise<void> => {
 
   // Generate typedefs
   const declarer = new Declarer(loader)
-  const types = await declarer.declare()
-  const data = fs.readFileSync(TargetPath).toString()
+  const types = (await declarer.declare()).trim()
+  const data = fs.readFileSync(TargetPath, 'utf-8').toString().trim()
 
   if (isCI) {
     if (data !== types) exit(1)
