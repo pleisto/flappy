@@ -11,6 +11,7 @@ env:
   WORKING_DIRECTORY: packages/rust-core/nodejs
 
 permissions:
+  actions: read
   contents: write
   id-token: write
   security-events: write
