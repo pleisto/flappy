@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <Import Project="..\..\csharp\Directory.Build.props" />
     <PropertyGroup>
-        <Version>0.0.0.6</Version>
+        <Version>0.0.0.7</Version>
       <AnalysisMode>none</AnalysisMode>
       <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
