@@ -3,10 +3,10 @@ using System.ComponentModel;
 
 namespace Pleisto.Flappy.Test.Law
 {
-  internal class getMeta_Args
+  internal class GetMeta_Args
   {
     [Description("Lawsuit full text.")]
-    public string lawsuit { get; set; }
+    public string Lawsuit { get; set; }
 
     public override string ToString()
     {

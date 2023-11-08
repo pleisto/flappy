@@ -14,7 +14,7 @@ namespace Pleisto.Flappy.Features
     public abstract class FlappyFeatureBase<TArgs, TReturn, TOptions> : IFlappyFeature
         where TArgs : class
         where TReturn : class
-      where TOptions : FlappyFeatureOption
+        where TOptions : FlappyFeatureOption
     {
         /// <summary>
         /// Feature definition
@@ -73,15 +73,18 @@ namespace Pleisto.Flappy.Features
         /// <returns></returns>
         public abstract Task<TReturn> Call(FlappyAgent agent, TArgs args);
 
-        /// <summary>
-        /// System call method
-        /// </summary>
-        /// <param name="agent">FlappyAgent</param>
-        /// <param name="args">Calling argument (JObject)</param>
-        /// <returns>Feature return (JObject)</returns>
-        public async Task<JObject> SharpSystemCall(FlappyAgent agent, JObject args)
+        async Task<object> IFlappyFeature.SystemCall(FlappyAgent agent, object args)
         {
-            return (await Call(agent, args.JsonToObject<TArgs>())).ObjectToJson();
+            TArgs argsType = args as TArgs;
+
+            if (argsType == null)
+                throw new InvalidCastException($"unable to convert {args.GetType().FullName} to {typeof(TArgs).FullName}");
+            return await Call(agent, argsType);
+        }
+
+        object IFlappyFeature.JsonToArgs(JObject json)
+        {
+            return json.ToObject<TArgs>();
         }
     }
 }

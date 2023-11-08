@@ -53,9 +53,11 @@ implementation("com.pleisto:flappy:0.0.7")
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
   <PackageReference Include="Pleisto.Flappy" Version="0.0.0.4-alpha" />
 ```
+
   </TabItem>
 </Tabs>
 
@@ -120,6 +122,7 @@ const chatGpt = new Baichuan(
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
   var gpt35 = new ChatGPT(new OpenAIAPI
   {
@@ -128,6 +131,7 @@ const chatGpt = new Baichuan(
     ApiVersion = "v1",
   }, "gpt-3.5-turbo", null, null);
 ```
+
   </TabItem>
 </Tabs>
 
@@ -422,6 +426,7 @@ suspend fun main(args: Array<String>) {
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
   internal class LawCase
   {
@@ -527,6 +532,7 @@ suspend fun main(args: Array<String>) {
     Unknow
   }
 ```
+
   </TabItem>
 </Tabs>
 
@@ -563,9 +569,11 @@ agent.use {
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
 var data = lawAgent.ExecutePlan(LAW_EXECUTE_PLAN_PROMPT).GetAwaiter().GetResult();
 ```
+
   </TabItem>
 </Tabs>
 
@@ -600,9 +608,11 @@ agent.use {
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
 var result = await agent.CallFeature<TestObject>(callName, LAW_EXECUTE_PLAN_PROMPT);
 ```
+
   </TabItem>
 </Tabs>
 
@@ -646,8 +656,10 @@ agent.use {
 
   </TabItem>
   <TabItem value="csharp" label="C#" default>
+
 ```csharp
 var data = lawAgent.ExecutePlan("There are some rabbits and chickens in a barn. What is the number of chickens if there are 396 legs and 150 heads in the barn?").GetAwaiter().GetResult();
 ```
+
   </TabItem>
 </Tabs>

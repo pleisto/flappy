@@ -6,17 +6,17 @@ using System.ComponentModel;
 namespace Pleisto.Flappy.Test.Law
 {
   [JsonObject(ItemRequired = Required.Always)]
-  public class getMeta_Return
+  public class GetMeta_Return
   {
     [JsonConverter(typeof(StringEnumConverter))]
     [DefaultValue(Verdict.Unknow)]
-    public Verdict verdict { get; set; } = Verdict.Unknow;
+    public Verdict Verdict { get; set; } = Verdict.Unknow;
 
-    public string plaintiff { get; set; } = string.Empty;
+    public string Plaintiff { get; set; } = string.Empty;
 
-    public string defendant { get; set; } = string.Empty;
+    public string Defendant { get; set; } = string.Empty;
 
-    public string[] judgeOptions { get; set; } = Array.Empty<string>();
+    public string[] JudgeOptions { get; set; } = Array.Empty<string>();
 
     public override string ToString()
     {
