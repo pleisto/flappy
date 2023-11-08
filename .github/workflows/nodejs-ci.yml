@@ -33,7 +33,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: 'package.json'
-          cache: yarn
 
       - run: npm publish --dry-run
         working-directory: ./packages/nodejs
