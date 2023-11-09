@@ -12,6 +12,12 @@ namespace Pleisto.Flappy.Interfaces
         /// </summary>
         string Name { get; }
 
+
+        /// <summary>
+        /// Feature definition
+        /// </summary>
+        IFlappyFeatureDefinition Define { get;  }
+
         /// <summary>
         /// System convert json to argument
         /// </summary>

@@ -6,13 +6,14 @@ using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Features.Syntehesized
 {
+
     /// <summary>
     /// Synthesized Feature
     /// </summary>
     /// <typeparam name="TArgs">Argument of feature</typeparam>
     /// <typeparam name="TReturn">Return of feature</typeparam>
     /// <typeparam name="TOptions">Options of feature</typeparam>
-    public class SynthesizedFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature
+    public class SynthesizedFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature , ISynthesizedFeature
       where TArgs : class
       where TReturn : class
       where TOptions : FlappyFeatureOption

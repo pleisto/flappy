@@ -3,6 +3,9 @@ using Pleisto.Flappy.LLM;
 
 namespace Pleisto.Flappy.Tests.LLM
 {
+    /// <summary>
+    /// Baichuan test
+    /// </summary>
     public class BaichuanTest : LLMTest<Baichuan>
     {
         private string BaichuanToken => Environment.GetEnvironmentVariable("BAICHUAN_API_KEY");

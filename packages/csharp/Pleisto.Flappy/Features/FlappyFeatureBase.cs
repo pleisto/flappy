@@ -19,7 +19,7 @@ namespace Pleisto.Flappy.Features
         /// <summary>
         /// Feature definition
         /// </summary>
-        public IFlappyFeatureDefinition<TArgs, TReturn> Define;
+        public IFlappyFeatureDefinition Define { get; private set; }
 
         /// <summary>
         /// Feature options
@@ -40,13 +40,13 @@ namespace Pleisto.Flappy.Features
         /// Create Flappy Fature Base
         /// </summary>
         /// <param name="define">Feature Definition</param>
-        public FlappyFeatureBase(IFlappyFeatureDefinition<TArgs, TReturn> define)
+        public FlappyFeatureBase(IFlappyFeatureDefinition define)
         {
             Define = define;
             CallingSchema = BuildJsonSchema(define);
         }
 
-        private static JObject BuildJsonSchema(IFlappyFeatureDefinition<TArgs, TReturn> define)
+        private static JObject BuildJsonSchema(IFlappyFeatureDefinition define)
         {
             var schemaGenerator = new JSchemaGenerator();
             return new JObject

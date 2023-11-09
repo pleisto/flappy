@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Pleisto.Flappy.Exceptions;
+using Pleisto.Flappy.Features.CodeInterpreter;
 using Pleisto.Flappy.Features.Invoke;
 using Pleisto.Flappy.Features.Syntehesized;
 using Pleisto.Flappy.Interfaces;
@@ -9,6 +10,7 @@ using Pleisto.Flappy.LLM;
 using Pleisto.Flappy.LLM.Interfaces;
 using Pleisto.Flappy.Utils;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pleisto.Flappy
 {
@@ -55,15 +57,15 @@ namespace Pleisto.Flappy
         /// <param name="llmPlaner"></param>
         /// <param name="logger">Logger of FlappyAgent</param>
         /// <exception cref="NullReferenceException"></exception>
-        public FlappyAgent(FlappyAgentConfig config, ILLMBase llm, ILLMBase llmPlaner, ILogger<FlappyAgent> logger)
+        public FlappyAgent(FlappyAgentConfig config,[AllowNull] ILLMBase llm, [AllowNull] ILLMBase llmPlaner,[AllowNull] ILogger<FlappyAgent> logger)
         {
-            this.config = config;
+            this.config = config ?? throw new ArgumentNullException(nameof(config));
             if ((config.Features?.Length ?? 0) <= 0)
                 throw new NullReferenceException($"{nameof(Features)} not be null");
             this.llm = llm ?? config.LLM;
             this.llmPlaner = llmPlaner ?? config.LLMPlaner ?? this.llm;
             this.retry = config.Retry ?? DEFAULT_RETRY;
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -72,6 +74,7 @@ namespace Pleisto.Flappy
         /// <returns></returns>
         public IEnumerable<IFlappyFeature> FeatureDefinitions() => from i in config.Features
                                                                    select i;
+
 
         /// <summary>
         /// Find feature by name.
@@ -83,22 +86,33 @@ namespace Pleisto.Flappy
                                                            select i).FirstOrDefault();
 
         /// <summary>
+        /// Find features with feature type marker
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private IEnumerable<IFlappyFeature> FeatureDefinitions<T>()
+            where T : IFlappyFeature
+            => from i in config.Features
+               where i.GetType().GetInterface(typeof(T).FullName) != null
+               select i;
+
+        /// <summary>
         ///  List all synthesized features.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IFlappyFeature> SynthesizedFeatures() => from i in config.Features
-                                                                    let type = i.GetType()
-                                                                    where type.BaseType == typeof(SynthesizedFeature<,,>)
-                                                                    select i;
+        public IEnumerable<IFlappyFeature> SynthesizedFeatures() => FeatureDefinitions<ISynthesizedFeature>();
 
         /// <summary>
         /// List all invoke features.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IFlappyFeature> InvokeFeatures() => from i in config.Features
-                                                               let type = i.GetType()
-                                                               where type.BaseType == typeof(InvokeFeature<,,>)
-                                                               select i;
+        public IEnumerable<IFlappyFeature> InvokeFeatures() => FeatureDefinitions<IInvokeFeature>();
+
+        /// <summary>
+        /// List all codeinterpreter features.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IFlappyFeature> CodeInterpreterFeatures() => FeatureDefinitions<ICodeInterpreterFeature>();
 
         /// <summary>
         /// Call a feature by name.
@@ -110,7 +124,6 @@ namespace Pleisto.Flappy
         public async Task<object> CallFeature(string name, object args)
         {
             var fn = FindFeature(name) ?? throw new InvalidProgramException($"no feature found: {name}");
-            //   return (await fn.SharpSystemCall(this, JObject.FromObject(args))).ToObject<T>();
             return await fn.SystemCall(this, args);
         }
 
@@ -131,24 +144,24 @@ namespace Pleisto.Flappy
 
             var originalRequestMesasge = new ChatMLMessage[]
             {
-        new ChatMLMessage
-        {
-          Role = ChatMLMessageRole.System,
-          Content = TemplateRenderer.Render("agent.systemMessage",new Dictionary<string, object>
-          {
-            ["functions"] = new JArray(from i in FeatureDefinitions()
-                                select JObject.FromObject(i)).JsonToString(),
-            ["returnSchema"] = zodSchema.JsonToString()
-          })
-        },
-        new ChatMLMessage
-        {
-          Role = ChatMLMessageRole.User,
-          Content = TemplateRenderer.Render("agent.userMessage",new Dictionary<string, object>
-          {
-            ["prompt"] = prompt
-          })
-        }
+                new ChatMLMessage
+                {
+                    Role = ChatMLMessageRole.System,
+                    Content = TemplateRenderer.Render("agent.systemMessage",new Dictionary<string, object>
+                    {
+                        ["functions"] = new JArray(from i in FeatureDefinitions()
+                                        select JObject.FromObject(i)).JsonToString(),
+                        ["returnSchema"] = zodSchema.JsonToString()
+                    })
+                },
+                new ChatMLMessage
+                {
+                    Role = ChatMLMessageRole.User,
+                    Content = TemplateRenderer.Render("agent.userMessage",new Dictionary<string, object>
+                    {
+                        ["prompt"] = prompt
+                    })
+                }
             };
             var requestMessage = originalRequestMesasge;
             int retryCount = retry;
@@ -159,7 +172,7 @@ namespace Pleisto.Flappy
                 {
                     if (retryCount != retry)
                     {
-                        logger.LogWarning("Plan retry {retryCount}/{retry}", retryCount, retry);
+                        logger?.LogWarning("Plan retry {retryCount}/{retry}", retryCount, retry);
                     }
                     result = await llmPlaner.ChatComplete(requestMessage, null);
                     if (result.Success == false)
@@ -174,7 +187,7 @@ namespace Pleisto.Flappy
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Retry {retry} of {retryCount}", retryCount, retry);
+                    logger?.LogError(ex, "Retry {retry} of {retryCount}", retryCount, retry);
                     if (retryCount <= 0)
                         throw new TooMoreRetryException(retryCount, ex);
                     retryCount -= 1;
@@ -265,8 +278,7 @@ namespace Pleisto.Flappy
             var content = msg.Data.Substring(startIdx, endIdx - startIdx + 1).Trim();
             try
             {
-                JArray json = JArray.Parse(content);
-                return json;
+                return JArray.Parse(content);
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ namespace Pleisto.Flappy.Tests.LLM
             var llm = OnLLMCreate();
             var result = await llm.ChatComplete(new ChatMLMessage[]
              {
-         new ChatMLMessage(){ Content = "Hello world", Role = ChatMLMessageRole.User}
+                 new ChatMLMessage(){ Content = "Hello world", Role = ChatMLMessageRole.User}
              }, null);
             if (result.Success == false)
                 Assert.Fail();

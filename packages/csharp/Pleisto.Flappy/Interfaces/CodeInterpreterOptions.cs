@@ -18,6 +18,6 @@ namespace Pleisto.Flappy.Interfaces
         /// <summary>
         /// Environment variables for code interpreter.
         /// </summary>
-        public Dictionary<string, string> Env { get; set; }
+        public Dictionary<string, string> Env { get; set; } = new Dictionary<string, string>();
     }
 }

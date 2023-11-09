@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using Pleisto.Flappy.Exceptions;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
@@ -9,10 +10,6 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// </summary>
     public static class NativeHandler
     {
-        static NativeHandler()
-        {
-        }
-
         #region Import of native
 
         /// <summary>
@@ -20,7 +17,7 @@ namespace Pleisto.Flappy.CodeInterpreter
         /// </summary>
         /// <returns></returns>
         [DllImport("flappy_csharp_bindings", EntryPoint = "eval_native_call")]
-        [SuppressMessage("Interoperability", "SYSLIB1054:使用 “LibraryImportAttribute” 而不是 “DllImportAttribute” 在编译时生成 P/Invoke 封送代码", Justification = "<挂起>")]
+        [SuppressMessage("Interoperability", "SYSLIB1054")]
         private static extern bool EvalNativeCall();
 
         /// <summary>
@@ -29,7 +26,7 @@ namespace Pleisto.Flappy.CodeInterpreter
         /// <param name="jsonIn"></param>
         /// <returns></returns>
         [DllImport("flappy_csharp_bindings", EntryPoint = "eval_python_code_by_json")]
-        [SuppressMessage("Interoperability", "SYSLIB1054:使用 “LibraryImportAttribute” 而不是 “DllImportAttribute” 在编译时生成 P/Invoke 封送代码", Justification = "<挂起>")]
+        [SuppressMessage("Interoperability", "SYSLIB1054")]
         private static extern IntPtr EvalPythonCodeResultJson(IntPtr jsonIn);
 
         #endregion Import of native
@@ -68,9 +65,9 @@ namespace Pleisto.Flappy.CodeInterpreter
         /// <param name="env">environment</param>
         /// <param name="cacheDir">cache directory</param>
         /// <returns></returns>
-        public static RustStdOutputManaged EvalPythonCode(string code, bool enableNetwork, Dictionary<string, string> env, string cacheDir = null)
+        public static NativeResult EvalPythonCode(string code, bool enableNetwork, Dictionary<string, string> env, string cacheDir = null)
         {
-            var sendTo = JObject.FromObject(new RustStdInputManaged
+            var sendTo = JObject.FromObject(new NativeInput
             {
                 Code = code,
                 Network = enableNetwork,
@@ -83,8 +80,11 @@ namespace Pleisto.Flappy.CodeInterpreter
             try
             {
                 result = EvalPythonCodeResultJson(sendToPtr);
-                var json = JObject.Parse(Marshal.PtrToStringAnsi(result));
-                return json.ToObject<RustStdOutputManaged>();
+                var json = JObject.Parse(Marshal.PtrToStringAnsi(result)).ToObject<NativeResult>();
+                if (json.ExceptionString != null)
+                    throw new CodeInterpreterNativeException(json.ExceptionString);
+                else
+                    return json;
             }
             finally
             {

@@ -8,7 +8,7 @@ namespace Pleisto.Flappy.Features.Invoke
     /// <typeparam name="TArgs">Argument of feature</typeparam>
     /// <typeparam name="TReturn">Return of feature</typeparam>
     /// <typeparam name="TOptions">Options of feature</typeparam>
-    public class InvokeFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature
+    public class InvokeFeature<TArgs, TReturn, TOptions> :  FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature,IInvokeFeature
       where TArgs : class
       where TReturn : class
       where TOptions : FlappyFeatureOption

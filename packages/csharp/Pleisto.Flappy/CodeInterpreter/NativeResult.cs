@@ -5,7 +5,9 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// Managed of Rust Result
     /// </summary>
-    public sealed class RustStdOutputManaged
+    public sealed class NativeResult
+
+
     {
         /// <summary>
         /// Std Error
