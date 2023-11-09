@@ -30,7 +30,7 @@ namespace Pleisto.Flappy.Tests
                      })
                  }
             }, null, null, null);
-            var result = await agent.CallFeature(callName, callResult) as string;
+            var result = await agent.CallFeature(callName, new EasyPayload<string> { Payload = callResult }) as EasyPayload<string>;
             if (result == null)
                 Assert.Fail("result is null!");
             Assert.That(result, Is.EqualTo(callResult));
