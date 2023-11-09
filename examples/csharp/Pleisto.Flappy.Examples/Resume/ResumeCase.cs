@@ -54,7 +54,9 @@ I am a seasoned software engineer with over seven years of experience in front-e
         Auth = new APIAuthentication(apiKey: OpenAIApiKey),
         ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
         ApiVersion = "v1",
-      }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
+      }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>())
+      {
+      };
 
       var lawAgent = new FlappyAgent(new FlappyAgentConfig
       {

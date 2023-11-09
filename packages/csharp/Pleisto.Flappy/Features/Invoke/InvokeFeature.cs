@@ -24,9 +24,9 @@ namespace Pleisto.Flappy.Features.Invoke
         /// <summary>
         /// Invoke function call
         /// </summary>
-        /// <param name="agent"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        /// <param name="agent">FlappyAgent Caller</param>
+        /// <param name="args">Call args</param>
+        /// <returns>Execution result</returns>
         public override async Task<TReturn> Call(FlappyAgent agent, TArgs args)
         {
             return await (Define as InvokeFeatureDefinition<TArgs, TReturn>).Resolve(args);

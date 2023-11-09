@@ -28,6 +28,9 @@ namespace Pleisto.Flappy.Tests.Features
             };
         }
 
+        /// <summary>
+        /// Test map from feature to define
+        /// </summary>
         [Test]
         public void DefineMapper()
         {

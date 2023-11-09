@@ -28,6 +28,20 @@ namespace Pleisto.Flappy.Tests.Features
             Assert.That(result?.Payload, Is.EqualTo("testData123"));
         }
 
+        /// <summary>
+        /// Test invoke feature system call
+        /// </summary>
+        /// <returns></returns>
+        [Test]
+        public async Task InvokeFeatureSystemCallTestAsync()
+        {
+            var feature = CreateFeature();
+            feature.Define.Resolve = new(TestResolve);
+
+            var result = await (feature.Feature as IFlappyFeature).SystemCall(null, new EasyPayload<string> { Payload = "testData123" });
+            Assert.That(result, Is.EqualTo(new EasyPayload<string> { Payload = "testData123" }));
+        }
+
         private static Task<EasyPayload<string>> TestResolve(EasyPayload<string> payload)
         {
             return Task.FromResult((EasyPayload<string>)payload.Payload);
