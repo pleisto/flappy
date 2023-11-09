@@ -12,8 +12,7 @@ const gpt35 = new ChatGPT(
   new OpenAI({
     apiKey: process.env.OPENAI_API_KEY!,
     baseURL: process.env.OPENAI_API_BASE!
-  }),
-  'gpt-3.5-turbo'
+  })
 )
 
 const baichuan = new Baichuan()

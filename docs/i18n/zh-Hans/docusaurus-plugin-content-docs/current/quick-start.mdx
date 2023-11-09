@@ -107,8 +107,7 @@ const chatGpt = new ChatGPT(
   new OpenAI({
     apiKey: env.OPENAI_API_KEY!,
     baseURL: env.OPENAI_API_BASE!
-  }),
-  'gpt-3.5-turbo'
+  })
 )
 ```
 
@@ -132,7 +131,7 @@ const chatGpt = new Baichuan(
 
 ```java
     Dotenv dotenv = Dotenv.load();
-    ChatGPT llm = new ChatGPT("gpt-3.5-turbo", new ChatGPT.ChatGPTConfig(dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+    ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
 ```
 
   </TabItem>
@@ -140,12 +139,10 @@ const chatGpt = new Baichuan(
 
 
 ```kotlin
-  val dotenv = dotenv()
-
-  val chatGPT = ChatGPT(
-    model = "gpt-3.5-turbo",
-    chatGPTConfig = ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
-  )
+val dotenv = dotenv()
+val llm = ChatGPT(
+  ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+)
 ```
 
   </TabItem>

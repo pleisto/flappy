@@ -94,5 +94,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           flags: csharp
+          name: csharp-upload
           fail_ci_if_error: true
           verbose: true

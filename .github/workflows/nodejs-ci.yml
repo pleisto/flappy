@@ -93,5 +93,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           flags: nodejs
+          name: nodejs-upload
           fail_ci_if_error: true
           verbose: true

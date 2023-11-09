@@ -191,8 +191,7 @@ To create an agent, you need to provide an LLM (Large Language Model) along with
 
 ```kotlin
 val llm = ChatGPT(
-  model = "gpt-3.5-turbo",
-  chatGPTConfig = ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
+  ChatGPT.ChatGPTConfig(token = dotenv["OPENAI_TOKEN"], host = dotenv["OPENAI_API_BASE"])
 )
 
 val lawAgent = FlappyBaseAgent(
@@ -208,10 +207,10 @@ val lawAgent = FlappyBaseAgent(
   <summary>Java</summary>
 
 ```java
-ChatGPT llm=new ChatGPT("gpt-3.5-turbo",new ChatGPTConfig(dotenv.get("OPENAI_TOKEN"),dotenv.get("OPENAI_API_BASE")));
-  FlappyBaseAgent lawAgent=new FlappyBaseAgent(
+ChatGPT llm = new ChatGPT(new ChatGPT.ChatGPTConfig(null, dotenv.get("OPENAI_TOKEN"), dotenv.get("OPENAI_API_BASE")));
+FlappyBaseAgent lawAgent=new FlappyBaseAgent(
   llm,Arrays.asList(lawGetMeta,lawGetLatestLawsuitsByPlaintiff)
-  );
+);
 ```
 
 </details>
