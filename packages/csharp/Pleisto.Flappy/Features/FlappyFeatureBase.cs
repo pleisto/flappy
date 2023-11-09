@@ -1,7 +1,5 @@
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema.Generation;
 using Pleisto.Flappy.Interfaces;
-using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Features
 {
@@ -46,9 +44,8 @@ namespace Pleisto.Flappy.Features
             CallingSchema = BuildJsonSchema(define);
         }
 
-        private static JObject BuildJsonSchema(IFlappyFeatureDefinition define)
+        internal static JObject BuildJsonSchema(IFlappyFeatureDefinition define)
         {
-            var schemaGenerator = new JSchemaGenerator();
             return new JObject
             {
                 ["name"] = define.Name,
@@ -58,8 +55,8 @@ namespace Pleisto.Flappy.Features
                     ["type"] = "object",
                     ["properties"] = new JObject
                     {
-                        ["args"] = JObject.FromObject(schemaGenerator.Generate(typeof(TArgs))),
-                        ["returnType"] = JObject.FromObject(schemaGenerator.Generate(typeof(TReturn)))
+                        ["args"] = JObject.FromObject(JsonSchema.FromType<TArgs>()),
+                        ["returnType"] = JObject.FromObject(JsonSchema.FromType<TReturn>())
                     }
                 }
             };

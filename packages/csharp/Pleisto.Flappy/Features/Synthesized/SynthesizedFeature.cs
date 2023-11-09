@@ -27,9 +27,8 @@ namespace Pleisto.Flappy.Features.Syntehesized
         public override async Task<TReturn> Call(FlappyAgent agent, TArgs args)
         {
             var describe = Define.Description;
-            var schema = FlappyAgent.GetSchemaGenerator();
-            var returnTypeSchema = schema.Generate(typeof(TReturn)); //extractSchema(callingSchema, "returnType");
-            var argsSchema = schema.Generate(typeof(TArgs)); ;
+            var returnTypeSchema = JsonSchema.FromType<TReturn>();
+            var argsSchema = JsonSchema.FromType<TArgs>();
             var prompt = JObject.FromObject(args); //(args as object) is string ? args as string : JObject.FromObject(args).ToString();
             var originalRequestMessage = new ChatMLMessage[]{
                   new ChatMLMessage

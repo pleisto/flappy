@@ -135,12 +135,11 @@ namespace Pleisto.Flappy
         /// <returns></returns>
         public async Task<object> ExecutePlan(string prompt, bool enableCot = true)
         {
-            JSchema zodSchema;
-            var schema = GetSchemaGenerator();
+            JsonSchema zodSchema;
             if (enableCot)
-                zodSchema = schema.Generate(typeof(List<LanOutputSchemaCot>));
+                zodSchema = JsonSchema.FromType<List<LanOutputSchemaCot>>();
             else
-                zodSchema = schema.Generate(typeof(List<LanOutputSchema>));
+                zodSchema = JsonSchema.FromType<List<LanOutputSchema>>();
 
             var originalRequestMesasge = new ChatMLMessage[]
             {
@@ -181,8 +180,9 @@ namespace Pleisto.Flappy
                     }
                     plan = ParseComplete(result);
 
-                    if (plan.IsValid(zodSchema, out IList<ValidationError> errorList) == false)
-                        throw new InvalidJsonWithSchemaValidationException(errorList);
+                    var validation = zodSchema.Validate(plan);
+                    if ((validation?.Count ?? 0) != 0 )
+                        throw new InvalidJsonWithSchemaValidationException(validation);
                     break;
                 }
                 catch (Exception ex)
