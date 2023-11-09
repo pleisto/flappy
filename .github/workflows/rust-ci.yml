@@ -77,6 +77,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup perl
+        uses: shogo82148/actions-setup-perl@v1
+        if: ${{ matrix.os }} == "windows-latest"
+        with:
+          perl-version: 5.30
+          distribution: strawberry
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: ${{matrix.target}}
