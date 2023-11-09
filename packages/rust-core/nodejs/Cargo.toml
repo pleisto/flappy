@@ -16,7 +16,7 @@ crate-type = ["cdylib"]
 flappy-common = { path = "../common", version = "*" }
 
 mimalloc.workspace = true
-openssl.workspace = true
+# openssl.workspace = true
 
 napi = { version = "2", default-features = false, features = [
   "napi8",

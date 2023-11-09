@@ -17,7 +17,7 @@ crate-type = ["cdylib"]
 flappy-common = { path = "../common", version = "*" }
 mimalloc.workspace = true
 tokio.workspace = true
-openssl.workspace = true
+# openssl.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 
