@@ -19,7 +19,7 @@ mimalloc.workspace = true
 anyhow.workspace = true
 once_cell.workspace = true
 num_cpus.workspace = true
-openssl.workspace = true
+# openssl.workspace = true
 tokio.workspace = true
 thiserror.workspace = true
 
