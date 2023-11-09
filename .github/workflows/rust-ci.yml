@@ -62,7 +62,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # toolchain: [stable]
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -85,7 +84,6 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           target: ${{matrix.target}}
 
       - name: Install cross-compilation tools

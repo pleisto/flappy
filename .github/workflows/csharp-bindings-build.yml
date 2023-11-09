@@ -126,7 +126,6 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
         with:
-          toolchain: stable
           targets: ${{ matrix.settings.target }}
 
       - name: Install cross-compilation tools
