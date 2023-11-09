@@ -65,7 +65,7 @@ namespace Pleisto.Flappy
             this.llm = llm ?? config.LLM;
             this.llmPlaner = llmPlaner ?? config.LLMPlaner ?? this.llm;
             this.retry = config.Retry ?? DEFAULT_RETRY;
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.logger = logger;
         }
 
         /// <summary>
