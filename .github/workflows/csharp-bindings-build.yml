@@ -264,7 +264,6 @@ jobs:
 
       - name: publish nuget pkg
         run: |
-          cd packages/csharp
           find -type f | grep nupkg$ | grep -v 'symbols\.nupkg$' | while read line; do
             echo "Pulish: $line"
             nuget push $line \
