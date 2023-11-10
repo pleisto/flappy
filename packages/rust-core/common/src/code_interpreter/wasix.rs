@@ -50,6 +50,8 @@ pub struct SandboxOutput {
 }
 
 async fn get_sandbox_path(cache_path: PathBuf) -> anyhow::Result<PathBuf> {
+  println!("cache path {:?}", cache_path);
+
   // Get python interpreter web container from the wasmer registry
   let file_path = get_package(
     PYTHON_INTERPRETER_WASM_PKG.to_string(),
@@ -57,6 +59,8 @@ async fn get_sandbox_path(cache_path: PathBuf) -> anyhow::Result<PathBuf> {
     None,
   )
   .await?;
+
+  println!("sandbox path {:?}", file_path);
 
   Ok(file_path)
 }
@@ -119,6 +123,8 @@ pub async fn python_sandbox(
     .with_stderr(Arc::clone(&stderr))
     .with_envs(envs)
     .with_capabilities(caps);
+
+  println!("runner {:?}", runner);
   runner
     .with_args(["-c", &code])
     .run_command("python", &bin_pkg, Arc::new(runtime))?;
@@ -162,6 +168,12 @@ mod tests {
   use super::*;
 
   #[tokio::test]
+  async fn test_sandbox() {
+    test_python_sandbox().await;
+    test_dumb_sandbox().await;
+    test_failed_sandbox().await;
+  }
+
   async fn test_python_sandbox() {
     let code = "print('hello world')";
     let output = python_sandbox(code.to_string(), true, vec![], None)
@@ -172,24 +184,22 @@ mod tests {
     assert_eq!(output.stderr, "");
   }
 
-  // #[tokio::test]
-  // async fn test_dumb_sandbox() {
-  //   let code = "1+1";
-  //   let output = python_sandbox(code.to_string(), true, vec![], None)
-  //     .await
-  //     .unwrap();
-  //   //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
-  //   assert_eq!(output.stdout, "");
-  //   assert_eq!(output.stderr, "");
-  // }
+  async fn test_dumb_sandbox() {
+    let code = "1+1";
+    let output = python_sandbox(code.to_string(), true, vec![], None)
+      .await
+      .unwrap();
+    //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
+    assert_eq!(output.stdout, "");
+    assert_eq!(output.stderr, "");
+  }
 
-  // #[tokio::test]
-  // async fn test_failed_sandbox() {
-  //   let code = "foo";
-  //   let output = python_sandbox(code.to_string(), true, vec![], None)
-  //     .await
-  //     .unwrap_err();
-  //   //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
-  //   assert_eq!(output.to_string(), "WASI error");
-  // }
+  async fn test_failed_sandbox() {
+    let code = "foo";
+    let output = python_sandbox(code.to_string(), true, vec![], None)
+      .await
+      .unwrap_err();
+    //println!("result: {:?}, stderr: {:?}", output.stdout, output.stderr);
+    assert_eq!(output.to_string(), "WASI error");
+  }
 }

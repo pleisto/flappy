@@ -64,7 +64,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: x86_64-pc-windows-gnu
           - target: x86_64-pc-windows-msvc
     steps:
       - uses: actions/checkout@v4
@@ -85,11 +84,9 @@ jobs:
 
       - name: Build
         run: cargo build --profile=test
-        shell: pwsh
 
       - name: Test
-        run: cargo test --verbose
-        shell: pwsh
+        run: cargo test --verbose -- --nocapture
 
   test:
     name: rust-ci-test
@@ -144,4 +141,4 @@ jobs:
 
       - name: Test
         if: ${{ matrix.test }}
-        run: cargo test --verbose
+        run: cargo test --verbose -- --nocapture
