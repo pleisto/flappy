@@ -19,7 +19,7 @@ async-trait.workspace = true
 futures.workspace = true
 tracing.workspace = true
 derivative.workspace = true
-
+openssl.workspace = true
 wasmer = "4.2.3"
 wasmer-registry = "5.9.0"
 wasmer-vm = "4.2.3"
