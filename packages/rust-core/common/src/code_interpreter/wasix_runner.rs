@@ -275,10 +275,8 @@ impl wasmer_wasix::runners::Runner for WasixRunner {
       .threading
       .enable_asynchronous_threading
     {
-      println!("run with store async {:?}", env);
       env.run_with_store_async(module, store)?;
     } else {
-      println!("run with store {:?}", env);
       env.run_with_store(module, &mut store)?;
     }
 

@@ -50,8 +50,6 @@ pub struct SandboxOutput {
 }
 
 async fn get_sandbox_path(cache_path: PathBuf) -> anyhow::Result<PathBuf> {
-  println!("cache path {:?}", cache_path);
-
   // Get python interpreter web container from the wasmer registry
   let file_path = get_package(
     PYTHON_INTERPRETER_WASM_PKG.to_string(),
@@ -59,8 +57,6 @@ async fn get_sandbox_path(cache_path: PathBuf) -> anyhow::Result<PathBuf> {
     None,
   )
   .await?;
-
-  println!("sandbox path {:?}", file_path);
 
   Ok(file_path)
 }

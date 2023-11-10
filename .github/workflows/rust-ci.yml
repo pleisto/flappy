@@ -85,8 +85,8 @@ jobs:
       - name: Build
         run: cargo build --profile=test
 
-      - name: Test
-        run: cargo test --verbose -- --nocapture
+      # - name: Test
+      #   run: cargo test --verbose -- --nocapture
 
   test:
     name: rust-ci-test

@@ -38,5 +38,9 @@ lto = true
 codegen-units = 1
 strip = true
 
+[profile.test]
+opt-level = 0
+debug = true
+
 [profile.dev]
 incremental = true
