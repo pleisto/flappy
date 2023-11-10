@@ -47,71 +47,38 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             artifact: libflappy_csharp_bindings.dylib
-            build: |
-              cargo build -r --target x86_64-apple-darwin
+            build: cargo build -r --target x86_64-apple-darwin
 
           - host: macos-latest
             target: aarch64-apple-darwin
             artifact: libflappy_csharp_bindings.dylib
-            build: |
-              cargo build -r --target aarch64-apple-darwin
+            build: cargo build -r --target aarch64-apple-darwin
 
           - host: ubuntu-latest
             target: x86_64-pc-windows-gnu
             command: sudo apt-get install -y gcc-mingw-w64-x86-64-win32 && cargo install cargo-xwin
             artifact: flappy_csharp_bindings.dll
-            build: |
-              cargo build -r --target x86_64-pc-windows-gnu
+            build: cargo build -r --target x86_64-pc-windows-gnu
 
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             artifact: libflappy_csharp_bindings.so
-            build: |-
-              set -e && \
-              sudo apt-get update
-              sudo apt-get install build-essential perl pkg-config libssl-dev -y
-              cargo build -r --target x86_64-unknown-linux-gnu
+            build: cargo build -r --target x86_64-unknown-linux-gnu
 
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             artifact: libflappy_csharp_bindings.so
-            build: |
-              apk add pkgconfig openssl-dev gcc g++ make perl
-              set -e
-              cargo build -r --target x86_64-unknown-linux-musl
+            build: cargo build -r --target x86_64-unknown-linux-musl
 
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
             artifact: libflappy_csharp_bindings.so
-            build: |-
-              set -e && \
-              sudo apt-get update && \
-              sudo apt-get install build-essential -y && \
-              sudo apt-get install perl -y && \
-              sudo apt-get install pkg-config libssl-dev -y && \
-              export LDFLAGS="-L/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5" && \
-              export CFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
-              export CXXFLAGS="-fuse-ld=lld -mcrc -B/usr/aarch64-unknown-linux-gnu/lib/gcc/aarch64-unknown-linux-gnu/4.8.5 --sysroot=/usr/aarch64-unknown-linux-gnu/aarch64-unknown-linux-gnu/sysroot" && \
-              cargo build -r --target aarch64-unknown-linux-gnu
+            build: cargo build -r --target aarch64-unknown-linux-gnu
 
-          #- host: ubuntu-latest
-          #  target: aarch64-linux-android
-          #  artifact: target/x86_64-apple-darwin/*.so
-          #  build: |
-          #    cargo build --target aarch64-linux-android
-
-          #- host: ubuntu-latest
-          #  target: aarch64-unknown-linux-musl
-          #  docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-          #  artifact: libflappy_csharp_bindings.so
-          #  build: |-
-          #    set -e && \
-          #    apk add pkgconfig openssl-dev gcc g++ make perl && \
-          #    rustup target add aarch64-unknown-linux-musl && \
-          #    cargo build -r --target aarch64-unknow-linux-musl
+          # - host: ubuntu-latest
+          #   target: aarch64-unknown-linux-musl
+          #   artifact: libflappy_csharp_bindings.so
+          #   build: cargo build -r --target aarch64-unknow-linux-musl
 
     name: csharp-bindings-publish-build
     runs-on: ${{ matrix.settings.host }}
@@ -124,13 +91,11 @@ jobs:
 
       - name: Install
         uses: dtolnay/rust-toolchain@stable
-        if: ${{ !matrix.settings.docker }}
         with:
           targets: ${{ matrix.settings.target }}
 
       - name: Install cross-compilation tools
         uses: taiki-e/setup-cross-toolchain-action@v1
-        if: ${{ !matrix.settings.docker }}
         with:
           target: ${{matrix.settings.target}}
 
@@ -145,19 +110,8 @@ jobs:
             target/
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}
 
-      - name: Build in docker
-        uses: addnab/docker-run-action@v3
-        if: ${{ matrix.settings.docker }}
-        with:
-          image: ${{ matrix.settings.docker }}
-          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
-          run: |
-            cd packages/rust-core/csharp
-            ${{ matrix.settings.build }}
-
       - name: Build
         run: ${{ matrix.settings.build }}
-        if: ${{ !matrix.settings.docker }}
         shell: bash
         working-directory: packages/rust-core/csharp
 
