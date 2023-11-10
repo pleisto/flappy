@@ -84,12 +84,11 @@ jobs:
         if: ${{matrix.command}}
         run: ${{matrix.command}}
 
-      - name: Setup perl
-        uses: shogo82148/actions-setup-perl@v1
+      - name: Setup Choco and perl
+        uses: crazy-max/ghaction-chocolatey@v3
         if: ${{ matrix.os == 'windows-latest' }}
         with:
-          perl-version: '5.34'
-          distribution: strawberry
+          args: install -y strawberryperl
 
       - uses: dtolnay/rust-toolchain@stable
         with:
