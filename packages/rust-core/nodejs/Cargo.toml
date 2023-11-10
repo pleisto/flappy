@@ -4,6 +4,7 @@ version = "0.1.0"
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+publish = false
 
 [package.metadata.workspaces]
 independent = true
@@ -15,7 +16,6 @@ crate-type = ["cdylib"]
 flappy-common = { path = "../common", version = "*" }
 
 mimalloc.workspace = true
-openssl.workspace = true
 
 napi = { version = "2", default-features = false, features = [
   "napi8",

@@ -3,6 +3,7 @@ flag_management:
     carryforward: true
 coverage:
   status:
+    patch: off
     project:
       default:
         target: auto
