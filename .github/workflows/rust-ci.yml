@@ -66,23 +66,37 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             command: sudo apt-get update && sudo apt-get install pkg-config libssl-dev
+
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
-            command: sudo apt-get update && sudo apt-get install pkg-config libssl-dev
-          # - os: macos-latest
-          # target: aarch64-apple-darwin
+            command: sudo apt-get update && sudo apt-get install pkg-config libssl-dev musl-tools librust-openssl-sys-dev
+
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            command: sudo apt-get update && sudo apt-get install pkg-config libssl-dev librust-openssl-sys-dev
+
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            command: sudo apt-get update && sudo apt-get install pkg-config libssl-dev librust-openssl-sys-dev musl-tools
+
           - os: macos-latest
             target: x86_64-apple-darwin
             command: brew install openssl@1.1
+
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            command: brew install openssl@1.1
+            skip_test: true
+
           - os: windows-latest
             target: x86_64-pc-windows-gnu
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run command ${{matrix.command}}
-        if: ${{matrix.command}}
-        run: ${{matrix.command}}
+      - name: Run command ${{ matrix.command }}
+        if: ${{ matrix.command }}
+        run: ${{ matrix.command }}
 
       - name: Setup Choco and perl
         uses: crazy-max/ghaction-chocolatey@v3
@@ -92,12 +106,16 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          target: ${{matrix.target}}
+          target: ${{ matrix.target }}
 
       - name: Install cross-compilation tools
         uses: taiki-e/setup-cross-toolchain-action@v1
         with:
-          target: ${{matrix.target}}
+          target: ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --profile=test
 
       - name: Test
+        if: ${{ !matrix.skip_test }}
         run: cargo test --verbose
