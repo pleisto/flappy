@@ -1,0 +1,131 @@
+name: Coverage
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'codecov.yml'
+      - '.github/workflows/coverage.yml'
+      - 'packages/nodejs/**'
+      - 'packages/kotlin/**'
+      - 'packages/csharp/**'
+  push:
+    branches: [main]
+    paths:
+      - 'codecov.yml'
+      - '.github/workflows/coverage.yml'
+      - 'packages/nodejs/**'
+      - 'packages/kotlin/**'
+      - 'packages/csharp/**'
+
+jobs:
+  nodejs:
+    name: nodejs-coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Coverage
+        run: yarn coverage
+        working-directory: packages/nodejs
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: packages/nodejs
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: nodejs
+          name: nodejs-upload
+          fail_ci_if_error: true
+          verbose: true
+
+  kotlin:
+    name: kotlin-coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.9.0
+        with:
+          gradle-version: wrapper
+
+      - name: coverage
+        run: ./gradlew build check
+        working-directory: packages/kotlin
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: kotlin
+          name: kotlin-upload
+          fail_ci_if_error: true
+          verbose: true
+
+  csharp:
+    name: csharp-coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: dotnet test
+        working-directory: packages/csharp
+        run: |
+          dotnet tool install --global dotnet-coverage
+          dotnet coverage collect \
+            --output-format=xml --output=coverage.xml \
+            dotnet test -e NO_GPT_TEST=true --framework net7.0
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bindings
+          path: packages/csharp/coverage.xml
+          if-no-files-found: error
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: packages/csharp
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          flags: csharp
+          name: csharp-upload
+          fail_ci_if_error: true
+          verbose: true
