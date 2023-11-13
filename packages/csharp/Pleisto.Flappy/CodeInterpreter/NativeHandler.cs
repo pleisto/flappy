@@ -81,7 +81,7 @@ namespace Pleisto.Flappy.CodeInterpreter
             {
                 result = EvalPythonCodeResultJson(sendToPtr);
                 var json = JObject.Parse(Marshal.PtrToStringAnsi(result)).ToObject<NativeResult>();
-                if (json.ExceptionString != null)
+                if (!string.IsNullOrWhiteSpace(json.ExceptionString))
                     throw new CodeInterpreterNativeException(json);
                 else
                     return json;
