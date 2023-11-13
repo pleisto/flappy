@@ -5,8 +5,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Pleisto.Flappy.Tests</RootNamespace>
-
-    <TargetFramework>net7.0;net6.0;netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
