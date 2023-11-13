@@ -83,16 +83,5 @@ jobs:
         run: yarn install --immutable
 
       - name: Test
-        run: yarn coverage
+        run: yarn test
         working-directory: ./packages/nodejs
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          working-directory: ./packages/nodejs
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          flags: nodejs
-          name: nodejs-upload
-          fail_ci_if_error: true
-          verbose: true
