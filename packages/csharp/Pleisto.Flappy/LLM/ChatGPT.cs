@@ -74,6 +74,7 @@ namespace Pleisto.Flappy.LLM
                 //MaxTokens = (config?.maxTokens ?? maxTokens),
                 Temperature = config?.Temperature,
                 TopP = config?.Top_P,
+                 
             });
 
             logger?.LogDebug("chatGpt: {}", resp.Choices[0].Message.Content);

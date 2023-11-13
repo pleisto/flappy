@@ -1,7 +1,6 @@
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Pleisto.Flappy.CodeInterpreter;
-using Pleisto.Flappy.Examples.CodeInterpreter;
 
 namespace Pleisto.Flappy.Tests
 {
@@ -27,20 +26,12 @@ print('Hello World');
         }
 
         /// <summary>
-        /// Test result of python version
-        /// </summary>
-        [Test]
-        public void PythonInspect()
-        {
-            new NativeCall().OnExecute();
-        }
-
-        /// <summary>
         /// Test of environment
         /// </summary>
         [Test]
         public void PythonEnvironment()
         {
+            const string env = "this_is_env_test_success";
             const string pythonEnvironment = @"
 import os
 
@@ -48,10 +39,10 @@ print(os.environ['testEnv'])
 ";
             var result = NativeHandler.EvalPythonCode(pythonEnvironment, false, new Dictionary<string, string>
             {
-                ["testEnv"] = "123123123"
+                ["testEnv"] = env
             });
             Console.WriteLine(JObject.FromObject(result).ToString());
-            Assert.That(result.StdOut.Trim(), Is.EqualTo("123123123"));
+            Assert.That(result.StdOut.Trim(), Is.EqualTo(env));
         }
 
         /// <summary>

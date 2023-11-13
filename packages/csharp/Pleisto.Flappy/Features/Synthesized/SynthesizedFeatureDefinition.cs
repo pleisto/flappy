@@ -8,7 +8,7 @@ namespace Pleisto.Flappy.Features.Syntehesized
     /// </summary>
     /// <typeparam name="TArgs"></typeparam>
     /// <typeparam name="TReturn"></typeparam>
-    public class SynthesizedFeatureDefinition<TArgs, TReturn> : InvokeFeatureDefinition<TArgs, TReturn>, IFlappyFeatureDefinition<TArgs, TReturn>
+    public class SynthesizedFeatureDefinition<TArgs, TReturn> : InvokeFeatureDefinition<TArgs, TReturn>, IFlappyFeatureDefinition
       where TArgs : class
       where TReturn : class
     {

@@ -1,7 +1,5 @@
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema.Generation;
 using Pleisto.Flappy.Interfaces;
-using Pleisto.Flappy.Utils;
 
 namespace Pleisto.Flappy.Features
 {
@@ -19,7 +17,7 @@ namespace Pleisto.Flappy.Features
         /// <summary>
         /// Feature definition
         /// </summary>
-        public IFlappyFeatureDefinition<TArgs, TReturn> Define;
+        public IFlappyFeatureDefinition Define { get; private set; }
 
         /// <summary>
         /// Feature options
@@ -40,15 +38,14 @@ namespace Pleisto.Flappy.Features
         /// Create Flappy Fature Base
         /// </summary>
         /// <param name="define">Feature Definition</param>
-        public FlappyFeatureBase(IFlappyFeatureDefinition<TArgs, TReturn> define)
+        public FlappyFeatureBase(IFlappyFeatureDefinition define)
         {
             Define = define;
             CallingSchema = BuildJsonSchema(define);
         }
 
-        private static JObject BuildJsonSchema(IFlappyFeatureDefinition<TArgs, TReturn> define)
+        internal static JObject BuildJsonSchema(IFlappyFeatureDefinition define)
         {
-            var schemaGenerator = new JSchemaGenerator();
             return new JObject
             {
                 ["name"] = define.Name,
@@ -58,8 +55,8 @@ namespace Pleisto.Flappy.Features
                     ["type"] = "object",
                     ["properties"] = new JObject
                     {
-                        ["args"] = JObject.FromObject(schemaGenerator.Generate(typeof(TArgs))),
-                        ["returnType"] = JObject.FromObject(schemaGenerator.Generate(typeof(TReturn)))
+                        ["args"] = JObject.FromObject(JsonSchema.FromType<TArgs>()),
+                        ["returnType"] = JObject.FromObject(JsonSchema.FromType<TReturn>())
                     }
                 }
             };

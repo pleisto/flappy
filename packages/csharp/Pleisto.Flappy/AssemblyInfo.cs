@@ -1,3 +1,5 @@
+global using JsonSchema = NJsonSchema.JsonSchema;
+
 using System.Runtime.CompilerServices;
 
 // for test app

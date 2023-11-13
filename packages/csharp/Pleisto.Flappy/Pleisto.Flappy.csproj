@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<ProductName>Pleisto.Flappy</ProductName>
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
@@ -11,7 +12,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>agent;transfromers;llama;llm;generative-ai;chatgpt;rewoo</PackageTags>
-    
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -29,9 +29,10 @@
     </PackageReference>
     <PackageReference Include="Mustache" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
+    <PackageReference Include="NJsonSchema" Version="10.9.0" />
     <PackageReference Include="OpenAI" Version="1.7.2" />
     <PackageReference Include="Pleisto.Flappy.Native" Version="0.0.0.7" />
+    <PackageReference Include="Stubble.Core" Version="1.10.8" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Text.Encodings.Web" Version="7.0.0" />

@@ -5,7 +5,7 @@ namespace Pleisto.Flappy.CodeInterpreter
     /// <summary>
     /// CodeInterpreter Input Argument
     /// </summary>
-    internal sealed class RustStdInputManaged
+    internal sealed class NativeInput
     {
         /// <summary>
         /// Python Code

@@ -24,7 +24,7 @@ namespace Pleisto.Flappy.Features.CodeInterpreter
     /// <typeparam name="TArgs">Argument of feature</typeparam>
     /// <typeparam name="TReturn">Return of feature</typeparam>
     /// <typeparam name="TOptions">Options of feature</typeparam>
-    public class CodeInterpreterFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature
+    public class CodeInterpreterFeature<TArgs, TReturn, TOptions> : FlappyFeatureBase<TArgs, TReturn, TOptions>, IFlappyFeature,ICodeInterpreterFeature
       where TArgs : CodeInterpreterInput
       where TReturn : CodeInterpreterOutput, new()
       where TOptions : CodeInterpreterOptions
@@ -39,7 +39,7 @@ namespace Pleisto.Flappy.Features.CodeInterpreter
             Name = Name,
             Description = TemplateRenderer.Render("features.codeInterpreter.description", new Dictionary<string, object>
             {
-                ["enabled"] = options?.EnableNetwork ?? false
+                ["#enabled"] = options?.EnableNetwork ?? false
             })
         })
         {

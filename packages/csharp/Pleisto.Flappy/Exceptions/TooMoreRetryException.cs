@@ -8,7 +8,7 @@ namespace Pleisto.Flappy.Exceptions
         internal TooMoreRetryException(int count, Exception inner)
           : base($"retried count={count}", inner)
         {
-            this.RetryCount = count;
+            RetryCount = count;
         }
 
         /// <summary>

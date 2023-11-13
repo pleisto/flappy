@@ -1,10 +1,14 @@
 using Mustache;
+using Stubble.Core.Builders;
 using System.Reflection;
 
 namespace Pleisto.Flappy.Utils
 {
     internal static class TemplateRenderer
     {
+        /// <summary>
+        /// Template lists
+        /// </summary>
         public static IEnumerable<string> Templates
            => from i in CurrentAssembly.GetManifestResourceNames()
               where i.EndsWith(".mustache")
@@ -46,12 +50,18 @@ namespace Pleisto.Flappy.Utils
         /// e.g features.synthesized.systemMessage.mustache or features.synthesized.systemMessage
         /// </param>
         /// <param name="argument">render argument</param>
-        /// <returns></returns>
+        /// <returns>Rendered string</returns>
         public static string Render(string name, Dictionary<string, object> argument)
         {
-            FormatCompiler compiler = new FormatCompiler();
-            Generator generator = compiler.Compile(GetTemplate(name));
-            return generator.Render(argument);
+            try
+            {
+                var builder = new StubbleBuilder().Build();
+                return builder.Render(GetTemplate(name), argument);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidDataException($"unable to render template:{name}", ex);
+            }
         }
     }
 }

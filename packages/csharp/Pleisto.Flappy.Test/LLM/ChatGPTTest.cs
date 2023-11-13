@@ -5,9 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Pleisto.Flappy.Tests.LLM
 {
+    /// <summary>
+    /// ChatGPT test
+    /// </summary>
     public class ChatGPTTest : LLMTest<ChatGPT>
     {
-        [SuppressMessage("Performance", "CA1822:将成员标记为 static", Justification = "<挂起>")]
+        [SuppressMessage("Performance", "CA1822")]
         private string OpenAIApiKey => Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
         protected override ChatGPT OnLLMCreate()

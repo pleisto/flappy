@@ -5,10 +5,8 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Pleisto.Flappy.Tests</RootNamespace>
-
-    
+    <TargetFrameworks>net7.0;net6.0;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
@@ -22,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\examples\csharp\Pleisto.Flappy.Examples\Pleisto.Flappy.Examples.csproj" />
     <ProjectReference Include="..\Pleisto.Flappy\Pleisto.Flappy.csproj" />
   </ItemGroup>
 

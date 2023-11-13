@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Schema;
+using NJsonSchema.Validation;
 using System.Text;
 
 namespace Pleisto.Flappy.Exceptions

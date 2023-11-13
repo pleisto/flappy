@@ -3,20 +3,16 @@ namespace Pleisto.Flappy.Interfaces
     /// <summary>
     /// Flappy Feature Definition
     /// </summary>
-    /// <typeparam name="TArgs">Argument of Feature Call</typeparam>
-    /// <typeparam name="TReturn">Function Return</typeparam>
-    public interface IFlappyFeatureDefinition<TArgs, TReturn>
-      where TArgs : class
-      where TReturn : class
+    public interface IFlappyFeatureDefinition
     {
         /// <summary>
         /// Name of feature
         /// </summary>
-        public string Name { get; }
+        public string Name { get;  set; }
 
         /// <summary>
         /// Description of feature
         /// </summary>
-        public string Description { get; }
+        public string Description { get; set; }
     }
 }

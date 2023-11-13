@@ -5,4 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Performance", "CA1822")]
+[assembly: SuppressMessage("Maintainability", "CA1510")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079")]
