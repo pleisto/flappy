@@ -16,10 +16,11 @@ rustflags = ["-C", "target-cpu=sandybridge"]
 # SSE4.2 and AVX instructions for SIMD support.
 # Since sandy bridge is released in 2011, we can assume that most
 # of our users have a CPU that supports these instructions.
-rustflags = ["-C", "target-cpu=sandybridge"]
+rustflags = ["-C", "target-cpu=sandybridge", "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup"]
 
 [target.aarch64-apple-darwin]
-rustflags = ["-C", "target-cpu=apple-m1",  "-C", "link-arg=-undefined",
+rustflags = ["-C", "target-cpu=apple-m1", "-C", "link-arg=-undefined",
   "-C", "link-arg=dynamic_lookup"]
 
 [target.x86_64-apple-darwin]

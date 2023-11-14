@@ -6,7 +6,10 @@ resolver = "2"
 [workspace.package]
 license = "Apache-2.0"
 repository = "https://github.com/pleisto/flappy"
+homepage = "https://flappy.pleisto.com"
 edition = "2021"
+keywords = []
+categories = []
 
 [workspace.dependencies]
 mimalloc = { version = "0.1.39", default-features = false }
