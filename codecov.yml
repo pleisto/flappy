@@ -20,6 +20,9 @@ coverage:
         flags:
           - csharp
 flags:
+  rust:
+    paths:
+      - packages/rust-core/
   nodejs:
     paths:
       - packages/nodejs/

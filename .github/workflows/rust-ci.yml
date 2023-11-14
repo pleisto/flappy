@@ -56,6 +56,17 @@ jobs:
       - name: Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
 
+  deny:
+    name: rust-ci-deny
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - run: cargo install cargo-deny
+      - run: cargo deny check
+
   windows-test:
     name: rust-ci-test-windows
     runs-on: windows-latest

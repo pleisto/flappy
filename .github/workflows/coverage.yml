@@ -10,6 +10,7 @@ on:
     paths:
       - 'codecov.yml'
       - '.github/workflows/coverage.yml'
+      - 'packages/rust-core/**'
       - 'packages/nodejs/**'
       - 'packages/kotlin/**'
       - 'packages/csharp/**'
@@ -18,11 +19,38 @@ on:
     paths:
       - 'codecov.yml'
       - '.github/workflows/coverage.yml'
+      - 'packages/rust-core/**'
       - 'packages/nodejs/**'
       - 'packages/kotlin/**'
       - 'packages/csharp/**'
 
 jobs:
+  rust:
+    name: rust-coverage
+    runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:develop-nightly
+      options: --security-opt seccomp=unconfined
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Generate code coverage
+        working-directory: packages/rust-core
+        run: |
+          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 300 --run-types doctests --run-types lib --run-types tests --out xml
+
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: packages/rust-core
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: rust
+          name: rust-upload
+          fail_ci_if_error: true
+          verbose: true
+
   nodejs:
     name: nodejs-coverage
     runs-on: ubuntu-latest
@@ -46,8 +74,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           working-directory: packages/nodejs
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: nodejs
           name: nodejs-upload
           fail_ci_if_error: true
@@ -77,8 +104,9 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          working-directory: packages/kotlin
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: kotlin
           name: kotlin-upload
           fail_ci_if_error: true
@@ -123,8 +151,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           working-directory: packages/csharp
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           flags: csharp
           name: csharp-upload
           fail_ci_if_error: true
