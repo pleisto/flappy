@@ -27,18 +27,18 @@ on:
 jobs:
   rust:
     name: rust-coverage
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
 
       - run: cargo install cargo-tarpaulin
 
       - name: Generate code coverage
         working-directory: packages/rust-core
         run: |
-          cargo tarpaulin --verbose --all-features --workspace --timeout 300 --run-types doctests --run-types lib --run-types tests --out xml
+          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 300 --run-types doctests --run-types lib --run-types tests --out xml
 
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v3
