@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/github/license/pleisto/flappy)](../../LICENSE)
 [![NuGet version (Pleisto.Flappy)](https://img.shields.io/nuget/v/Pleisto.Flappy.svg?style=flat-square)](https://www.nuget.org/packages/Pleisto.Flappy/)
 [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/csharp-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/csharp-ci.yml)
+[![codecov](https://codecov.io/gh/pleisto/flappy/graph/badge.svg?token=8C94YY3KBD&flag=csharp)](https://codecov.io/gh/pleisto/flappy)
 
 This package is the CSharp version of the flappy implementation.
 
