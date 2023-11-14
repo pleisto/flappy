@@ -4,21 +4,7 @@ flag_management:
 coverage:
   status:
     patch: off
-    project:
-      default:
-        target: auto
-      nodejs:
-        target: auto
-        flags:
-          - nodejs
-      kotlin:
-        target: auto
-        flags:
-          - kotlin
-      csharp:
-        target: auto
-        flags:
-          - csharp
+    project: off
 flags:
   rust:
     paths:

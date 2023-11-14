@@ -7,6 +7,7 @@ This package is about the Node.js version of the implementation which is written
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/nodejs-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/nodejs-ci.yml)
 [![NPM version](https://img.shields.io/npm/v/%40pleisto/node-flappy/next.svg)](https://npmjs.org/package/@pleisto/node-flappy)
+[![codecov](https://codecov.io/gh/pleisto/flappy/graph/badge.svg?token=8C94YY3KBD&flag=nodejs)](https://codecov.io/gh/pleisto/flappy)
 
 </div>
 

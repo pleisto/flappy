@@ -4,6 +4,7 @@
 
 [![License](https://img.shields.io/github/license/pleisto/flappy.svg)](https://raw.githubusercontent.com/pleisto/flappy/main/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/pleisto/flappy/rust-ci.yml.svg)](https://github.com/pleisto/flappy/actions/workflows/rust-ci.yml)
+[![codecov](https://codecov.io/gh/pleisto/flappy/graph/badge.svg?token=8C94YY3KBD&flag=rust)](https://codecov.io/gh/pleisto/flappy)
 
 </div>
 
