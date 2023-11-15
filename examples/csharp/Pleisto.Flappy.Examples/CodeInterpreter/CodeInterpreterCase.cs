@@ -15,7 +15,7 @@ namespace Pleisto.Flappy.Examples.CodeInterpreter
       var gpt35 = new ChatGPT(new OpenAIAPI
       {
         Auth = new APIAuthentication(apiKey: OpenAIApiKey),
-        ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+        ApiUrlFormat =OpenAIApiUrl,
         ApiVersion = "v1",
       }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
 

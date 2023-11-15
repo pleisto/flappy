@@ -153,7 +153,7 @@ val llm = ChatGPT(
   var gpt35 = new ChatGPT(new OpenAIAPI
   {
     Auth = new APIAuthentication(apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")),
-    ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+    ApiUrlFormat = Environment.GetEnvironmentVariable("OPENAI_API_URL"),
     ApiVersion = "v1",
   }, "gpt-3.5-turbo", null, null);
 ```
@@ -462,7 +462,7 @@ suspend fun main(args: Array<String>) {
       var gpt35 = new ChatGPT(new OpenAIAPI
       {
         Auth = new APIAuthentication(apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")),
-        ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+        ApiUrlFormat = Environment.GetEnvironmentVariable("OPENAI_API_URL"),
         ApiVersion = "v1",
       }, "gpt-3.5-turbo", null, Logger.CreateLogger<ChatGPT>());
 

@@ -20,7 +20,7 @@ namespace Pleisto.Flappy.Tests.LLM
             return new ChatGPT(new OpenAIAPI
             {
                 Auth = new APIAuthentication(apiKey: OpenAIApiKey),
-                ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+                ApiUrlFormat = Environment.GetEnvironmentVariable("OPENAI_API_URL"),
                 ApiVersion = "v1",
             }, "gpt-3.5-turbo", null, null);
         }

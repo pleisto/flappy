@@ -11,7 +11,7 @@ namespace Pleisto.Flappy.Examples
     public string OpenAIApiKey { get; set; } = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
     [Option("--openai-api-url")]
-    public string OpenAIApiUrl { get; set; } = "https://openai.api2d.net/{0}/{1}";
+    public string OpenAIApiUrl { get; set; } = Environment.GetEnvironmentVariable("OPENAI_API_URL");
 
     protected static readonly ILoggerFactory Logger = LoggerFactory.Create(builder =>
      {
