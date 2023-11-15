@@ -1,9 +1,15 @@
 [package]
 name = "flappy-common"
 version = "0.1.0"
+description = ""
+
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
 publish = false
 
 [package.metadata.workspaces]
