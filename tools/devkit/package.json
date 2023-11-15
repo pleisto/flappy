@@ -17,9 +17,9 @@
     "@types/yargs": "^17.0.29"
   },
   "dependencies": {
-    "@angular-devkit/core": "^16.2.7",
-    "@angular-devkit/schematics": "^16.2.7",
-    "@angular-devkit/schematics-cli": "^16.2.7",
+    "@angular-devkit/core": "^17.0.0",
+    "@angular-devkit/schematics": "^17.0.0",
+    "@angular-devkit/schematics-cli": "^17.0.0",
     "chalk": "^4.1.2",
     "jsonc": "^2.0.0",
     "ts-mustache": "^0.0.2",
