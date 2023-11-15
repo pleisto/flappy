@@ -103,7 +103,7 @@ To create an agent, you need to provide an LLM (Large Language Model) along with
 var gpt35 = new ChatGPT(new OpenAIAPI
 {
     Auth = new APIAuthentication(apiKey: OpenApiKey),
-    ApiUrlFormat = "https://openai.api2d.net/{0}/{1}",
+    ApiUrlFormat = OpenApiUrl,
     ApiVersion = "v1",
 }, "gpt-3.5-turbo", null);
 

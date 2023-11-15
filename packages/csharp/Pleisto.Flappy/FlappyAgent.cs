@@ -57,7 +57,7 @@ namespace Pleisto.Flappy
         /// <param name="llmPlaner"></param>
         /// <param name="logger">Logger of FlappyAgent</param>
         /// <exception cref="NullReferenceException"></exception>
-        public FlappyAgent(FlappyAgentConfig config,[AllowNull] ILLMBase llm, [AllowNull] ILLMBase llmPlaner,[AllowNull] ILogger<FlappyAgent> logger)
+        public FlappyAgent(FlappyAgentConfig config, [AllowNull] ILLMBase llm, [AllowNull] ILLMBase llmPlaner, [AllowNull] ILogger<FlappyAgent> logger)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
             if ((config.Features?.Length ?? 0) <= 0)
@@ -74,7 +74,6 @@ namespace Pleisto.Flappy
         /// <returns></returns>
         public IEnumerable<IFlappyFeature> FeatureDefinitions() => from i in config.Features
                                                                    select i;
-
 
         /// <summary>
         /// Find feature by name.
@@ -181,7 +180,7 @@ namespace Pleisto.Flappy
                     plan = ParseComplete(result);
 
                     var validation = zodSchema.Validate(plan);
-                    if ((validation?.Count ?? 0) != 0 )
+                    if ((validation?.Count ?? 0) != 0)
                         throw new InvalidJsonWithSchemaValidationException(validation);
                     break;
                 }
