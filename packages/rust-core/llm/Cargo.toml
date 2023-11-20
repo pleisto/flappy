@@ -23,7 +23,6 @@ tokio.workspace = true
 futures.workspace = true
 strum.workspace = true
 strum_macros.workspace = true
-
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
 
 async-openai = { version = "0.16.2", optional = true }
