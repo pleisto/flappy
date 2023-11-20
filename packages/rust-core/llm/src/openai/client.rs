@@ -8,7 +8,7 @@ use crate::{
   client::Client,
   error::{ExecutorCreationError, ExecutorError},
   model::{ChatMLMessage, Output},
-  options::Options,
+  options::{OptionInitial, Options},
 };
 
 pub struct OpenAIClient {
@@ -24,9 +24,15 @@ pub enum OpenAIOptions {
   OrgId(String),
 }
 
+impl OptionInitial for OpenAIOptions {}
+
 #[async_trait]
 impl Client for OpenAIClient {
   type Opt<'a> = OpenAIOptions;
+
+  fn new() -> Result<Self, ExecutorCreationError> {
+    Self::new_with_options(Options::new())
+  }
 
   fn new_with_options(options: Options<Self::Opt<'_>>) -> Result<Self, ExecutorCreationError> {
     let mut cfg = OpenAIConfig::new();
@@ -37,17 +43,17 @@ impl Client for OpenAIClient {
       cfg = cfg.with_api_key(api_key)
     }
 
-    // if let Some(AllOption::Custom(OpenAIOptions::APIKey(api_key))) = options.get_custom(|item| {
-    //   OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::APIKey
-    // }) {
-    //   cfg = cfg.with_api_key(api_key)
-    // }
+    if let Some(OpenAIOptions::ApiBase(api_base)) = options.get_custom(|item| {
+      OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::ApiBase
+    }) {
+      cfg = cfg.with_api_base(api_base)
+    }
 
-    // if let Some(AllOption::Custom(OpenAIOptions::APIKey(api_key))) = options.get_custom(|item| {
-    //   OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::APIKey
-    // }) {
-    //   cfg = cfg.with_api_key(api_key)
-    // }
+    if let Some(OpenAIOptions::OrgId(org_id)) = options.get_custom(|item| {
+      OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::OrgId
+    }) {
+      cfg = cfg.with_org_id(org_id)
+    }
 
     let client = Arc::new(async_openai::Client::with_config(cfg));
     Ok(Self { client, options })

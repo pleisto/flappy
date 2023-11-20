@@ -3,12 +3,12 @@ use async_trait::async_trait;
 use crate::{
   error::{ExecutorCreationError, ExecutorError},
   model::{ChatMLMessage, Output},
-  options::Options,
+  options::{OptionInitial, Options},
 };
 
 #[async_trait]
 pub trait Client: Sized {
-  type Opt<'a>
+  type Opt<'a>: OptionInitial
   where
     Self: 'a;
 

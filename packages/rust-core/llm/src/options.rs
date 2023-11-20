@@ -1,5 +1,3 @@
-use std::slice::Iter;
-
 use strum_macros::EnumDiscriminants;
 
 #[derive(EnumDiscriminants)]
@@ -10,22 +8,33 @@ pub enum BuiltinOption {
   TopP(f64),
 }
 
-pub enum AllOption<T> {
+pub trait OptionInitial: Sized {
+  fn initialize() -> Vec<Self> {
+    Vec::new()
+  }
+}
+
+impl OptionInitial for BuiltinOption {}
+
+pub enum AllOptions<T: OptionInitial> {
   Builtin(BuiltinOption),
   Custom(T),
 }
 
 #[derive(Default)]
-pub struct Options<T> {
-  opts: Vec<AllOption<T>>,
+pub struct Options<T: OptionInitial> {
+  opts: Vec<AllOptions<T>>,
 }
 
-impl<T> Options<T> {
+impl<T> Options<T>
+where
+  T: OptionInitial,
+{
   pub fn new() -> Self {
     Self { opts: Vec::new() }
   }
 
-  pub fn add(&mut self, opt: AllOption<T>) {
+  pub fn add(&mut self, opt: AllOptions<T>) {
     self.opts.push(opt);
   }
 
@@ -36,12 +45,12 @@ impl<T> Options<T> {
     {
       for o in self.opts.iter() {
         match o {
-          AllOption::Custom(op) => {
+          AllOptions::Custom(op) => {
             if f(op) {
               return Some(op);
             }
           }
-          AllOption::Builtin(_) => (),
+          AllOptions::Builtin(_) => (),
         }
       }
       None
@@ -54,12 +63,12 @@ impl<T> Options<T> {
   {
     for o in self.opts.iter() {
       match o {
-        AllOption::Builtin(op) => {
+        AllOptions::Builtin(op) => {
           if f(op) {
             return Some(op);
           }
         }
-        AllOption::Custom(_) => (),
+        AllOptions::Custom(_) => (),
       }
     }
     None
@@ -70,11 +79,11 @@ impl<T> Options<T> {
 mod tests {
 
   use super::*;
+  enum Foo {}
+  impl OptionInitial for Foo {}
 
   #[test]
   fn default() {
-    enum Foo {}
-
     let v: Options<Foo> = Options::new();
 
     assert_eq!(v.opts.len(), 0)
@@ -82,9 +91,8 @@ mod tests {
 
   #[test]
   fn get_builtin() {
-    enum Foo {}
     let mut v = Options::<Foo>::new();
-    v.add(AllOption::Builtin(BuiltinOption::MaxTokens(1.0)));
+    v.add(AllOptions::Builtin(BuiltinOption::MaxTokens(1.0)));
     let data = v.get_builtin(|item| {
       BuiltinOptionDiscriminants::from(item) == BuiltinOptionDiscriminants::MaxTokens
     });
