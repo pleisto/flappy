@@ -35,7 +35,12 @@ num_cpus = "1.16.0"
 serde = "1.0.192"
 serde_json = "1.0.108"
 lazy_static = "1.4.0"
+strum = "0.25.0"
+strum_macros = "0.25.3"
 openssl = { version = "0.10", features = ["vendored"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
 
 [profile.release]
 lto = true

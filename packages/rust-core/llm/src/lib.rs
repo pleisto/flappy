@@ -1,19 +1,12 @@
 #![forbid(unsafe_code)]
 
-pub mod llm;
+pub mod client;
 pub mod error;
+pub mod model;
+pub mod options;
 
-pub fn add(left: usize, right: usize) -> usize {
-  left + right
-}
+#[cfg(feature = "openai")]
+pub mod openai;
 
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn it_works() {
-    let result = add(2, 2);
-    assert_eq!(result, 4);
-  }
-}
+#[cfg(feature = "local")]
+pub mod local;
