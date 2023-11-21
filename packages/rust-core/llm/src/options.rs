@@ -4,8 +4,8 @@ use strum_macros::EnumDiscriminants;
 #[strum_discriminants(vis(pub))]
 pub enum BuiltinOption {
   MaxTokens(f64),
-  Temperature(f64),
-  TopP(f64),
+  Temperature(f32),
+  TopP(f32),
 }
 
 pub trait OptionInitial: Sized {
@@ -17,15 +17,37 @@ pub trait OptionInitial: Sized {
 impl OptionInitial for BuiltinOption {}
 
 pub struct AllOptions<T: OptionInitial> {
-  builtin: Vec<BuiltinOption>,
-  custom: Vec<T>,
+  pub(crate) builtin: BuiltinOptions,
+  pub(crate) custom: CustomOptions<T>,
+}
+
+#[derive(Default)]
+pub struct BuiltinOptions(Vec<BuiltinOption>);
+
+impl BuiltinOptions {
+  pub fn get(&self, t: BuiltinOptionDiscriminants) -> Option<&BuiltinOption> {
+    self
+      .0
+      .iter()
+      .find(|o| BuiltinOptionDiscriminants::from(*o) == t)
+  }
+}
+pub struct CustomOptions<T: OptionInitial>(Vec<T>);
+
+impl<T: OptionInitial> CustomOptions<T> {
+  pub fn get<F>(&self, f: F) -> Option<&T>
+  where
+    F: Fn(&&T) -> bool,
+  {
+    self.0.iter().find(f)
+  }
 }
 
 impl<T: OptionInitial> Default for AllOptions<T> {
   fn default() -> Self {
     AllOptions {
-      builtin: BuiltinOption::initialize(),
-      custom: T::initialize(),
+      builtin: BuiltinOptions(BuiltinOption::initialize()),
+      custom: CustomOptions(T::initialize()),
     }
   }
 }
@@ -46,30 +68,33 @@ where
   }
 
   pub fn size(self) -> usize {
-    self.opts.builtin.len() + self.opts.custom.len()
+    self.opts.builtin.0.len() + self.opts.custom.0.len()
   }
 
   pub fn add_builtin(&mut self, value: BuiltinOption) {
-    self.opts.builtin.push(value)
+    self.opts.builtin.0.push(value)
   }
 
   pub fn add_custom(&mut self, value: T) {
-    self.opts.custom.push(value)
+    self.opts.custom.0.push(value)
   }
 
   pub fn get_custom<F>(&self, f: F) -> Option<&T>
   where
     F: Fn(&&T) -> bool,
   {
-    self.opts.custom.iter().find(f)
+    self.opts.custom.get(f)
+  }
+
+  pub fn get_customs<F>(&self, fs: Vec<F>) -> Vec<Option<&T>>
+  where
+    F: Fn(&&T) -> bool,
+  {
+    fs.iter().map(|f| self.get_custom(f)).collect()
   }
 
   pub fn get_builtin(&self, t: BuiltinOptionDiscriminants) -> Option<&BuiltinOption> {
-    self
-      .opts
-      .builtin
-      .iter()
-      .find(|o| BuiltinOptionDiscriminants::from(*o) == t)
+    self.opts.builtin.get(t)
   }
 }
 

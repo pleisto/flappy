@@ -1,7 +1,6 @@
-#![forbid(unsafe_code)]
-
 pub mod client;
 pub mod error;
+pub mod mock;
 pub mod model;
 pub mod options;
 

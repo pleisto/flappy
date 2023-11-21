@@ -1,13 +1,38 @@
+#[derive(Clone, Debug)]
 pub enum ChatRole {
   System,
   User,
   Assistant,
 }
 
-#[allow(dead_code)]
+#[derive(Clone, Debug)]
 pub struct ChatMLMessage {
-  role: ChatRole,
-  content: String,
+  pub(crate) role: ChatRole,
+  pub(crate) content: String,
 }
 
-pub struct Output(String);
+impl ChatMLMessage {
+  pub fn user(content: String) -> Self {
+    ChatMLMessage {
+      role: ChatRole::User,
+      content,
+    }
+  }
+
+  pub fn assistant(content: String) -> Self {
+    ChatMLMessage {
+      role: ChatRole::Assistant,
+      content,
+    }
+  }
+
+  pub fn system(content: String) -> Self {
+    ChatMLMessage {
+      role: ChatRole::System,
+      content,
+    }
+  }
+}
+
+#[derive(Debug)]
+pub struct Output(pub String);

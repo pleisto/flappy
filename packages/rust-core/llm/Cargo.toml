@@ -32,6 +32,9 @@ llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = 
 llm-sdk = { version = "0.3.1", optional = true }
 tiktoken-rs = { version = "0.5.7", optional = true }
 
+[dev-dependencies]
+tracing-subscriber.workspace = true
+
 [features]
 openai = ["dep:llm-sdk", "dep:tiktoken-rs"]
 local = ["dep:llm"]
@@ -43,3 +46,7 @@ opt-level = 3
 
 [lints]
 workspace = true
+
+[[example]]
+name = "openai"
+required-features = ["openai"]

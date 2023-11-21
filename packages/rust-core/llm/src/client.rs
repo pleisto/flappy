@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use crate::{
   error::{ExecutorCreationError, ExecutorError},
   model::{ChatMLMessage, Output},
-  options::{OptionInitial, Options},
+  options::{BuiltinOptions, OptionInitial, Options},
 };
 
 #[async_trait]
@@ -21,6 +21,6 @@ pub trait Client: Sized {
   async fn chat_complete(
     &self,
     messages: Vec<ChatMLMessage>,
-    config: Options<Self::Opt<'_>>,
+    config: BuiltinOptions,
   ) -> Result<Output, ExecutorError>;
 }

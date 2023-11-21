@@ -6,7 +6,7 @@ pub enum ExecutorCreationError {
   #[error("unable to create executor: {0}")]
   InnerError(#[from] Box<dyn std::error::Error + Send + Sync>),
   #[error("Field must be set: {0}")]
-  FieldRequiredError(String),
+  FieldRequiredError(anyhow::Error),
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -22,6 +22,8 @@ pub enum ExecutorError {
   PromptTokens(PromptTokensError),
   #[error("the context was to small to fit your input")]
   ContextTooSmall,
+  #[error("Unexpected error: {0}")]
+  Anyhow(#[from] anyhow::Error),
 }
 
 #[derive(Error, Debug, Clone)]

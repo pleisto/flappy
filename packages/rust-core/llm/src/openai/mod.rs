@@ -1,2 +1,1 @@
-mod client;
-mod model;
+pub mod client;
