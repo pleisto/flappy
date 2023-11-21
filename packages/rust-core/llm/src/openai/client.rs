@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use async_openai::config::OpenAIConfig;
 use async_trait::async_trait;
+use llm_sdk::LlmSdk;
 use strum_macros::EnumDiscriminants;
 
 use crate::{
@@ -12,7 +12,7 @@ use crate::{
 };
 
 pub struct OpenAIClient {
-  client: Arc<async_openai::Client<OpenAIConfig>>,
+  client: Arc<LlmSdk>,
   options: Options<OpenAIOptions>,
 }
 
@@ -21,7 +21,6 @@ pub struct OpenAIClient {
 pub enum OpenAIOptions {
   ApiBase(String),
   APIKey(String),
-  OrgId(String),
 }
 
 impl OptionInitial for OpenAIOptions {}
@@ -35,27 +34,23 @@ impl Client for OpenAIClient {
   }
 
   fn new_with_options(options: Options<Self::Opt<'_>>) -> Result<Self, ExecutorCreationError> {
-    let mut cfg = OpenAIConfig::new();
+    // let mut cfg = OpenAIConfig::new();
+
+    let sdk = LlmSdk::new("https://api.openai.com/v1", "your-api-key", 10);
 
     if let Some(OpenAIOptions::APIKey(api_key)) = options.get_custom(|item| {
       OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::APIKey
     }) {
-      cfg = cfg.with_api_key(api_key)
+      // cfg = cfg.with_api_key(api_key)
     }
 
     if let Some(OpenAIOptions::ApiBase(api_base)) = options.get_custom(|item| {
       OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::ApiBase
     }) {
-      cfg = cfg.with_api_base(api_base)
+      // cfg = cfg.with_api_base(api_base)
     }
 
-    if let Some(OpenAIOptions::OrgId(org_id)) = options.get_custom(|item| {
-      OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::OrgId
-    }) {
-      cfg = cfg.with_org_id(org_id)
-    }
-
-    let client = Arc::new(async_openai::Client::with_config(cfg));
+    let client = Arc::new(sdk);
     Ok(Self { client, options })
   }
 

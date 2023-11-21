@@ -23,13 +23,14 @@ tokio.workspace = true
 futures.workspace = true
 strum.workspace = true
 strum_macros.workspace = true
+derive_builder.workspace = true
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
 
-async-openai = { version = "0.16.2", optional = true }
+llm-sdk = { version = "0.3.1", optional = true }
 tiktoken-rs = { version = "0.5.7", optional = true }
 
 [features]
-openai = ["dep:async-openai", "dep:tiktoken-rs"]
+openai = ["dep:llm-sdk", "dep:tiktoken-rs"]
 local = ["dep:llm"]
 default = ["openai", "local"]
 
