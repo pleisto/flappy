@@ -16,14 +16,23 @@ pub trait OptionInitial: Sized {
 
 impl OptionInitial for BuiltinOption {}
 
-pub enum AllOptions<T: OptionInitial> {
-  Builtin(BuiltinOption),
-  Custom(T),
+pub struct AllOptions<T: OptionInitial> {
+  builtin: Vec<BuiltinOption>,
+  custom: Vec<T>,
+}
+
+impl<T: OptionInitial> Default for AllOptions<T> {
+  fn default() -> Self {
+    AllOptions {
+      builtin: BuiltinOption::initialize(),
+      custom: T::initialize(),
+    }
+  }
 }
 
 #[derive(Default)]
 pub struct Options<T: OptionInitial> {
-  opts: Vec<AllOptions<T>>,
+  opts: AllOptions<T>,
 }
 
 impl<T> Options<T>
@@ -31,47 +40,36 @@ where
   T: OptionInitial,
 {
   pub fn new() -> Self {
-    Self { opts: Vec::new() }
+    Self {
+      opts: AllOptions::<T>::default(),
+    }
   }
 
-  pub fn add(&mut self, opt: AllOptions<T>) {
-    self.opts.push(opt);
+  pub fn size(self) -> usize {
+    self.opts.builtin.len() + self.opts.custom.len()
+  }
+
+  pub fn add_builtin(&mut self, value: BuiltinOption) {
+    self.opts.builtin.push(value)
+  }
+
+  pub fn add_custom(&mut self, value: T) {
+    self.opts.custom.push(value)
   }
 
   pub fn get_custom<F>(&self, f: F) -> Option<&T>
   where
-    F: Fn(&T) -> bool,
+    F: Fn(&&T) -> bool,
   {
-    {
-      for o in self.opts.iter() {
-        match o {
-          AllOptions::Custom(op) => {
-            if f(op) {
-              return Some(op);
-            }
-          }
-          AllOptions::Builtin(_) => (),
-        }
-      }
-      None
-    }
+    self.opts.custom.iter().find(f)
   }
 
-  pub fn get_builtin<F>(&self, f: F) -> Option<&BuiltinOption>
-  where
-    F: Fn(&BuiltinOption) -> bool,
-  {
-    for o in self.opts.iter() {
-      match o {
-        AllOptions::Builtin(op) => {
-          if f(op) {
-            return Some(op);
-          }
-        }
-        AllOptions::Custom(_) => (),
-      }
-    }
-    None
+  pub fn get_builtin(&self, t: BuiltinOptionDiscriminants) -> Option<&BuiltinOption> {
+    self
+      .opts
+      .builtin
+      .iter()
+      .find(|o| BuiltinOptionDiscriminants::from(*o) == t)
   }
 }
 
@@ -79,23 +77,27 @@ where
 mod tests {
 
   use super::*;
-  enum Foo {}
-  impl OptionInitial for Foo {}
+  enum Foo {
+    Bar,
+  }
+  impl OptionInitial for Foo {
+    fn initialize() -> Vec<Self> {
+      vec![Foo::Bar]
+    }
+  }
 
   #[test]
   fn default() {
     let v: Options<Foo> = Options::new();
 
-    assert_eq!(v.opts.len(), 0)
+    assert_eq!(v.size(), 1)
   }
 
   #[test]
-  fn get_builtin() {
+  fn get_builtin_test() {
     let mut v = Options::<Foo>::new();
-    v.add(AllOptions::Builtin(BuiltinOption::MaxTokens(1.0)));
-    let data = v.get_builtin(|item| {
-      BuiltinOptionDiscriminants::from(item) == BuiltinOptionDiscriminants::MaxTokens
-    });
+    v.add_builtin(BuiltinOption::MaxTokens(1.0));
+    let data = v.get_builtin(BuiltinOptionDiscriminants::MaxTokens);
 
     assert_eq!(data.is_some(), true);
   }

@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use llm_sdk::LlmSdk;
+use secrecy::{ExposeSecret, Secret};
 use strum_macros::EnumDiscriminants;
 
 use crate::{
@@ -16,14 +17,33 @@ pub struct OpenAIClient {
   options: Options<OpenAIOptions>,
 }
 
-#[derive(EnumDiscriminants)]
+pub const OPENAI_API_BASE: &str = "https://api.openai.com/v1";
+
+lazy_static::lazy_static! {
+  static ref DEFAULT_OPENAI_OPTIONS: Vec<OpenAIOptions> = vec![
+    OpenAIOptions::ApiBase(
+      std::env::var("OPENAI_API_BASE")
+        .unwrap_or_else(|_| OPENAI_API_BASE.to_string())
+        .into(),
+    ),
+    OpenAIOptions::APIKey(std::env::var("OPENAI_API_KEY").unwrap().into()),
+    OpenAIOptions::MaxHTTPRetries(3),
+  ];
+}
+
+#[derive(EnumDiscriminants, Clone)]
 #[strum_discriminants(vis(pub(crate)))]
 pub enum OpenAIOptions {
   ApiBase(String),
-  APIKey(String),
+  APIKey(Secret<String>),
+  MaxHTTPRetries(u32),
 }
 
-impl OptionInitial for OpenAIOptions {}
+impl OptionInitial for OpenAIOptions {
+  fn initialize() -> Vec<Self> {
+    DEFAULT_OPENAI_OPTIONS.to_vec()
+  }
+}
 
 #[async_trait]
 impl Client for OpenAIClient {
@@ -39,13 +59,14 @@ impl Client for OpenAIClient {
     let sdk = LlmSdk::new("https://api.openai.com/v1", "your-api-key", 10);
 
     if let Some(OpenAIOptions::APIKey(api_key)) = options.get_custom(|item| {
-      OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::APIKey
+      OpenAIOptionsDiscriminants::from(*item) == OpenAIOptionsDiscriminants::APIKey
     }) {
+      let sdk2 = LlmSdk::new("https://api.openai.com/v1", api_key.expose_secret(), 10);
       // cfg = cfg.with_api_key(api_key)
     }
 
     if let Some(OpenAIOptions::ApiBase(api_base)) = options.get_custom(|item| {
-      OpenAIOptionsDiscriminants::from(item) == OpenAIOptionsDiscriminants::ApiBase
+      OpenAIOptionsDiscriminants::from(*item) == OpenAIOptionsDiscriminants::ApiBase
     }) {
       // cfg = cfg.with_api_base(api_base)
     }

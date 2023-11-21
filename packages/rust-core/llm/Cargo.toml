@@ -24,6 +24,9 @@ futures.workspace = true
 strum.workspace = true
 strum_macros.workspace = true
 derive_builder.workspace = true
+lazy_static.workspace = true
+anyhow.workspace = true
+secrecy.workspace = true
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
 
 llm-sdk = { version = "0.3.1", optional = true }
