@@ -21,13 +21,14 @@ tracing.workspace = true
 async-trait.workspace = true
 tokio.workspace = true
 futures.workspace = true
-strum.workspace = true
-strum_macros.workspace = true
 derive_builder.workspace = true
-lazy_static.workspace = true
 anyhow.workspace = true
 secrecy.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
+hf-hub = { version = "0.3.2", optional = true, features = ["tokio"] }
 
 llm-sdk = { version = "0.3.1", optional = true }
 tiktoken-rs = { version = "0.5.7", optional = true }
@@ -37,7 +38,7 @@ tracing-subscriber.workspace = true
 
 [features]
 openai = ["dep:llm-sdk", "dep:tiktoken-rs"]
-local = ["dep:llm"]
+local = ["dep:llm", "dep:hf-hub"]
 default = ["openai", "local"]
 
 # https://github.com/rustformers/llm#using-llm-in-a-rust-project

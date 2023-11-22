@@ -15,9 +15,9 @@ categories = []
 mimalloc = { version = "0.1.39", default-features = false }
 reqwest = { version = "0.11.22", default-features = false, features = [
   "gzip",
-  "native-tls",
   "json",
   "multipart",
+  "rustls-tls",
 ] }
 tokio = { version = "1.34.0", features = [
   "sync",
@@ -41,7 +41,6 @@ secrecy = "0.8.0"
 strum = "0.25.0"
 strum_macros = "0.25.3"
 derive_builder = "0.12.0"
-openssl = { version = "0.10", features = ["vendored"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

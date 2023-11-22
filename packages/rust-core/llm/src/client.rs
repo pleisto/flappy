@@ -1,21 +1,21 @@
 use async_trait::async_trait;
 
 use crate::{
-  error::{ExecutorCreationError, ExecutorError},
+  error::{ClientCreationError, ExecutorError},
   model::{ChatMLMessage, Output},
-  options::{BuiltinOptions, OptionInitial, Options},
+  options::{BuiltinOptions, Options},
 };
 
 #[async_trait]
 pub trait Client: Sized {
-  type Opt<'a>: OptionInitial
+  type Opt<'a>: Default
   where
     Self: 'a;
 
-  fn new_with_options(options: Options<Self::Opt<'_>>) -> Result<Self, ExecutorCreationError>;
+  fn new_with_options(options: Options<Self::Opt<'_>>) -> Result<Self, ClientCreationError>;
 
-  fn new() -> Result<Self, ExecutorCreationError> {
-    Self::new_with_options(Options::new())
+  fn new() -> Result<Self, ClientCreationError> {
+    Self::new_with_options(Options::default())
   }
 
   async fn chat_complete(
