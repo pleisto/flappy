@@ -45,7 +45,7 @@ mod tests {
     let result = client
       .chat_complete(
         vec![ChatMLMessage::user("hello".to_string())],
-        BuiltinOptions::default(),
+        Default::default(),
       )
       .await
       .unwrap();

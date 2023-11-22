@@ -1,6 +1,11 @@
+use std::error::Error;
+
 #[derive(thiserror::Error, Debug)]
 #[error("unable to create client")]
 pub enum ClientCreationError {
+  #[error("unable to create client: {0}")]
+  InnerError(#[from] Box<dyn Error + Send + Sync>),
+
   #[error("Field must be set: {0}")]
   FieldRequiredError(anyhow::Error),
 }

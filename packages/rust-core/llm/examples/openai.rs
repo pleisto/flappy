@@ -1,6 +1,4 @@
-use flappy_llm::{
-  client::Client, model::ChatMLMessage, openai::client::OpenAIClient, options::BuiltinOptions,
-};
+use flappy_llm::{client::Client, model::ChatMLMessage, openai::client::OpenAIClient};
 use tracing::info;
 
 #[tokio::main]
@@ -11,7 +9,7 @@ async fn main() {
   let result = client
     .chat_complete(
       [ChatMLMessage::user("hello".to_string())].to_vec(),
-      BuiltinOptions::default(),
+      Default::default(),
     )
     .await
     .unwrap();
