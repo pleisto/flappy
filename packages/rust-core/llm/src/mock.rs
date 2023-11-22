@@ -51,9 +51,6 @@ mod tests {
       .await
       .unwrap();
 
-    assert_eq!(
-      result.to_string(),
-      "[{\"content\":\"hello\",\"role\":\"User\"}]"
-    );
+    assert_eq!(result.to_string(), "User: hello\n");
   }
 }

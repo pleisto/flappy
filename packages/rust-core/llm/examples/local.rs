@@ -8,7 +8,7 @@ use tracing::info;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-  std::env::set_var("RUST_LOG", "DEBUG");
+  // std::env::set_var("RUST_LOG", "DEBUG");
   tracing_subscriber::fmt::init();
 
   let api = Api::new().unwrap();
@@ -24,7 +24,7 @@ async fn main() {
 
   let result = client
     .chat_complete(
-      Prompt::new_chat(vec![ChatMLMessage::user("hello".to_string())]),
+      Prompt::new_chat(vec![ChatMLMessage::user("who are you".to_string())]),
       Default::default(),
     )
     .await
