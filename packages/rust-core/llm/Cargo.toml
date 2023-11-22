@@ -29,6 +29,7 @@ serde_json.workspace = true
 
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
 hf-hub = { version = "0.3.2", optional = true, features = ["tokio"] }
+rand.workspace = true
 
 llm-sdk = { version = "0.3.1", optional = true }
 tiktoken-rs = { version = "0.5.7", optional = true }
@@ -51,3 +52,7 @@ workspace = true
 [[example]]
 name = "openai"
 required-features = ["openai"]
+
+[[example]]
+name = "local"
+required-features = ["local"]

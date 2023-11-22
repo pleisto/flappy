@@ -1081,6 +1081,7 @@ dependencies = [
  "hf-hub",
  "llm",
  "llm-sdk",
+ "rand",
  "secrecy",
  "serde",
  "serde_json",

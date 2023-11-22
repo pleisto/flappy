@@ -1,6 +1,6 @@
 use derive_builder::Builder;
 
-#[derive(Default, Builder)]
+#[derive(Default, Builder, Clone)]
 #[builder(default)]
 pub struct BuiltinOptions {
   pub(crate) max_token: Option<f64>,
@@ -21,11 +21,17 @@ impl From<()> for BuiltinOptions {
   }
 }
 
-#[derive(Default)]
+#[derive(Default, Builder)]
 pub struct Options<T: Default> {
   #[allow(dead_code)]
   pub(crate) builtin: BuiltinOptions,
   pub(crate) custom: T,
+}
+
+impl<T: Default> Options<T> {
+  pub fn new(builtin: BuiltinOptions, custom: T) -> Self {
+    Self { builtin, custom }
+  }
 }
 
 #[cfg(test)]

@@ -12,6 +12,9 @@ pub enum ClientCreationError {
 
 #[derive(thiserror::Error, Debug)]
 pub enum ExecutorError {
+  #[error("execute error: {0}")]
+  InnerError(#[from] Box<dyn Error + Send + Sync>),
+
   #[error("Unexpected error: {0}")]
   Anyhow(#[from] anyhow::Error),
 

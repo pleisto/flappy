@@ -12,7 +12,7 @@ use tracing::info;
 use crate::{
   client::Client,
   error::{ClientCreationError, ExecutorError},
-  model::{ChatMLMessage, ChatRole, Output},
+  model::{ChatMLMessage, ChatRole, Output, Prompt},
   options::{BuiltinOptions, Options},
 };
 
@@ -35,9 +35,7 @@ pub struct OpenAIOptions {
 impl Default for OpenAIOptions {
   fn default() -> Self {
     OpenAIOptions {
-      api_base: std::env::var("OPENAI_API_BASE")
-        .unwrap_or_else(|_| OPENAI_API_BASE.to_string())
-        .into(),
+      api_base: std::env::var("OPENAI_API_BASE").unwrap_or_else(|_| OPENAI_API_BASE.to_string()),
       api_key: std::env::var("OPENAI_API_KEY").map(|x| x.into()).ok(),
       max_http_retries: 3,
       model: ChatCompleteModel::Gpt3Turbo,
@@ -45,17 +43,17 @@ impl Default for OpenAIOptions {
   }
 }
 
-impl Into<ChatCompletionMessage> for ChatMLMessage {
-  fn into(self) -> ChatCompletionMessage {
+impl From<ChatMLMessage> for ChatCompletionMessage {
+  fn from(value: ChatMLMessage) -> Self {
     let name = "";
-    match self.role {
+    match value.role {
       ChatRole::Assistant => ChatCompletionMessage::Assistant(AssistantMessage {
-        content: Some(self.content),
+        content: Some(value.content),
         name: None,
         tool_calls: Vec::new(),
       }),
-      ChatRole::System => ChatCompletionMessage::new_system(self.content, name),
-      ChatRole::User => ChatCompletionMessage::new_user(self.content, name),
+      ChatRole::System => ChatCompletionMessage::new_system(value.content, name),
+      ChatRole::User => ChatCompletionMessage::new_user(value.content, name),
     }
   }
 }
@@ -84,7 +82,7 @@ impl Client for OpenAIClient {
 
   async fn chat_complete(
     &self,
-    messages: Vec<ChatMLMessage>,
+    prompt: Prompt,
     opt: BuiltinOptions,
   ) -> Result<Output, ExecutorError> {
     let mut request_builder = ChatCompletionRequestBuilder::default();
@@ -98,7 +96,13 @@ impl Client for OpenAIClient {
     };
 
     let request = request_builder
-      .messages(messages.into_iter().map(|x| x.into()).collect::<Vec<_>>())
+      .messages(
+        prompt
+          .to_messages()
+          .into_iter()
+          .map(|x| x.into())
+          .collect::<Vec<_>>(),
+      )
       .model(self.options.custom.model)
       .build()
       .map_err(|err| anyhow!(err.to_string()))?;
@@ -113,7 +117,7 @@ impl Client for OpenAIClient {
     let optional_content = first_choice.message.content.clone();
     let content = optional_content.ok_or(anyhow!("Content is empty"))?;
 
-    Ok(Output(content))
+    Ok(Output::new(content))
   }
 }
 

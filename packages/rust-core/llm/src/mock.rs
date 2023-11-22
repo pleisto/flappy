@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use crate::{
   client::Client,
   error::{ClientCreationError, ExecutorError},
-  model::{ChatMLMessage, Output},
+  model::{Output, Prompt},
   options::{BuiltinOptions, Options},
 };
 
@@ -25,11 +25,11 @@ impl Client for MockClient {
 
   async fn chat_complete(
     &self,
-    messages: Vec<ChatMLMessage>,
+    prompt: Prompt,
     _: BuiltinOptions,
   ) -> Result<Output, ExecutorError> {
-    let data = serde_json::to_value(messages)?.to_string();
-    Ok(Output(data))
+    let data = prompt.to_string();
+    Ok(Output::new(data))
   }
 }
 
@@ -37,6 +37,7 @@ impl Client for MockClient {
 mod tests {
 
   use super::*;
+  use crate::model::ChatMLMessage;
 
   #[tokio::test]
   async fn mock() {
@@ -44,12 +45,15 @@ mod tests {
 
     let result = client
       .chat_complete(
-        vec![ChatMLMessage::user("hello".to_string())],
+        Prompt::new_chat(vec![ChatMLMessage::user("hello".to_string())]),
         Default::default(),
       )
       .await
       .unwrap();
 
-    assert_eq!(result.0, "[{\"content\":\"hello\",\"role\":\"User\"}]");
+    assert_eq!(
+      result.to_string(),
+      "[{\"content\":\"hello\",\"role\":\"User\"}]"
+    );
   }
 }
