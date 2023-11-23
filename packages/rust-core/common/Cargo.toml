@@ -1,9 +1,15 @@
 [package]
 name = "flappy-common"
 version = "0.1.0"
+description = ""
+
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
 publish = false
 
 [package.metadata.workspaces]
@@ -19,7 +25,6 @@ async-trait.workspace = true
 futures.workspace = true
 tracing.workspace = true
 derivative.workspace = true
-openssl.workspace = true
 wasmer = "4.2.3"
 wasmer-registry = "5.9.0"
 wasmer-vm = "4.2.3"
@@ -41,3 +46,7 @@ dirs = "5.0.1"
 webc = "5.8.0"
 virtual-fs = { version = "0.9.0", features = ["host-fs"] }
 virtual-net = { version = "0.6.1", features = ["host-net"] }
+openssl.workspace = true
+
+[lints]
+workspace = true

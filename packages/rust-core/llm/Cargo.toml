@@ -1,0 +1,58 @@
+[package]
+name = "flappy-llm"
+version = "0.1.0"
+description = ""
+keywords = ["llm", "langchain", "chain"]
+
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+categories.workspace = true
+
+publish = false
+
+[package.metadata.workspaces]
+independent = true
+
+[dependencies]
+thiserror.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+tokio.workspace = true
+futures.workspace = true
+derive_builder.workspace = true
+anyhow.workspace = true
+secrecy.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
+hf-hub = { version = "0.3.2", optional = true, features = ["tokio"] }
+rand.workspace = true
+
+llm-sdk = { version = "0.3.1", optional = true }
+tiktoken-rs = { version = "0.5.7", optional = true }
+
+[dev-dependencies]
+tracing-subscriber.workspace = true
+
+[features]
+openai = ["dep:llm-sdk", "dep:tiktoken-rs"]
+local = ["dep:llm", "dep:hf-hub"]
+default = ["openai", "local"]
+
+# https://github.com/rustformers/llm#using-llm-in-a-rust-project
+[profile.dev.package.ggml-sys]
+opt-level = 3
+
+[lints]
+workspace = true
+
+[[example]]
+name = "openai"
+required-features = ["openai"]
+
+[[example]]
+name = "local"
+required-features = ["local"]
