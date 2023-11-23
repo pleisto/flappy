@@ -36,9 +36,6 @@ jobs:
       - name: Install cargo-audit
         run: cargo install cargo-audit
 
-      - name: Generate lockfile
-        run: cargo generate-lockfile
-
       - name: Audit dependencies
         run: cargo audit
 
