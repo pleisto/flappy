@@ -1,9 +1,5 @@
 type MustacheValue = string | number | boolean
 
-type MustacheRecord<T> = T
-
-type MustacheSection<T> = T[] | T
-
 interface Test_ping {
   name: MustacheValue
 }
@@ -49,3 +45,16 @@ export type TemplateMap = {
   'features/codeInterpreter/evalCode': Features_codeInterpreter_evalCode,
   'features/codeInterpreter/description': Features_codeInterpreter_description,
 }
+
+export type TemplateName = keyof TemplateMap
+
+export const TEMPLATES = [
+  'test/ping',
+  'error/retry',
+  'agent/userMessage',
+  'agent/systemMessage',
+  'features/synthesized/userMessage',
+  'features/synthesized/systemMessage',
+  'features/codeInterpreter/evalCode',
+  'features/codeInterpreter/description',
+] as const
