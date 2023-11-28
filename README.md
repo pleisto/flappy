@@ -37,20 +37,20 @@ Flappy is a production-ready Language Language Model (LLM) Application/Agent SDK
 
 ### Agent Features
 
-In Flappy's ecosystem, an agent operates as a versatile conduit for the LLM, performing a variety of tasks such as structuring data, invoking external APIs, or sandboxing LLM-generated Python code as needed. This design philosophy caters to the increasing demand for LLM-based AI applications across various sectors.
+In Flappy's ecosystem, an agent operates as a versatile conduit for the LLM, performing a variety of tasks such as ETL data, invoking external APIs, or running LLM-generated Python code in a sandbox when needed. This design philosophy caters to the increasing demand for LLM-based AI applications across various sectors.
 
-The agent features in Flappy are built on two foundational types:
+The agent features in Flappy are built on three foundational types:
 
-1. **InvokeFunction**: This feature allows agents to interact with the environment. It's defined by input and output parameters, facilitating efficient interaction with the LLM.
-2. **SynthesizedFunction**: This feature is processed by the LLM and only requires the definition of its description and the structure of its inputs and outputs.
+1. **InvokeFunction**: This feature allows agents to interact with the environment. Users should implement these functions with pre-defined input and output parameters, facilitating efficient interaction of LLM and real world data.
+2. **SynthesizedFunction**: This feature is processed by the LLM and only requires the definition of its description and the data structure declaration of the input and output types.
 3. **CodeInterpreter** This feature allows agents to eval python code produced by LLMs in a safe sandbox that reduces runtime errors and potential security vulnerabilities, making it suitable for deployment in a production environment.
 
 #### Function Implementation Details
 
 Flappy introduces unique implementation mechanisms to enhance these functions:
 
-- **Unique JSON Schema Integration**: Users can define abstract classes in their preferred programming language, which Flappy then transforms into JSON Schema schemas. This feature enhances machine readability and interoperability and manages the inputs and outputs of LLMs, providing controlled, consistent, and machine-readable data.
-- **AST Parsing**: Flappy performs Abstract Syntax Tree (AST) parsing on the LLM outputs to ensure that the generated JSON data strictly adheres to the defined JSON Schema schema.
+- **Unique JSON Schema Integration**: Users can define abstract classes in their preferred programming language, which is then transformed into JSON Schema schemas by Flappy. This feature enhances machine readability and interoperability and manages the inputs and outputs of LLMs, providing controlled, consistent, and machine-readable data.
+- **AST Parsing**: Flappy performs Abstract Syntax Tree (AST) parsing on the LLM outputs to ensure that the generated JSON data strictly adheres to the defined JSON Schema.
 
 ### LLM Abstraction Layer
 
