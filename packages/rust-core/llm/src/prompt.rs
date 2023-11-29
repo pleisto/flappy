@@ -2,11 +2,24 @@ use std::{collections::VecDeque, fmt::Display};
 
 use serde::Serialize;
 
+use crate::error::InvalidRoleError;
+
 #[derive(Clone, Debug, Serialize)]
 pub enum ChatRole {
   System,
   User,
   Assistant,
+}
+
+impl ChatRole {
+  pub fn cast(role: &str) -> Result<Self, InvalidRoleError> {
+    match role {
+      "user" | "User" => Ok(Self::User),
+      "assistant" | "Assistant" => Ok(Self::Assistant),
+      "system" | "System" => Ok(Self::System),
+      other => Err(InvalidRoleError(other.to_string())),
+    }
+  }
 }
 
 impl Display for ChatRole {
@@ -26,25 +39,29 @@ pub struct ChatMLMessage {
 }
 
 impl ChatMLMessage {
-  pub fn user(content: String) -> Self {
+  pub fn new_user(content: String) -> Self {
     Self {
       role: ChatRole::User,
       content,
     }
   }
 
-  pub fn assistant(content: String) -> Self {
+  pub fn new_assistant(content: String) -> Self {
     Self {
       role: ChatRole::Assistant,
       content,
     }
   }
 
-  pub fn system(content: String) -> Self {
+  pub fn new_system(content: String) -> Self {
     Self {
       role: ChatRole::System,
       content,
     }
+  }
+
+  pub fn new(role: ChatRole, content: String) -> Self {
+    Self { role, content }
   }
 }
 
@@ -95,7 +112,7 @@ impl Prompt {
   pub fn to_messages(&self) -> Vec<ChatMLMessage> {
     match self {
       Prompt::Chat(chat) => chat.inner().into(),
-      Prompt::Text(text) => vec![ChatMLMessage::user(text.inner())],
+      Prompt::Text(text) => vec![ChatMLMessage::new_user(text.inner())],
     }
   }
 }
@@ -106,21 +123,6 @@ impl ToString for Prompt {
       Prompt::Chat(chat) => chat.to_string(),
       Prompt::Text(text) => text.inner().to_string(),
     }
-  }
-}
-
-#[derive(Debug)]
-pub struct Output(String);
-
-impl Display for Output {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{}", self.0)
-  }
-}
-
-impl Output {
-  pub fn new(output: String) -> Self {
-    Self(output)
   }
 }
 
@@ -142,7 +144,7 @@ mod tests {
     assert_eq!(chat1.to_string(), "");
     assert_eq!(chat1.to_messages().len(), 0);
 
-    let chat2 = Prompt::new_chat(vec![ChatMLMessage::user("foo".to_string())]);
+    let chat2 = Prompt::new_chat(vec![ChatMLMessage::new_user("foo".to_string())]);
     assert_eq!(chat2.to_string(), "User: foo\n");
     assert_eq!(chat2.to_messages().len(), 1)
   }

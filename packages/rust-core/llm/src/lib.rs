@@ -1,8 +1,9 @@
 pub mod client;
 pub mod error;
 pub mod mock;
-pub mod model;
 pub mod options;
+pub mod output;
+pub mod prompt;
 
 #[cfg(feature = "openai")]
 pub mod openai;

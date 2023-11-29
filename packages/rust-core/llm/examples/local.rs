@@ -1,18 +1,18 @@
 use flappy_llm::{
   client::Client,
   local::client::{LocalClient, LocalOptionsBuilder},
-  model::{ChatMLMessage, Prompt},
   options::BuiltinOptionsBuilder,
+  prompt::{ChatMLMessage, Prompt},
 };
-use hf_hub::api::tokio::Api;
+use hf_hub::api::tokio::ApiBuilder;
 use tracing::info;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
-  std::env::set_var("RUST_LOG", "DEBUG");
+  std::env::set_var("RUST_LOG", "TRACE");
   tracing_subscriber::fmt::init();
 
-  let api = Api::new().unwrap();
+  let api = ApiBuilder::new().with_progress(false).build().unwrap();
   let repo = api.model("rustformers/open-llama-ggml".to_string());
   let filename = repo.get("open_llama_3b-f16.bin").await.unwrap();
 
@@ -24,7 +24,7 @@ async fn main() {
 
   let result = client
     .chat_complete(
-      Prompt::new_chat(vec![ChatMLMessage::user("who are you".to_string())]),
+      Prompt::new_chat(vec![ChatMLMessage::new_user("who are you".to_string())]),
       BuiltinOptionsBuilder::default()
         .top_k(Some(35.0))
         .top_p(Some(0.9))

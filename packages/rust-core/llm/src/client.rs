@@ -1,14 +1,23 @@
+use std::fmt::Display;
+
 use async_trait::async_trait;
 
 use crate::{
-  error::{ClientCreationError, ExecutorError},
-  model::{Output, Prompt},
+  error::{ClientCreationError, ExecuteError},
   options::{BuiltinOptions, Options},
+  output::{stream::Streamable, ImmediateOutput, StreamOutput},
+  prompt::Prompt,
 };
 
 #[async_trait]
 pub trait Client: Sized {
   type Opt<'a>: Default
+  where
+    Self: 'a;
+  type Output<'a>: Display + Send
+  where
+    Self: 'a;
+  type StreamSegment<'a>: Display + Send + Streamable<Output = Self::Output<'a>>
   where
     Self: 'a;
 
@@ -26,5 +35,11 @@ pub trait Client: Sized {
     &self,
     prompt: Prompt,
     config: BuiltinOptions,
-  ) -> Result<Output, ExecutorError>;
+  ) -> Result<ImmediateOutput<Self::Output<'_>>, ExecuteError>;
+
+  async fn chat_complete_stream(
+    &self,
+    prompt: Prompt,
+    config: BuiltinOptions,
+  ) -> Result<StreamOutput<Self::StreamSegment<'_>>, ExecuteError>;
 }
