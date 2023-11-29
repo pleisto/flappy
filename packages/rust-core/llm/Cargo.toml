@@ -43,6 +43,7 @@ backoff = { version = "0.4.0", features = ["tokio"], optional = true }
 
 [dev-dependencies]
 tracing-subscriber.workspace = true
+clap.workspace = true
 
 [features]
 default = ["openai", "local"]
@@ -62,9 +63,6 @@ workspace = true
 name = "openai"
 required-features = ["openai"]
 
-[[example]]
-name = "openai-stream"
-required-features = ["openai"]
 
 [[example]]
 name = "local"

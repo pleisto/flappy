@@ -1,4 +1,4 @@
-use std::{convert::Infallible, io::Write, path::PathBuf, time::Instant};
+use std::{convert::Infallible, path::PathBuf, time::Instant};
 
 use anyhow::anyhow;
 use async_trait::async_trait;
@@ -177,10 +177,10 @@ impl Client for LocalClient {
     let mut output = String::new();
     self.inference(prompt, opt, |t| match t {
       llm::InferenceResponse::PromptToken(t) | llm::InferenceResponse::InferredToken(t) => {
-        print!("\x1b[31m{t}\x1b[0m");
-        let Ok(_) = std::io::stdout().flush() else {
-          return Ok(llm::InferenceFeedback::Halt);
-        };
+        // print!("\x1b[31m{t}\x1b[0m");
+        // let Ok(_) = std::io::stdout().flush() else {
+        //   return Ok(llm::InferenceFeedback::Halt);
+        // };
         output.push_str(&t);
         Ok(llm::InferenceFeedback::Continue)
       }
@@ -201,11 +201,6 @@ impl Client for LocalClient {
 
     self.inference(prompt, opt, |t| match t {
       llm::InferenceResponse::PromptToken(t) | llm::InferenceResponse::InferredToken(t) => {
-        print!("\x1b[31m{t}\x1b[0m");
-        let Ok(_) = std::io::stdout().flush() else {
-          return Ok(llm::InferenceFeedback::Halt);
-        };
-
         match sender.send(StreamItem::Data(t)) {
           Ok(_) => Ok(llm::InferenceFeedback::Continue),
           Err(_) => Ok(llm::InferenceFeedback::Halt),

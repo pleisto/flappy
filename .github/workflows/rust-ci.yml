@@ -70,7 +70,7 @@ jobs:
   windows-test:
     name: rust-ci-test-windows
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -102,7 +102,7 @@ jobs:
   test:
     name: rust-ci-test
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
