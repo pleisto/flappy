@@ -34,7 +34,7 @@ thread_local! {
 
 /// # Safety
 ///
-/// This function could be only called by java vm when load this lib.
+/// This function could be only called by java vm when loading this lib.
 #[no_mangle]
 pub unsafe extern "system" fn JNI_OnLoad(vm: JavaVM, _: *mut c_void) -> jint {
   RUNTIME
@@ -58,7 +58,7 @@ pub unsafe extern "system" fn JNI_OnLoad(vm: JavaVM, _: *mut c_void) -> jint {
 
 /// # Safety
 ///
-/// This function could be only called by java vm when unload this lib.
+/// This function could be only called by java vm when unloading this lib.
 #[no_mangle]
 pub unsafe extern "system" fn JNI_OnUnload(_: JavaVM, _: *mut c_void) {
   if let Some(r) = RUNTIME.take() {
@@ -68,7 +68,7 @@ pub unsafe extern "system" fn JNI_OnUnload(_: JavaVM, _: *mut c_void) {
 
 /// # Safety
 ///
-/// This function could be only when the lib is loaded and within a RUNTIME-spawned thread.
+/// This function could be only called when the lib is loaded and within a RUNTIME-spawned thread.
 unsafe fn get_current_env<'local>() -> JNIEnv<'local> {
   let env = ENV.with(|cell| *cell.borrow_mut()).unwrap();
   JNIEnv::from_raw(env).unwrap()
@@ -76,7 +76,7 @@ unsafe fn get_current_env<'local>() -> JNIEnv<'local> {
 
 /// # Safety
 ///
-/// This function could be only when the lib is loaded.
+/// This function could be only called when the lib is loaded.
 unsafe fn get_global_runtime<'local>() -> &'local Runtime {
   RUNTIME.get_unchecked()
 }
