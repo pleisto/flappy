@@ -56,6 +56,8 @@ impl Client for MockClient {
 #[cfg(test)]
 mod tests {
 
+  use tokio_stream::StreamExt;
+
   use super::*;
   use crate::prompt::ChatMLMessage;
 
@@ -75,17 +77,47 @@ mod tests {
   }
 
   #[tokio::test]
-  async fn mock_stream() {
+  async fn mock_stream_into() {
     let client = MockClient::new().unwrap();
 
     let mut result = client
       .chat_complete_stream(
-        Prompt::new_chat(vec![ChatMLMessage::new_user("hello".to_string())]),
+        Prompt::new_chat(vec![
+          ChatMLMessage::new_user("hello".to_string()),
+          ChatMLMessage::new_user("world".to_string()),
+        ]),
         Default::default(),
       )
       .await
       .unwrap();
 
-    assert_eq!(result.to_immediate().await.unwrap().to_string(), "hello");
+    assert_eq!(
+      result.to_immediate().await.unwrap().to_string(),
+      "helloworld"
+    );
+  }
+
+  #[tokio::test]
+  async fn mock_stream_listen() {
+    let client = MockClient::new().unwrap();
+
+    let mut stream = client
+      .chat_complete_stream(
+        Prompt::new_chat(vec![
+          ChatMLMessage::new_user("hello".to_string()),
+          ChatMLMessage::new_user("world".to_string()),
+        ]),
+        Default::default(),
+      )
+      .await
+      .unwrap();
+
+    let mut output = String::new();
+
+    while let Some(v) = stream.next().await {
+      output.push_str(&v.to_string());
+    }
+
+    assert_eq!(output, "helloworld");
   }
 }
