@@ -59,7 +59,20 @@ clap = { version = "4.4.10", features = ["derive"] }
 openssl = { version = "0.10", features = ["vendored"] }
 
 [workspace.lints.rust]
-unsafe_code = "forbid"
+# https://doc.rust-lang.org/rustc/lints/listing/allowed-by-default.html
+# unsafe_code = "forbid"
+non_ascii_idents = "forbid"
+keyword_idents = "forbid"
+let_underscore_drop = "forbid"
+single_use_lifetimes = "forbid"
+# unused_crate_dependencies = "forbid"
+unused_import_braces = "forbid"
+unused_lifetimes = "forbid"
+unused_macro_rules = "forbid"
+# unused_qualifications = "forbid"
+# unused_results = "forbid"
+unused_tuple_struct_fields = "forbid"
+variant_size_differences = "forbid"
 
 [profile.release]
 lto = true

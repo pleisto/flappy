@@ -42,7 +42,7 @@ impl Client for MockClient {
   ) -> Result<StreamOutput<String>, ExecuteError> {
     let (sender, output) = StreamOutput::<String>::new();
 
-    let _ = prompt
+    let _unused = prompt
       .to_messages()
       .into_iter()
       .map(|msg| sender.send(StreamItem::Data(msg.content)))

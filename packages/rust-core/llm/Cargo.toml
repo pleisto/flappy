@@ -27,14 +27,11 @@ anyhow.workspace = true
 secrecy.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-once_cell.workspace = true
-bytes.workspace = true
 rand.workspace = true
 spinoff.workspace = true
 reqwest.workspace = true
 
 llm = { git = "https://github.com/rustformers/llm", branch = "main", optional = true }
-hf-hub = { version = "0.3.2", optional = true, features = ["tokio"] }
 
 async-openai = { version = "0.17.0", optional = true, default-features = false, features = [
   "native-tls",
@@ -44,12 +41,13 @@ backoff = { version = "0.4.0", features = ["tokio"], optional = true }
 [dev-dependencies]
 tracing-subscriber.workspace = true
 clap.workspace = true
+hf-hub = { version = "0.3.2", features = ["tokio"] }
 
 [features]
 default = ["openai", "local"]
 
 openai = ["dep:async-openai", "dep:backoff"]
-local = ["dep:llm", "dep:hf-hub"]
+local = ["dep:llm"]
 full = ["openai", "local"]
 
 # https://github.com/rustformers/llm#using-llm-in-a-rust-project

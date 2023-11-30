@@ -27,3 +27,6 @@ tokio.workspace = true
 thiserror.workspace = true
 
 jni = "0.21.1"
+
+[lints]
+workspace = true
