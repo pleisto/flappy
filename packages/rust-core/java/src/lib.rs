@@ -16,6 +16,7 @@ use tokio::runtime::Builder;
 use tokio::runtime::Runtime;
 
 mod error;
+mod future;
 mod sandbox;
 
 use mimalloc::MiMalloc;

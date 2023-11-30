@@ -19,6 +19,8 @@ doc = false
 
 [dependencies]
 flappy-common.workspace = true
+flappy-llm.workspace = true
+
 mimalloc.workspace = true
 anyhow.workspace = true
 once_cell.workspace = true

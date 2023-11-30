@@ -114,4 +114,5 @@ You can apply the code style with the following command::
 This project is heavily inspired by the following awesome projects.
 
 * [OpenDAL Java Bindings](https://github.com/apache/incubator-opendal/blob/main/bindings/java/README.md)
+* [jni-utils-rs](https://github.com/deviceplug/jni-utils-rs)
 

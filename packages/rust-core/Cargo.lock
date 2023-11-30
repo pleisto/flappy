@@ -1181,6 +1181,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "flappy-common",
+ "flappy-llm",
  "jni",
  "mimalloc",
  "num_cpus",
