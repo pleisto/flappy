@@ -9,6 +9,8 @@ use crate::{
   prompt::Prompt,
 };
 
+pub type StreamResult = ();
+
 #[async_trait]
 pub trait Client: Sized {
   type Opt<'a>: Default
@@ -38,8 +40,8 @@ pub trait Client: Sized {
   ) -> Result<ImmediateOutput<Self::Output<'_>>, ExecuteError>;
 
   async fn chat_complete_stream(
-    &self,
+    self,
     prompt: Prompt,
     config: BuiltinOptions,
-  ) -> Result<StreamOutput<Self::StreamSegment<'_>>, ExecuteError>;
+  ) -> Result<StreamOutput<Self::StreamSegment<'async_trait>>, ExecuteError>;
 }

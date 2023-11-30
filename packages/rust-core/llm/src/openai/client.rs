@@ -153,7 +153,7 @@ impl Client for OpenAIClient {
   }
 
   async fn chat_complete_stream(
-    &self,
+    self,
     prompt: Prompt,
     opt: BuiltinOptions,
   ) -> Result<StreamOutput<OpenAIStreamFragment>, ExecuteError> {

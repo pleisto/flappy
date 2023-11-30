@@ -23,16 +23,17 @@ struct Args {
   log_leval: String,
 
   /// STREAM
-  #[arg(short, long, default_value_t = true)]
-  stream: bool,
+  #[arg(short, long, action)]
+  no_stream: bool,
 }
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
   let args = Args::parse();
 
-  std::env::set_var("RUST_LOG", args.log_leval);
   tracing_subscriber::fmt::init();
+  info!("args {:?}", args);
+  std::env::set_var("RUST_LOG", args.log_leval);
 
   let api = ApiBuilder::new().with_progress(true).build().unwrap();
   let repo = api.model("TheBloke/Flan-OpenLlama-7B-GGML".to_string());
@@ -53,15 +54,15 @@ async fn main() {
     .unwrap();
   let client = LocalClient::new_with_custom_options(local_options).unwrap();
 
-  if args.stream {
+  if args.no_stream {
+    let result = client.chat_complete(prompt, options).await.unwrap();
+    info!("result {}", result);
+  } else {
     let mut stream = client.chat_complete_stream(prompt, options).await.unwrap();
 
     while let Some(v) = stream.next().await {
-      print!("{}", v);
+      print!("\x1b[31m{v}\x1b[0m");
       std::io::stdout().flush().unwrap();
     }
-  } else {
-    let result = client.chat_complete(prompt, options).await.unwrap();
-    info!("result {}", result);
   }
 }

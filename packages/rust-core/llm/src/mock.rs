@@ -36,7 +36,7 @@ impl Client for MockClient {
   }
 
   async fn chat_complete_stream(
-    &self,
+    self,
     prompt: Prompt,
     _: BuiltinOptions,
   ) -> Result<StreamOutput<String>, ExecuteError> {

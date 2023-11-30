@@ -8,6 +8,7 @@ use llm::{
   ModelArchitecture, ModelParameters, TokenizerSource,
 };
 use spinoff::{spinners::Dots2, Spinner};
+use tokio::task::spawn_blocking;
 use tracing::{debug, info};
 
 use crate::{
@@ -177,10 +178,6 @@ impl Client for LocalClient {
     let mut output = String::new();
     self.inference(prompt, opt, |t| match t {
       llm::InferenceResponse::PromptToken(t) | llm::InferenceResponse::InferredToken(t) => {
-        // print!("\x1b[31m{t}\x1b[0m");
-        // let Ok(_) = std::io::stdout().flush() else {
-        //   return Ok(llm::InferenceFeedback::Halt);
-        // };
         output.push_str(&t);
         Ok(llm::InferenceFeedback::Continue)
       }
@@ -193,21 +190,24 @@ impl Client for LocalClient {
   }
 
   async fn chat_complete_stream(
-    &self,
+    self,
     prompt: Prompt,
     opt: BuiltinOptions,
   ) -> Result<StreamOutput<String>, ExecuteError> {
     let (sender, output) = StreamOutput::<String>::new();
 
-    self.inference(prompt, opt, |t| match t {
-      llm::InferenceResponse::PromptToken(t) | llm::InferenceResponse::InferredToken(t) => {
-        match sender.send(StreamItem::Data(t)) {
-          Ok(_) => Ok(llm::InferenceFeedback::Continue),
-          Err(_) => Ok(llm::InferenceFeedback::Halt),
-        }
-      }
-      _ => Ok(llm::InferenceFeedback::Continue),
-    })?;
+    let _join_handle: tokio::task::JoinHandle<Result<(), ExecuteError>> =
+      spawn_blocking(move || {
+        self.inference(prompt, opt, |t| match t {
+          llm::InferenceResponse::PromptToken(t) | llm::InferenceResponse::InferredToken(t) => {
+            match sender.send(StreamItem::Data(t)) {
+              Ok(_) => Ok(llm::InferenceFeedback::Continue),
+              Err(_) => Ok(llm::InferenceFeedback::Halt),
+            }
+          }
+          _ => Ok(llm::InferenceFeedback::Continue),
+        })
+      });
 
     Ok(output)
   }
