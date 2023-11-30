@@ -18,7 +18,7 @@ crate-type = ["cdylib"]
 doc = false
 
 [dependencies]
-flappy-common = { path = "../common", version = "*" }
+flappy-common.workspace = true
 mimalloc.workspace = true
 anyhow.workspace = true
 once_cell.workspace = true
