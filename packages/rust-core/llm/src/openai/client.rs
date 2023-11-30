@@ -1,123 +1,205 @@
 use std::sync::Arc;
 
 use anyhow::anyhow;
-use async_trait::async_trait;
-use derive_builder::Builder;
-use llm_sdk::{
-  AssistantMessage, ChatCompleteModel, ChatCompletionMessage, ChatCompletionRequestBuilder, LlmSdk,
+use async_openai::{
+  config::OpenAIConfig,
+  error::OpenAIError,
+  types::{
+    ChatCompletionRequestAssistantMessageArgs, ChatCompletionRequestMessage,
+    ChatCompletionRequestSystemMessageArgs, ChatCompletionRequestUserMessageArgs,
+    CreateChatCompletionRequest, CreateChatCompletionRequestArgs, Role,
+  },
 };
-use secrecy::{ExposeSecret, Secret};
-use tracing::info;
+use async_trait::async_trait;
+use futures::StreamExt;
+use secrecy::ExposeSecret;
+use tracing::{debug, info};
 
 use crate::{
   client::Client,
-  error::{ClientCreationError, ExecutorError},
-  model::{ChatMLMessage, ChatRole, Output, Prompt},
+  error::{ClientCreationError, ExecuteError},
   options::{BuiltinOptions, Options},
+  output::{stream::StreamItem, ImmediateOutput, StreamOutput},
+  prompt::{ChatMLMessage, ChatRole, Prompt},
 };
 
+use super::{options::OpenAIOptions, stream::OpenAIStreamFragment};
+
 pub struct OpenAIClient {
-  client: Arc<LlmSdk>,
+  client: Arc<async_openai::Client<OpenAIConfig>>,
   options: Options<OpenAIOptions>,
 }
 
-pub const OPENAI_API_BASE: &str = "https://api.openai.com/v1";
-
-#[derive(Builder)]
-#[builder(default)]
-pub struct OpenAIOptions {
-  api_base: String,
-  api_key: Option<Secret<String>>,
-  max_http_retries: u32,
-  model: ChatCompleteModel,
-}
-
-impl Default for OpenAIOptions {
-  fn default() -> Self {
-    OpenAIOptions {
-      api_base: std::env::var("OPENAI_API_BASE").unwrap_or_else(|_| OPENAI_API_BASE.to_string()),
-      api_key: std::env::var("OPENAI_API_KEY").map(|x| x.into()).ok(),
-      max_http_retries: 3,
-      model: ChatCompleteModel::Gpt3Turbo,
+impl From<Role> for ChatRole {
+  fn from(value: Role) -> Self {
+    match value {
+      Role::Assistant => ChatRole::Assistant,
+      Role::System => ChatRole::System,
+      Role::User => ChatRole::User,
+      _ => ChatRole::Assistant,
     }
   }
 }
 
-impl From<ChatMLMessage> for ChatCompletionMessage {
-  fn from(value: ChatMLMessage) -> Self {
-    let name = "";
-    match value.role {
-      ChatRole::Assistant => ChatCompletionMessage::Assistant(AssistantMessage {
-        content: Some(value.content),
-        name: None,
-        tool_calls: Vec::new(),
-      }),
-      ChatRole::System => ChatCompletionMessage::new_system(value.content, name),
-      ChatRole::User => ChatCompletionMessage::new_user(value.content, name),
-    }
+impl OpenAIClient {
+  fn convert_message(x: &ChatMLMessage) -> Result<ChatCompletionRequestMessage, OpenAIError> {
+    Ok(match x.role {
+      ChatRole::Assistant => ChatCompletionRequestMessage::Assistant(
+        ChatCompletionRequestAssistantMessageArgs::default()
+          .content(x.content.clone())
+          .build()?,
+      ),
+      ChatRole::System => ChatCompletionRequestMessage::System(
+        ChatCompletionRequestSystemMessageArgs::default()
+          .content(x.content.clone())
+          .build()?,
+      ),
+      ChatRole::User => ChatCompletionRequestMessage::User(
+        ChatCompletionRequestUserMessageArgs::default()
+          .content(x.content.clone())
+          .build()?,
+      ),
+    })
+  }
+
+  fn build_request(
+    &self,
+    prompt: Prompt,
+    opt: BuiltinOptions,
+    stream: bool,
+  ) -> Result<CreateChatCompletionRequest, ExecuteError> {
+    let messages = prompt
+      .to_messages()
+      .iter()
+      .map(OpenAIClient::convert_message)
+      .collect::<Result<Vec<_>, _>>()
+      .map_err(|err| ExecuteError::Inner(err.into()))?;
+
+    let mut builder = CreateChatCompletionRequestArgs::default();
+
+    if let Some(temperature) = opt.temperature {
+      builder.temperature(temperature);
+    };
+
+    if let Some(top_p) = opt.top_p {
+      builder.top_p(top_p);
+    };
+
+    builder
+      .model(self.options.custom.model.clone())
+      .stream(stream)
+      .messages(messages)
+      .build()
+      .map_err(|err| ExecuteError::Inner(err.into()))
   }
 }
 
 #[async_trait]
 impl Client for OpenAIClient {
   type Opt<'a> = OpenAIOptions;
+  type Output<'a> = ChatMLMessage;
+  type StreamSegment<'a> = OpenAIStreamFragment;
 
   fn new_with_options(options: Options<Self::Opt<'_>>) -> Result<Self, ClientCreationError> {
     let api_key = options
       .custom
       .api_key
       .clone()
-      .ok_or(ClientCreationError::FieldRequiredError(anyhow!(
+      .ok_or(ClientCreationError::FieldRequired(anyhow!(
         "OpenAI ApiKey is empty"
       )))?;
-    let sdk = LlmSdk::new(
-      options.custom.api_base.clone(),
-      api_key.expose_secret(),
-      options.custom.max_http_retries,
-    );
 
-    let client = Arc::new(sdk);
-    Ok(Self { client, options })
+    let client_options = OpenAIConfig::new()
+      .with_api_base(options.custom.api_base.clone())
+      .with_api_key(api_key.expose_secret())
+      .with_org_id(options.custom.org_id.clone());
+
+    let http_client = reqwest::Client::new();
+    let client = async_openai::Client::with_config(client_options)
+      .with_http_client(http_client)
+      .with_backoff(backoff::ExponentialBackoff::default());
+
+    Ok(Self {
+      options,
+      client: Arc::new(client),
+    })
   }
 
   async fn chat_complete(
     &self,
     prompt: Prompt,
     opt: BuiltinOptions,
-  ) -> Result<Output, ExecutorError> {
-    let mut request_builder = ChatCompletionRequestBuilder::default();
-
-    if let Some(temperature) = opt.temperature {
-      request_builder.temperature(temperature);
-    };
-
-    if let Some(top_p) = opt.top_p {
-      request_builder.top_p(top_p);
-    };
-
-    let request = request_builder
-      .messages(
-        prompt
-          .to_messages()
-          .into_iter()
-          .map(|x| x.into())
-          .collect::<Vec<_>>(),
-      )
-      .model(self.options.custom.model)
-      .build()
-      .map_err(|err| anyhow!(err.to_string()))?;
+  ) -> Result<ImmediateOutput<ChatMLMessage>, ExecuteError> {
+    let request = self.build_request(prompt, opt, false)?;
 
     info!("request {:?}", request);
 
-    let result = self.client.chat_completion(request).await?;
+    let result = self
+      .client
+      .chat()
+      .create(request)
+      .await
+      .map_err(|err| ExecuteError::Inner(err.into()))?;
 
-    info!("request {:?}", result);
+    info!("response {:?}", result);
 
     let first_choice = result.choices.first().ok_or(anyhow!("Choices is empty"))?;
-    let optional_content = first_choice.message.content.clone();
+    let content_message = &first_choice.message;
+    let optional_content = content_message.content.clone();
     let content = optional_content.ok_or(anyhow!("Content is empty"))?;
+    let message = ChatMLMessage::new(content_message.role.into(), content);
 
-    Ok(Output::new(content))
+    Ok(ImmediateOutput::new(message))
+  }
+
+  async fn chat_complete_stream(
+    self,
+    prompt: Prompt,
+    opt: BuiltinOptions,
+  ) -> Result<StreamOutput<OpenAIStreamFragment>, ExecuteError> {
+    let request = self.build_request(prompt, opt, true)?;
+
+    info!("request {:?}", request);
+
+    let resp = self
+      .client
+      .chat()
+      .create_stream(request)
+      .await
+      .map_err(|e| ExecuteError::Inner(e.into()))?;
+
+    let stream = resp.flat_map(|result| {
+      let mut v: Vec<StreamItem<OpenAIStreamFragment>> = vec![];
+
+      let optional_item: Option<StreamItem<OpenAIStreamFragment>> = match result {
+        Err(err) => Some(StreamItem::Err(ExecuteError::Inner(err.into()))),
+        Ok(resp) => match resp.choices.first() {
+          None => Some(StreamItem::Err(ExecuteError::Anyhow(anyhow!(
+            "Choices is empty"
+          )))),
+          Some(choice) => {
+            let delta = choice.delta.clone();
+            debug!("delta {:?}", delta);
+
+            if let Some(content) = delta.content {
+              Some(StreamItem::Data(OpenAIStreamFragment::Delta(content)))
+            } else {
+              delta
+                .role
+                .map(|role| StreamItem::Data(OpenAIStreamFragment::Role(role.into())))
+            }
+          }
+        },
+      };
+
+      if let Some(item) = optional_item {
+        v.push(item)
+      }
+
+      futures::stream::iter(v)
+    });
+
+    Ok(StreamOutput::from_stream(stream))
   }
 }
 

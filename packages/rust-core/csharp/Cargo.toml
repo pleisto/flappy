@@ -18,10 +18,13 @@ independent = true
 crate-type = ["cdylib"]
 
 [dependencies]
-flappy-common = { path = "../common", version = "*" }
+flappy-common.workspace = true
 mimalloc.workspace = true
 tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 
 libc = "0.2"
+
+[lints]
+workspace = true

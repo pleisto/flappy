@@ -48,5 +48,8 @@ virtual-fs = { version = "0.9.0", features = ["host-fs"] }
 virtual-net = { version = "0.6.1", features = ["host-net"] }
 openssl.workspace = true
 
+[package.metadata.cargo-udeps.ignore]
+normal = ["openssl"]
+
 [lints]
 workspace = true

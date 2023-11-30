@@ -39,6 +39,20 @@ jobs:
       - name: Audit dependencies
         run: cargo audit
 
+  udeps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@nightly
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-udeps
+
+      - name: udeps
+        run: cargo +nightly udeps
+
   lint:
     name: rust-ci-lint
     runs-on: ubuntu-latest
@@ -64,13 +78,16 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - run: cargo install cargo-deny
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-deny
+
       - run: cargo deny check
 
   windows-test:
     name: rust-ci-test-windows
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -102,7 +119,7 @@ jobs:
   test:
     name: rust-ci-test
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:

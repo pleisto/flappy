@@ -33,7 +33,9 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@nightly
 
-      - run: cargo install cargo-tarpaulin
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-tarpaulin
 
       - name: Generate code coverage
         working-directory: packages/rust-core
