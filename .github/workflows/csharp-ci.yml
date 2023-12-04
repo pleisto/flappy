@@ -47,12 +47,12 @@ jobs:
           #- windows-latest
           #- macos-latest
         dotnet-version:
-          - framework: netcoreapp3.1
-            runtime: 3.1
           - framework: net6.0
             runtime: 6.0
           - framework: net7.0
             runtime: 7.0
+          - framework: net8.0
+            runtime: 8.0
     steps:
       - uses: actions/checkout@v4
 
