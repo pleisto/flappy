@@ -30,5 +30,9 @@ thiserror.workspace = true
 
 jni = "0.21.1"
 
+static_assertions = "1.1.0"
+futures = "0.3.28"
+dashmap = "5.4.0"
+
 [lints]
 workspace = true
