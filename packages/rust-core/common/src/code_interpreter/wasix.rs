@@ -144,11 +144,15 @@ fn wasix_runtime(cache_path: PathBuf, network: bool) -> impl Runtime + Send + Sy
   let mut rt = PluggableRuntime::new(Arc::new(TokioTaskManager::new(tokio_rt)));
   let cache = SharedCache::default().with_fallback(FileSystemCache::new(cache_path.clone()));
 
-  let client = Arc::new(wasmer_wasix::http::default_http_client().unwrap());
+  let client = wasmer_wasix::http::default_http_client().unwrap();
 
   rt.set_engine(Some(store.engine().clone()))
     .set_module_cache(cache)
-    .set_package_loader(BuiltinPackageLoader::new_with_client(cache_path, client));
+    .set_package_loader(
+      BuiltinPackageLoader::new()
+        .with_cache_dir(cache_path)
+        .with_http_client(client),
+    );
 
   if network {
     // TODO: fix me.
