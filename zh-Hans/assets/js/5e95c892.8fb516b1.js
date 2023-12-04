@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_pleisto_flappy_docs=self.webpackChunk_pleisto_flappy_docs||[]).push([[661],{32:(e,s,p)=>{p.r(s),p.d(s,{default:()=>o});p(7378);var r=p(7140),a=p(8836),c=p(5854),l=p(5473),t=p(2577),u=p(4246);function o(e){return(0,u.jsx)(a.FG,{className:(0,r.Z)(c.k.wrapper.docsPages),children:(0,u.jsx)(t.Z,{children:(0,l.H)(e.route.routes)})})}}}]);
