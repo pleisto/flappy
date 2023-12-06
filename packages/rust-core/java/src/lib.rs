@@ -14,6 +14,9 @@ mod error;
 mod future;
 mod sandbox;
 
+#[cfg(test)]
+mod test_utils;
+
 use mimalloc::MiMalloc;
 
 /// mimalloc is a compact general purpose allocator with excellent performance.

@@ -75,3 +75,17 @@ fn get_future<'local>(env: &mut JNIEnv<'local>, id: jlong) -> Result<JObject<'lo
       .l()?,
   )
 }
+
+#[cfg(test)]
+mod test {
+  use super::*;
+  use crate::test_utils;
+
+  #[test]
+  fn test_request_id() {
+    test_utils::JVM_ENV.with(|env| {
+      let result = request_id(unsafe { &mut env.unsafe_clone() });
+      assert!(result.is_ok())
+    });
+  }
+}
