@@ -86,7 +86,7 @@ To load the shared library correctly, you can choose one of the following approa
 You can use Maven to build both Rust dynamic lib and JAR files with one command now:
 
 ```shell
-./mvnw clean package -DskipTests=true
+./mvnw clean package -DskipTests
 ```
 
 ## Run tests
