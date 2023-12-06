@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
 
 public class FlappyJniSandbox extends FlappyJniLoader implements AutoCloseable {
