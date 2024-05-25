@@ -107,7 +107,7 @@ jobs:
         shell: bash
         run: |
           ./mvnw verify org.sonatype.plugins:nexus-staging-maven-plugin:deploy \
-            -DskipTests=true \
+            -DskipTests \
             -Djni.classifier=${{ matrix.classifier }} \
             -Dcargo-build.profile=release \
             -DaltStagingDirectory=local-staging \
